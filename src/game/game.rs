@@ -13,7 +13,9 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn execute_turn(&self) -> Game {
+    pub fn explore(&self) {}
+
+    pub fn simulate_simple_turn(&self) -> Game {
         let mut game = self.clone();
         let is_player = game.turn_is_player();
 
