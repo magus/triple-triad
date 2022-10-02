@@ -90,7 +90,7 @@ impl Game {
         // println!("[computer] [{:?}]", game.computer.cards);
         println!("[squares_empty] {:?}", game.squares_empty());
         // println!("[board] {:?}", game.board);
-        println!("[end turn {}] {}", game.turn + 1, game.player_name());
+        println!("[end turn {}] {}", game.turn, game.player_name());
 
         return game;
     }
