@@ -13,7 +13,22 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn explore(&self) {}
+    pub fn explore(&self) {
+        // find all valid moves from this game state and exeecute them
+        let is_player = self.turn_is_player();
+        let square_choices = self.squares_empty();
+        let card_choices = if is_player {
+            self.player.cards_left()
+        } else {
+            self.computer.cards_left()
+        };
+
+        for square in &square_choices {
+            for card in &card_choices {
+                println!("{card} {square}");
+            }
+        }
+    }
 
     pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
         let mut game = self.clone();
