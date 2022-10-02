@@ -14,7 +14,15 @@ pub struct Game {
 
 impl Game {
     pub fn explore(&self) {
-        // find all valid moves from this game state and exeecute them
+        if self.turn == 9 {
+            // in worst case scenario this will happen
+            // = 5 225 472 000 times
+            // = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
+            // println!("[end of branch] {:?}", self.board);
+            return;
+        }
+
+        // find all valid moves from this game state and execute them
         let is_player = self.turn_is_player();
         let square_choices = self.squares_empty();
         let card_choices = if is_player {
@@ -25,7 +33,11 @@ impl Game {
 
         for square in &square_choices {
             for card in &card_choices {
-                println!("{card} {square}");
+                // need to track whether this thread ends in a win or loss
+                // we want branches where there is high likelihood of win
+
+                // println!("{card} {square}");
+                self.execute_turn(is_player, *card, *square).explore();
             }
         }
     }

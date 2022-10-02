@@ -4,6 +4,7 @@ use triple_triad::game::Game;
 fn main() {
     let game = Game::new();
     game.explore();
+    println!("done!");
 
     // simple_simulation();
 
