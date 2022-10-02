@@ -4,8 +4,9 @@ use triple_triad::game::Game;
 fn main() {
     let mut game = Game::new();
 
+    // simulate 10 turns in sequence to verify basic game flow
     for _turn in 1..10 {
-        game = game.execute_turn();
+        game = game.simulate_simple_turn();
     }
 
     println!("");
