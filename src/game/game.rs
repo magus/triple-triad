@@ -19,11 +19,7 @@ impl Game {
 
         println!("");
         println!("");
-        println!(
-            "[start turn {}] {}",
-            game.turn + 1,
-            if is_player { "player" } else { "computer" },
-        );
+        println!("[start turn {}] {}", game.turn + 1, game.player_name());
 
         // println!("[player] [{:?}]", player.cards);
         // println!("[computer] [{:?}]", computer.cards);
@@ -41,11 +37,7 @@ impl Game {
         // println!("[computer] [{:?}]", computer.cards);
         println!("[board] [{:?}]", game.board);
 
-        println!(
-            "[end turn {}] {}",
-            game.turn + 1,
-            if is_player { "player" } else { "computer" },
-        );
+        println!("[end turn {}] {}", game.turn + 1, game.player_name());
 
         game.finish_turn();
 
@@ -72,24 +64,21 @@ impl Game {
         return false;
     }
 
-    pub fn turn_is_player(&self) -> bool {
-        return if self.is_player_first {
-            if self.turn % 2 == 0 {
-                true
-            } else {
-                false
-            }
-        } else {
-            if self.turn % 2 == 0 {
-                false
-            } else {
-                true
-            }
-        };
-    }
-
     pub fn finish_turn(&mut self) {
         self.turn += 1;
+    }
+
+    pub fn turn_is_player(&self) -> bool {
+        let remainder: u8 = if self.is_player_first { 0 } else { 1 };
+        return self.turn % 2 == remainder;
+    }
+
+    pub fn player_name(&self) -> &str {
+        if self.turn_is_player() {
+            "player"
+        } else {
+            "computer"
+        }
     }
 
     pub fn new() -> Self {
