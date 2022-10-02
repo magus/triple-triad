@@ -20,10 +20,12 @@ impl Game {
         println!("");
         println!("");
         println!("[start turn {}] {}", game.turn + 1, game.player_name());
-
-        // println!("[player] [{:?}]", player.cards);
-        // println!("[computer] [{:?}]", computer.cards);
-        println!("[board] [{:?}]", game.board);
+        println!("[player.cards_left] {:?}", game.player.cards_left());
+        // println!("[player] [{:?}]", game.player.cards);
+        println!("[computer.cards_left] {:?}", game.computer.cards_left());
+        // println!("[computer] [{:?}]", game.computer.cards);
+        println!("[squares_empty] {:?}", game.squares_empty());
+        // println!("[board] {:?}", game.board);
 
         if is_player {
             let card = game.player.find_card();
@@ -33,15 +35,29 @@ impl Game {
             game.find_place_card(card);
         };
 
-        // println!("[player] [{:?}]", player.cards);
-        // println!("[computer] [{:?}]", computer.cards);
-        println!("[board] [{:?}]", game.board);
-
+        println!("[player.cards_left] {:?}", game.player.cards_left());
+        // println!("[player] [{:?}]", game.player.cards);
+        println!("[computer.cards_left] {:?}", game.computer.cards_left());
+        // println!("[computer] [{:?}]", game.computer.cards);
+        println!("[squares_empty] {:?}", game.squares_empty());
+        // println!("[board] {:?}", game.board);
         println!("[end turn {}] {}", game.turn + 1, game.player_name());
 
         game.finish_turn();
 
         return game;
+    }
+
+    pub fn squares_empty(&self) -> Vec<usize> {
+        let mut card_index_list = vec![];
+
+        for i in 0..9 {
+            if self.board[i] == card::EMPTY {
+                card_index_list.push(i);
+            }
+        }
+
+        return card_index_list;
     }
 
     pub fn find_place_card(&mut self, card: Card) {
