@@ -1,3 +1,5 @@
+use rayon::prelude::*;
+
 use crate::card;
 use crate::card::Card;
 use crate::player::Player;
@@ -31,7 +33,8 @@ impl Game {
             self.computer.cards_left()
         };
 
-        for square in &square_choices {
+        // square_choices.par_iter_mut().for_each(|square| {});
+        square_choices.par_iter().for_each(|square| {
             for card in &card_choices {
                 // need to track whether this thread ends in a win or loss
                 // we want branches where there is high likelihood of win
@@ -39,7 +42,7 @@ impl Game {
                 // println!("{card} {square}");
                 self.execute_turn(is_player, *card, *square).explore();
             }
-        }
+        });
     }
 
     pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
