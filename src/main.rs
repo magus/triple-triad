@@ -2,7 +2,10 @@ use rayon::prelude::*;
 use triple_triad::game::Game;
 
 fn main() {
-    let game = Game::new();
+    let mut game = Game::new();
+    // take two turns to significantly cull search space
+    game = game.simulate_simple_turn();
+    game = game.simulate_simple_turn();
     game.explore();
     println!("done!");
 
