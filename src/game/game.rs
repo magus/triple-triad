@@ -15,27 +15,44 @@ pub struct Game {
 impl Game {
     pub fn explore(&self) {}
 
-    pub fn simulate_simple_turn(&self) -> Game {
+    pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
         let mut game = self.clone();
-        let is_player = game.turn_is_player();
-
-        println!("");
-        println!("");
-        println!("[start turn {}] {}", game.turn + 1, game.player_name());
-        println!("[player.cards_left] {:?}", game.player.cards_left());
-        // println!("[player] [{:?}]", game.player.cards);
-        println!("[computer.cards_left] {:?}", game.computer.cards_left());
-        // println!("[computer] [{:?}]", game.computer.cards);
-        println!("[squares_empty] {:?}", game.squares_empty());
-        // println!("[board] {:?}", game.board);
 
         if is_player {
-            let card = game.player.find_card();
-            game.find_place_card(card);
+            let card = game.player.use_card(card_index);
+            game.place_card(card, square_index);
         } else {
-            let card = game.computer.find_card();
-            game.find_place_card(card);
+            let card = game.computer.use_card(card_index);
+            game.place_card(card, square_index);
         };
+
+        game.finish_turn();
+
+        return game;
+    }
+
+    pub fn simulate_simple_turn(&self) -> Game {
+        println!("");
+        println!("");
+        println!("[start turn {}] {}", self.turn + 1, self.player_name());
+        println!("[player.cards_left] {:?}", self.player.cards_left());
+        // println!("[player] [{:?}]", self.player.cards);
+        println!("[computer.cards_left] {:?}", self.computer.cards_left());
+        // println!("[computer] [{:?}]", self.computer.cards);
+        println!("[squares_empty] {:?}", self.squares_empty());
+        // println!("[board] {:?}", self.board);
+
+        // find first valid move and make it
+        let square_choices = self.squares_empty();
+        let is_player = self.turn_is_player();
+
+        let card_choices = if is_player {
+            self.player.cards_left()
+        } else {
+            self.computer.cards_left()
+        };
+
+        let game = self.execute_turn(is_player, card_choices[0], square_choices[0]);
 
         println!("[player.cards_left] {:?}", game.player.cards_left());
         // println!("[player] [{:?}]", game.player.cards);
@@ -44,8 +61,6 @@ impl Game {
         println!("[squares_empty] {:?}", game.squares_empty());
         // println!("[board] {:?}", game.board);
         println!("[end turn {}] {}", game.turn + 1, game.player_name());
-
-        game.finish_turn();
 
         return game;
     }
