@@ -1,0 +1,173 @@
+use crate::card;
+use crate::card::Card;
+use crate::player::Player;
+
+#[derive(Clone, Debug)]
+pub struct Game {
+    pub turn: u8,
+    pub is_player_first: bool,
+    pub board: [Card; 9],
+
+    pub player: Player,
+    pub computer: Player,
+}
+
+impl Game {
+    pub fn execute_turn(&self) -> Game {
+        let mut game = self.clone();
+        let is_player = game.turn_is_player();
+
+        println!("");
+        println!("");
+        println!(
+            "[start turn {}] {}",
+            game.turn + 1,
+            if is_player { "player" } else { "computer" },
+        );
+
+        // println!("[player] [{:?}]", player.cards);
+        // println!("[computer] [{:?}]", computer.cards);
+        println!("[board] [{:?}]", game.board);
+
+        if is_player {
+            let card = game.player.find_card();
+            game.find_place_card(card);
+        } else {
+            let card = game.computer.find_card();
+            game.find_place_card(card);
+        };
+
+        // println!("[player] [{:?}]", player.cards);
+        // println!("[computer] [{:?}]", computer.cards);
+        println!("[board] [{:?}]", game.board);
+
+        println!(
+            "[end turn {}] {}",
+            game.turn + 1,
+            if is_player { "player" } else { "computer" },
+        );
+
+        game.finish_turn();
+
+        return game;
+    }
+
+    pub fn find_place_card(&mut self, card: Card) {
+        if card != card::EMPTY {
+            for i in 0..9 {
+                if self.place_card(card, i) {
+                    break;
+                }
+            }
+        }
+    }
+
+    pub fn place_card(&mut self, card: Card, index: usize) -> bool {
+        if card != card::EMPTY && self.board[index] == card::EMPTY {
+            // place the card in this board square
+            self.board[index] = card;
+            return true;
+        }
+
+        return false;
+    }
+
+    pub fn turn_is_player(&self) -> bool {
+        return if self.is_player_first {
+            if self.turn % 2 == 0 {
+                true
+            } else {
+                false
+            }
+        } else {
+            if self.turn % 2 == 0 {
+                false
+            } else {
+                true
+            }
+        };
+    }
+
+    pub fn finish_turn(&mut self) {
+        self.turn += 1;
+    }
+
+    pub fn new() -> Self {
+        let board = [
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+            card::EMPTY,
+        ];
+
+        let cards = [
+            Card {
+                name: "P1",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "P2",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "P3",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "P4",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "P5",
+                sides: (1, 1, 1, 1),
+            },
+        ];
+
+        let computer_cards = [
+            Card {
+                name: "C1",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "C2",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "C3",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "C4",
+                sides: (1, 1, 1, 1),
+            },
+            Card {
+                name: "C5",
+                sides: (1, 1, 1, 1),
+            },
+        ];
+
+        let player = Player {
+            is_player: true,
+            cards,
+        };
+
+        let computer = Player {
+            is_player: false,
+            cards: computer_cards,
+        };
+
+        return Game {
+            turn: 0,
+            is_player_first: true,
+            board,
+
+            player,
+            computer,
+        };
+    }
+}
