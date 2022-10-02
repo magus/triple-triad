@@ -77,16 +77,6 @@ impl Game {
         return card_index_list;
     }
 
-    pub fn find_place_card(&mut self, card: Card) {
-        if card != card::EMPTY {
-            for i in 0..9 {
-                if self.place_card(card, i) {
-                    break;
-                }
-            }
-        }
-    }
-
     pub fn place_card(&mut self, card: Card, index: usize) -> bool {
         if card != card::EMPTY && self.board[index] == card::EMPTY {
             // place the card in this board square

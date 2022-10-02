@@ -20,16 +20,6 @@ impl Player {
         return card_index_list;
     }
 
-    pub fn find_card(&mut self) -> Card {
-        for i in 0..5 {
-            if self.cards[i] != card::EMPTY {
-                return self.use_card(i);
-            }
-        }
-
-        return card::EMPTY;
-    }
-
     pub fn use_card(&mut self, index: usize) -> Card {
         let card = self.cards[index];
 
