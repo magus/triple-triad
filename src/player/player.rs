@@ -8,6 +8,18 @@ pub struct Player {
 }
 
 impl Player {
+    pub fn cards_left(&self) -> Vec<usize> {
+        let mut card_index_list = vec![];
+
+        for i in 0..5 {
+            if self.cards[i] != card::EMPTY {
+                card_index_list.push(i);
+            }
+        }
+
+        return card_index_list;
+    }
+
     pub fn find_card(&mut self) -> Card {
         for i in 0..5 {
             if self.cards[i] != card::EMPTY {
@@ -22,10 +34,7 @@ impl Player {
         let card = self.cards[index];
 
         if card != card::EMPTY {
-            println!("setting {} to empty", index);
-            // set this card in player cards to empty (used)
             self.cards[index] = card::EMPTY;
-            println!("cards {:?}", self.cards);
         }
 
         return card;
