@@ -30,9 +30,9 @@ fn parallel_explore_max() {
     let first_move_per_square: i64 = 5 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1;
     // let first_move_per_square: i64 = 2;
 
-    let mut square_list: Vec<i64> = (0..9).collect();
+    let square_list: Vec<i64> = (0..9).collect();
 
-    square_list.par_iter_mut().for_each(|square| {
+    square_list.par_iter().for_each(|square| {
         let turn_start: i64 = *square * first_move_per_square;
         let turn_end: i64 = (*square + 1) * first_move_per_square;
 
