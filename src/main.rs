@@ -3,20 +3,29 @@ use triple_triad::game::Game;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    let mut stopwatch = Stopwatch::start();
-
-    let mut game = Game::new();
-    // take turns to significantly cull search space
-    for _ in 0..4 {
-        game = game.simulate_simple_turn();
-    }
-    game.start_explore();
-    println!("\n✅ done!");
-    stopwatch.record("explore finished");
+    explore();
 
     // simple_simulation();
 
     // parallel_explore_max();
+}
+
+fn explore() {
+    let mut stopwatch = Stopwatch::start();
+
+    let mut game = Game::new();
+
+    // take turns to significantly cull search space
+    let simulate_turns = 0;
+    for _ in 0..simulate_turns {
+        game = game.simulate_simple_turn();
+    }
+
+    println!("\n📊 results");
+    game.start_explore();
+
+    println!("\n✅ done!");
+    stopwatch.record("explore finished");
 }
 
 fn simple_simulation() {
