@@ -89,12 +89,12 @@ impl Game {
         println!("");
         println!("");
         println!("[start turn {}] {}", self.turn + 1, self.player_name());
-        println!("[player.cards_left] {:?}", self.player.cards_left());
-        // println!("[player] [{:?}]", self.player.cards);
-        println!("[computer.cards_left] {:?}", self.computer.cards_left());
-        // println!("[computer] [{:?}]", self.computer.cards);
-        println!("[squares_empty] {:?}", self.squares_empty());
-        // println!("[board] {:?}", self.board);
+        println!("  [player.cards_left] {:?}", self.player.cards_left());
+        // println!("  [player] [{:?}]", self.player.cards);
+        println!("  [computer.cards_left] {:?}", self.computer.cards_left());
+        // println!("  [computer] [{:?}]", self.computer.cards);
+        println!("  [squares_empty] {:?}", self.squares_empty());
+        // println!("  [board] {:?}", self.board);
 
         // find first valid move and make it
         let square_choices = self.squares_empty();
@@ -108,13 +108,13 @@ impl Game {
 
         let game = self.execute_turn(is_player, card_choices[0], square_choices[0]);
 
-        println!("[player.cards_left] {:?}", game.player.cards_left());
-        // println!("[player] [{:?}]", game.player.cards);
-        println!("[computer.cards_left] {:?}", game.computer.cards_left());
-        // println!("[computer] [{:?}]", game.computer.cards);
-        println!("[squares_empty] {:?}", game.squares_empty());
-        // println!("[board] {:?}", game.board);
-        println!("[end turn {}] {}", game.turn, game.player_name());
+        println!("[end turn {}]", game.turn);
+        println!("  [player.cards_left] {:?}", game.player.cards_left());
+        // println!("  [player] [{:?}]", game.player.cards);
+        println!("  [computer.cards_left] {:?}", game.computer.cards_left());
+        // println!("  [computer] [{:?}]", game.computer.cards);
+        println!("  [squares_empty] {:?}", game.squares_empty());
+        // println!("  [board] {:?}", game.board);
 
         return game;
     }
