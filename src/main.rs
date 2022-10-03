@@ -1,14 +1,18 @@
 use rayon::prelude::*;
 use triple_triad::game::Game;
+use triple_triad::time::Stopwatch;
 
 fn main() {
+    let mut stopwatch = Stopwatch::start();
+
     let mut game = Game::new();
     // take turns to significantly cull search space
-    for _ in 0..4 {
+    for _ in 0..2 {
         game = game.simulate_simple_turn();
     }
     let iters = game.start_explore();
     println!("\n✅ done! [{} iterations]", iters);
+    stopwatch.record("explore finished");
 
     // simple_simulation();
 
