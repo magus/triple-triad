@@ -15,13 +15,19 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn explore(&self) {
-        if self.turn == 9 {
+    pub fn start_explore(&self) -> u64 {
+        return self.explore(0);
+    }
+
+    fn explore(&self, previous_iters: u64) -> u64 {
+        if self.is_ended() {
             // in worst case scenario this will happen
-            // = 5 225 472 000 times
-            // = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
-            // println!("[end of branch] {:?}", self.board);
-            return;
+            //   = 5 225 472 000 times
+            //   = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
+
+            // println!("[end of game] {:?}", self.board);
+
+            return previous_iters;
         }
 
         // find all valid moves from this game state and execute them
@@ -33,16 +39,34 @@ impl Game {
             self.computer.cards_left()
         };
 
-        // square_choices.par_iter_mut().for_each(|square| {});
-        square_choices.par_iter().for_each(|square| {
+        let square_choices_iter = square_choices.par_iter();
+
+        let inner_iters_list = square_choices_iter.map(|square| {
+            let mut inner_iters = 0;
+
             for card in &card_choices {
                 // need to track whether this thread ends in a win or loss
                 // we want branches where there is high likelihood of win
 
                 // println!("{card} {square}");
-                self.execute_turn(is_player, *card, *square).explore();
+
+                let game = self.execute_turn(is_player, *card, *square);
+
+                if game.is_ended() {
+                    inner_iters += game.explore(previous_iters + 1);
+                    // println!("[end of game] {:?}", game.board);
+                } else {
+                    inner_iters += game.explore(previous_iters);
+                    // println!("🔍 continue exploring");
+                }
             }
+
+            return inner_iters;
         });
+
+        let total_iters = inner_iters_list.sum();
+
+        return total_iters;
     }
 
     pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
@@ -132,6 +156,10 @@ impl Game {
         } else {
             "computer"
         }
+    }
+
+    pub fn is_ended(&self) -> bool {
+        return self.turn == 9;
     }
 
     pub fn new() -> Self {

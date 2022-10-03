@@ -3,11 +3,12 @@ use triple_triad::game::Game;
 
 fn main() {
     let mut game = Game::new();
-    // take two turns to significantly cull search space
-    game = game.simulate_simple_turn();
-    game = game.simulate_simple_turn();
-    game.explore();
-    println!("done!");
+    // take turns to significantly cull search space
+    for _ in 0..4 {
+        game = game.simulate_simple_turn();
+    }
+    let iters = game.start_explore();
+    println!("\n✅ done! [{} iterations]", iters);
 
     // simple_simulation();
 
