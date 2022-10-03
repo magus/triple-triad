@@ -13,6 +13,11 @@ pub struct Card {
 
 impl fmt::Debug for Card {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.name)
+        let print_name = if self.name == "EMPTY" {
+            "__"
+        } else {
+            self.name
+        };
+        write!(f, "{}", print_name)
     }
 }
