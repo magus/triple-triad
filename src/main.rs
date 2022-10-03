@@ -7,11 +7,11 @@ fn main() {
 
     let mut game = Game::new();
     // take turns to significantly cull search space
-    for _ in 0..2 {
+    for _ in 0..4 {
         game = game.simulate_simple_turn();
     }
-    let iters = game.start_explore();
-    println!("\n✅ done! [{} iterations]", iters);
+    game.start_explore();
+    println!("\n✅ done!");
     stopwatch.record("explore finished");
 
     // simple_simulation();

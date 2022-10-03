@@ -15,20 +15,12 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn start_explore(&self) -> u64 {
-        return self.explore(0);
+    pub fn start_explore(&self) {
+        self.explore(1);
     }
 
-    fn explore(&self, previous_iters: u64) -> u64 {
-        if self.is_ended() {
-            // in worst case scenario this will happen
-            //   = 5 225 472 000 times
-            //   = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
-
-            // println!("[end of game] {:?}", self.board);
-
-            return previous_iters;
-        }
+    fn explore(&self, depth: u8) {
+        // println!("[depth={depth}]");
 
         // find all valid moves from this game state and execute them
         let is_player = self.turn_is_player();
@@ -39,34 +31,21 @@ impl Game {
             self.computer.cards_left()
         };
 
-        let square_choices_iter = square_choices.par_iter();
-
-        let inner_iters_list = square_choices_iter.map(|square| {
-            let mut inner_iters = 0;
-
-            for card in &card_choices {
+        square_choices.par_iter().for_each(|square| {
+            card_choices.par_iter().for_each(|card| {
                 // need to track whether this thread ends in a win or loss
                 // we want branches where there is high likelihood of win
 
-                // println!("{card} {square}");
-
                 let game = self.execute_turn(is_player, *card, *square);
 
-                if game.is_ended() {
-                    inner_iters += game.explore(previous_iters + 1);
-                    // println!("[end of game] {:?}", game.board);
-                } else {
-                    inner_iters += game.explore(previous_iters);
-                    // println!("🔍 continue exploring");
+                if !game.is_ended() {
+                    // in worst case scenario this will explore
+                    //   = 5 225 472 000 paths
+                    //   = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
+                    game.explore(depth + 1);
                 }
-            }
-
-            return inner_iters;
+            });
         });
-
-        let total_iters = inner_iters_list.sum();
-
-        return total_iters;
     }
 
     pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
