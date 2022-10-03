@@ -20,6 +20,13 @@ impl Game {
     }
 
     fn explore(&self, depth: u8) {
+        // prevent going too deep on first few moves
+        // this improves performance significantly
+        // once we have heuristics use it to cutoff instead of depth
+        if depth == 7 {
+            return;
+        }
+
         // println!("[depth={depth}]");
 
         // find all valid moves from this game state and execute them
