@@ -126,6 +126,12 @@ impl Game {
     pub fn simulate_simple_turn(&self) -> Game {
         println!("");
         println!("");
+
+        if self.is_ended() {
+            println!("  [game ended]");
+            return self.clone();
+        }
+
         println!("[start turn {}] {}", self.turn + 1, self.player_name());
         println!("  [player.cards_left] {:?}", self.player.cards_left());
         // println!("  [player] [{:?}]", self.player.cards);
@@ -201,11 +207,12 @@ impl Game {
     }
 
     pub fn max_depth_moves(target_depth: u8, max_depth: i8) -> u64 {
-        let is_exhaustive = TURN_MOVES.len() - (target_depth as usize) <= max_depth as usize;
+        let turn_moves_len = TURN_MOVES.len();
+        let is_exhaustive = turn_moves_len - (target_depth as usize) <= max_depth as usize;
 
-        println!(
-            "target_depth={target_depth}, max_depth={max_depth}, is_exhaustive={is_exhaustive}"
-        );
+        // println!(
+        //     "target_depth={target_depth}, max_depth={max_depth}, is_exhaustive={is_exhaustive}"
+        // );
 
         if max_depth == 0 || is_exhaustive {
             return Game::total_depth_moves(target_depth);
@@ -213,7 +220,7 @@ impl Game {
 
         let mut total: u64 = 1;
 
-        for i in 0..TURN_MOVES.len() {
+        for i in 0..turn_moves_len {
             let depth = target_depth as usize + i;
 
             // println!("#{i} depth={depth}");
@@ -222,7 +229,7 @@ impl Game {
                 break;
             }
 
-            if depth == TURN_MOVES.len() {
+            if depth == turn_moves_len {
                 break;
             }
 
@@ -235,6 +242,10 @@ impl Game {
     }
 
     pub fn total_depth_moves(depth: u8) -> u64 {
+        if depth >= DEPTH_MOVES.len() as u8 {
+            return 0;
+        }
+
         return DEPTH_MOVES[depth as usize];
     }
 

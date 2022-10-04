@@ -17,7 +17,7 @@ fn explore() {
     let mut game = Game::new();
 
     // take turns to significantly cull search space
-    let simulate_turns = 0;
+    let simulate_turns = 3;
 
     for _ in 0..simulate_turns {
         game = game.simulate_simple_turn();
