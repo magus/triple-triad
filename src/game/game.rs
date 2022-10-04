@@ -318,6 +318,11 @@ impl Game {
     }
 }
 
+// turn 1: 5 (card choices) to put into 9 (square choices)
+// turn 2: 5 (card choices) to put into 8 (square choices)
+// turn 3: 4 (card choices) to put into 7 (square choices)
+// ...
+// turn 9: 1 (card choices) to put into 1 (square choices)
 const TURN_MOVES: [u8; 9] = [45, 40, 28, 24, 15, 12, 6, 4, 1];
 
 const DEPTH_MOVES: [u64; 9] = [
