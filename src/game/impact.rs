@@ -14,3 +14,24 @@ pub static BOARD: [[Option<usize>; CARD_SIDES]; BOARD_SIZE] = [
     [Some(4), Some(8), None, Some(6)],
     [Some(5), None, None, Some(7)],
 ];
+
+#[derive(Debug, Copy, Clone)]
+pub struct ImpactPair {
+    pub square: usize,
+    pub card: u8,
+    pub impacted: u8,
+    pub sum: u8,
+}
+
+impl ImpactPair {
+    pub fn new(square: usize, card: u8, impacted: u8) -> ImpactPair {
+        let sum = card + impacted;
+
+        ImpactPair {
+            square,
+            card,
+            impacted,
+            sum,
+        }
+    }
+}

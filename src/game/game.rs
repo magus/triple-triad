@@ -3,7 +3,7 @@ use rayon::prelude::*;
 use crate::card;
 use crate::card::Card;
 use crate::game::constants::{self, BOARD_SIZE};
-use crate::game::impact;
+use crate::game::impact::{self, ImpactPair};
 use crate::player::Player;
 
 type Board = [Card; BOARD_SIZE];
@@ -183,11 +183,32 @@ impl Game {
         if card != card::EMPTY && self.board[index] == card::EMPTY {
             // place the card in this board square
             self.board[index] = card;
-            self.card_impact(card, index);
+
+            let is_combo = false;
+            self.card_impact(index, is_combo);
+
             return true;
         }
 
         return false;
+    }
+
+    pub fn flip(&mut self, square: usize) -> bool {
+        let is_player = self.turn_is_player();
+        let is_flip = self.board[square].is_player != is_player;
+
+        if is_flip {
+            // println!("flip {square}");
+            self.board[square].flip(is_player);
+        }
+
+        return is_flip;
+    }
+
+    pub fn flip_all(&mut self, squares: &Vec<usize>) {
+        for square in squares {
+            self.flip(*square);
+        }
     }
 
     pub fn is_flip(&self, placed: u8, impacted: u8) -> bool {
@@ -200,45 +221,158 @@ impl Game {
         return false;
     }
 
-    pub fn card_impact(&mut self, card: Card, index: usize) {
-        // println!("\n  flips");
+    // pub fn check_sides(&self, sides: HashMap<&str, ImpactPair>) {
+    pub fn check_sides(&mut self, sides: [Option<ImpactPair>; 4], is_combo: bool) {
+        // println!(
+        //     "{} check_sides {:?}",
+        //     if is_combo { "COMBO!" } else { "" },
+        //     sides
+        // );
 
-        for i_impact in 0..impact::BOARD[index].len() {
-            let impact = impact::BOARD[index][i_impact];
-            if let Some(square) = impact {
-                match self.board[square] {
-                    // if square is empty we do nothing
-                    card::EMPTY => {}
+        let mut combo_squares = vec![];
 
-                    impacted_card => {
-                        let is_flip;
+        // 1. check same/plus pairs first for combo squares
+        //    skip this step if we are already in a combo
+        if !is_combo {
+            let mut pair_flips = self.check_pairs(sides);
+            self.flip_all(&pair_flips);
+            combo_squares.append(&mut pair_flips);
+        }
 
-                        // handle [top, right, bottom, left]
-                        match i_impact {
-                            0 => {
-                                is_flip = self.is_flip(card.top(), impacted_card.bottom());
-                            }
-                            1 => {
-                                is_flip = self.is_flip(card.right(), impacted_card.left());
-                            }
-                            2 => {
-                                is_flip = self.is_flip(card.bottom(), impacted_card.top());
-                            }
-                            3 => {
-                                is_flip = self.is_flip(card.left(), impacted_card.right());
-                            }
-                            _ => panic!("unhandled card_impact i_impact [{}]", i_impact),
-                        };
-
-                        if is_flip {
-                            self.board[square].flip(card.is_player);
-                        }
+        // 2. then check and flip normal sides
+        //    making sure to include them in combo as well
+        for pair in sides {
+            if let Some(pair) = pair {
+                if self.is_flip(pair.card, pair.impacted) {
+                    if self.flip(pair.square) {
+                        combo_squares.push(pair.square);
                     }
                 }
             }
         }
 
-        // println!();
+        // 3. finally recurse by calling card_impact for each combo square
+        //    which was flipped by either
+        //       - same/plus pair above or
+        //       - normal flip while is_combo is true
+        // println!("combo_squares={:?}", combo_squares);
+        for square in combo_squares {
+            let is_combo = true;
+            self.card_impact(square, is_combo);
+        }
+    }
+
+    // https://www.reddit.com/r/ffxiv/comments/p54gkq/ahhh_exactly_what_i_wanted_to_do/
+    // each plus/same flipped card can create a combo
+    // this means it can flip the impacted cards of the impacted card (ignoring repeat plus/same rules)
+    // this process continues recursively until there are no flips
+    // we can implement this by calling card_impact on plus/same flipped cards with the combo flag
+    // pub fn check_pairs(&self, sides: HashMap<&str, ImpactPair>) -> Vec<usize> {
+    pub fn check_pairs(&self, sides: [Option<ImpactPair>; 4]) -> Vec<usize> {
+        let mut flips = vec![];
+
+        if let [Some(top), Some(right), Some(bottom), Some(left)] = sides {
+            // T | R | B | L
+            // 1 | 1 | 1 | 1
+            if top.sum == right.sum && bottom.sum == left.sum && left.sum == right.sum {
+                flips = vec![top.square, right.square, bottom.square, left.square];
+            }
+        } else if let [_, Some(right), Some(bottom), Some(left)] = sides {
+            // T | R | B | L
+            // 0 | 1 | 1 | 1
+            if right.sum == bottom.sum && bottom.sum == left.sum {
+                flips = vec![right.square, bottom.square, left.square];
+            }
+        } else if let [Some(top), _, Some(bottom), Some(left)] = sides {
+            // T | R | B | L
+            // 1 | 0 | 1 | 1
+            if top.sum == bottom.sum && bottom.sum == left.sum {
+                flips = vec![top.square, bottom.square, left.square];
+            }
+        } else if let [Some(top), Some(right), _, Some(left)] = sides {
+            // T | R | B | L
+            // 1 | 1 | 0 | 1
+            if top.sum == right.sum && right.sum == left.sum {
+                flips = vec![top.square, right.square, left.square];
+            }
+        } else if let [Some(top), Some(right), Some(bottom), _] = sides {
+            // T | R | B | L
+            // 1 | 1 | 1 | 0
+            if top.sum == right.sum && right.sum == bottom.sum {
+                flips = vec![top.square, right.square, bottom.square];
+            }
+        } else if let [Some(top), Some(right), _, _] = sides {
+            // T | R | B | L
+            // 1 | 1 | 0 | 0
+            if top.sum == right.sum {
+                flips = vec![top.square, right.square];
+            }
+        } else if let [_, Some(right), Some(bottom), _] = sides {
+            // T | R | B | L
+            // 0 | 1 | 1 | 0
+            if right.sum == bottom.sum {
+                flips = vec![right.square, bottom.square];
+            }
+        } else if let [_, _, Some(bottom), Some(left)] = sides {
+            // T | R | B | L
+            // 0 | 0 | 1 | 1
+            if bottom.sum == left.sum {
+                flips = vec![bottom.square, left.square];
+            }
+        } else if let [Some(top), _, _, Some(left)] = sides {
+            // T | R | B | L
+            // 1 | 0 | 0 | 1
+            if top.sum == left.sum {
+                flips = vec![top.square, left.square];
+            }
+        }
+
+        return flips;
+    }
+
+    pub fn card_impact(&mut self, index: usize, is_combo: bool) {
+        let card = self.board[index];
+
+        let mut sides = [None, None, None, None];
+
+        let impacts = impact::BOARD[index];
+
+        for i_impact in 0..impacts.len() {
+            let impact = impacts[i_impact];
+
+            if let Some(square) = impact {
+                match self.board[square] {
+                    // if square is empty we do nothing
+                    card::EMPTY => {}
+
+                    impacted => {
+                        // handle [top, right, bottom, left]
+                        match i_impact {
+                            0 => {
+                                sides[0] =
+                                    Some(ImpactPair::new(square, card.top(), impacted.bottom()));
+                            }
+                            1 => {
+                                sides[1] =
+                                    Some(ImpactPair::new(square, card.right(), impacted.left()));
+                            }
+                            2 => {
+                                sides[2] =
+                                    Some(ImpactPair::new(square, card.bottom(), impacted.top()));
+                            }
+                            3 => {
+                                sides[3] =
+                                    Some(ImpactPair::new(square, card.left(), impacted.right()));
+                            }
+                            _ => panic!("unhandled card_impact i_impact [{}]", i_impact),
+                        };
+                    }
+                }
+            }
+        }
+
+        // examine each pair now that we've collected them into vec
+        self.check_sides(sides, is_combo);
     }
 
     pub fn finish_turn(&mut self) {
