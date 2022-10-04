@@ -26,6 +26,7 @@ fn explore() {
     stopwatch.record("explore finished");
 }
 
+#[allow(dead_code)]
 fn simple_simulation() {
     let mut game = Game::new();
 
@@ -39,6 +40,7 @@ fn simple_simulation() {
     println!("{:?}", game);
 }
 
+#[allow(dead_code)]
 fn parallel_explore_max() {
     // 5 (card choices) to put into a single square
     // then * 40 ... for each choice after this turn
