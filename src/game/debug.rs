@@ -18,7 +18,7 @@ impl Game {
             let square = if card == card::EMPTY {
                 format!("  {i}  ")
             } else {
-                format!("{:?}({})", card, if card.is_player { "P" } else { "C" })
+                format!("{}({:?})", if card.is_player { "P" } else { "C" }, card)
             };
 
             parts.push(format!(" {} |", square));
