@@ -1,8 +1,9 @@
 use rayon::prelude::*;
-use std::fmt;
 
 use crate::card;
 use crate::card::Card;
+use crate::game::constants::{self, BOARD_SIZE};
+use crate::game::impact;
 use crate::player::Player;
 
 type Board = [Card; BOARD_SIZE];
@@ -43,7 +44,7 @@ impl Game {
 
         println!(
             "\n✅ done [{} paths evaluated]",
-            Game::max_depth_moves(start_turn, max_depth + 1)
+            constants::max_depth_moves(start_turn, max_depth + 1)
         );
     }
 
@@ -98,8 +99,8 @@ impl Game {
         if depth == 1 {
             // println!("depth={depth}, start_turn={start_turn}, max_depth={max_depth}");
 
-            let total_depth_moves = Game::total_depth_moves(target_depth);
-            let max_depth_moves = Game::max_depth_moves(target_depth, max_depth);
+            let total_depth_moves = constants::total_depth_moves(target_depth);
+            let max_depth_moves = constants::max_depth_moves(target_depth, max_depth);
             let score = 100.0 * (total_wins / max_depth_moves as f64);
             println!(
                 "\n{:.4}%  ({total_wins} / {max_depth_moves}) [{total_depth_moves}]\n  {:?}",
@@ -182,10 +183,62 @@ impl Game {
         if card != card::EMPTY && self.board[index] == card::EMPTY {
             // place the card in this board square
             self.board[index] = card;
+            self.card_impact(card, index);
             return true;
         }
 
         return false;
+    }
+
+    pub fn is_flip(&self, placed: u8, impacted: u8) -> bool {
+        // TODO take into consideration rules
+
+        if placed > impacted {
+            return true;
+        }
+
+        return false;
+    }
+
+    pub fn card_impact(&mut self, card: Card, index: usize) {
+        // println!("\n  flips");
+
+        for i_impact in 0..impact::BOARD[index].len() {
+            let impact = impact::BOARD[index][i_impact];
+            if let Some(square) = impact {
+                match self.board[square] {
+                    // if square is empty we do nothing
+                    card::EMPTY => {}
+
+                    impacted_card => {
+                        let is_flip;
+
+                        // handle [top, right, bottom, left]
+                        match i_impact {
+                            0 => {
+                                is_flip = self.is_flip(card.top(), impacted_card.bottom());
+                            }
+                            1 => {
+                                is_flip = self.is_flip(card.right(), impacted_card.left());
+                            }
+                            2 => {
+                                is_flip = self.is_flip(card.bottom(), impacted_card.top());
+                            }
+                            3 => {
+                                is_flip = self.is_flip(card.left(), impacted_card.right());
+                            }
+                            _ => panic!("unhandled card_impact i_impact [{}]", i_impact),
+                        };
+
+                        if is_flip {
+                            self.board[square].flip(card.is_player);
+                        }
+                    }
+                }
+            }
+        }
+
+        // println!();
     }
 
     pub fn finish_turn(&mut self) {
@@ -209,48 +262,6 @@ impl Game {
         return self.turn == BOARD_SIZE as u8;
     }
 
-    pub fn max_depth_moves(target_depth: u8, max_depth: i8) -> u64 {
-        let is_exhaustive = BOARD_SIZE - (target_depth as usize) <= max_depth as usize;
-
-        // println!(
-        //     "target_depth={target_depth}, max_depth={max_depth}, is_exhaustive={is_exhaustive}"
-        // );
-
-        if max_depth == 0 || is_exhaustive {
-            return Game::total_depth_moves(target_depth);
-        }
-
-        let mut total: u64 = 1;
-
-        for i in 0..BOARD_SIZE {
-            let depth = target_depth as usize + i;
-
-            // println!("#{i} depth={depth}");
-
-            if i == max_depth as usize - 1 {
-                break;
-            }
-
-            if depth == BOARD_SIZE {
-                break;
-            }
-
-            let mult = TURN_MOVES[depth] as u64;
-            total *= mult;
-            // println!("mult={mult} total={total}");
-        }
-
-        return total;
-    }
-
-    pub fn total_depth_moves(depth: u8) -> u64 {
-        if depth >= BOARD_SIZE as u8 {
-            return 0;
-        }
-
-        return DEPTH_MOVES[depth as usize];
-    }
-
     pub fn new() -> Self {
         let board = [
             card::EMPTY,
@@ -264,60 +275,26 @@ impl Game {
             card::EMPTY,
         ];
 
-        let cards = [
-            Card {
-                name: "P1",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "P2",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "P3",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "P4",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "P5",
-                sides: (1, 1, 1, 1),
-            },
-        ];
-
-        let computer_cards = [
-            Card {
-                name: "C1",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "C2",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "C3",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "C4",
-                sides: (1, 1, 1, 1),
-            },
-            Card {
-                name: "C5",
-                sides: (1, 1, 1, 1),
-            },
-        ];
-
         let player = Player {
             is_player: true,
-            cards,
+            cards: [
+                Card::player("P1", 2, 2, 2, 2),
+                Card::player("P2", 2, 2, 2, 2),
+                Card::player("P3", 2, 2, 2, 2),
+                Card::player("P4", 2, 2, 2, 2),
+                Card::player("P5", 2, 2, 2, 2),
+            ],
         };
 
         let computer = Player {
             is_player: false,
-            cards: computer_cards,
+            cards: [
+                Card::computer("C1", 1, 1, 1, 1),
+                Card::computer("C2", 1, 1, 1, 1),
+                Card::computer("C3", 1, 1, 1, 1),
+                Card::computer("C4", 1, 1, 1, 1),
+                Card::computer("C5", 1, 1, 1, 1),
+            ],
         };
 
         return Game {
@@ -330,55 +307,3 @@ impl Game {
         };
     }
 }
-
-impl Game {
-    fn print_board(&self) -> String {
-        let mut parts: Vec<String> = vec![];
-
-        parts.push(String::from("\n"));
-        for i in 0..BOARD_SIZE {
-            if i % 3 == 0 {
-                parts.push(String::from("\n|"));
-            }
-
-            let card = self.board[i];
-            let square = if card == card::EMPTY {
-                format!(" {i}")
-            } else {
-                format!("{:?}", card)
-            };
-
-            parts.push(format!(" {} |", square));
-        }
-        parts.push(String::from("\n"));
-
-        return parts.join("");
-    }
-}
-
-impl fmt::Debug for Game {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.print_board())
-    }
-}
-
-const BOARD_SIZE: usize = 9;
-
-// turn 1: 5 (card choices) to put into 9 (square choices)
-// turn 2: 5 (card choices) to put into 8 (square choices)
-// turn 3: 4 (card choices) to put into 7 (square choices)
-// ...
-// turn 9: 1 (card choices) to put into 1 (square choices)
-const TURN_MOVES: [u8; BOARD_SIZE] = [45, 40, 28, 24, 15, 12, 6, 4, 1];
-
-const DEPTH_MOVES: [u64; BOARD_SIZE] = [
-    45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1,
-    40 * 28 * 24 * 15 * 12 * 6 * 4 * 1,
-    28 * 24 * 15 * 12 * 6 * 4 * 1,
-    24 * 15 * 12 * 6 * 4 * 1,
-    15 * 12 * 6 * 4 * 1,
-    12 * 6 * 4 * 1,
-    6 * 4 * 1,
-    4 * 1,
-    1,
-];
