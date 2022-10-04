@@ -1,14 +1,17 @@
 use rayon::prelude::*;
+use std::fmt;
 
 use crate::card;
 use crate::card::Card;
 use crate::player::Player;
 
-#[derive(Clone, Debug)]
+type Board = [Card; BOARD_SIZE];
+
+#[derive(Clone)]
 pub struct Game {
     pub turn: u8,
     pub is_player_first: bool,
-    pub board: [Card; 9],
+    pub board: Board,
 
     pub player: Player,
     pub computer: Player,
@@ -124,8 +127,8 @@ impl Game {
     }
 
     pub fn simulate_simple_turn(&self) -> Game {
-        println!("");
-        println!("");
+        println!();
+        println!();
 
         if self.is_ended() {
             println!("  [game ended]");
@@ -166,7 +169,7 @@ impl Game {
     pub fn squares_empty(&self) -> Vec<usize> {
         let mut card_index_list = vec![];
 
-        for i in 0..9 {
+        for i in 0..BOARD_SIZE {
             if self.board[i] == card::EMPTY {
                 card_index_list.push(i);
             }
@@ -203,12 +206,11 @@ impl Game {
     }
 
     pub fn is_ended(&self) -> bool {
-        return self.turn == 9;
+        return self.turn == BOARD_SIZE as u8;
     }
 
     pub fn max_depth_moves(target_depth: u8, max_depth: i8) -> u64 {
-        let turn_moves_len = TURN_MOVES.len();
-        let is_exhaustive = turn_moves_len - (target_depth as usize) <= max_depth as usize;
+        let is_exhaustive = BOARD_SIZE - (target_depth as usize) <= max_depth as usize;
 
         // println!(
         //     "target_depth={target_depth}, max_depth={max_depth}, is_exhaustive={is_exhaustive}"
@@ -220,7 +222,7 @@ impl Game {
 
         let mut total: u64 = 1;
 
-        for i in 0..turn_moves_len {
+        for i in 0..BOARD_SIZE {
             let depth = target_depth as usize + i;
 
             // println!("#{i} depth={depth}");
@@ -229,7 +231,7 @@ impl Game {
                 break;
             }
 
-            if depth == turn_moves_len {
+            if depth == BOARD_SIZE {
                 break;
             }
 
@@ -242,7 +244,7 @@ impl Game {
     }
 
     pub fn total_depth_moves(depth: u8) -> u64 {
-        if depth >= DEPTH_MOVES.len() as u8 {
+        if depth >= BOARD_SIZE as u8 {
             return 0;
         }
 
@@ -329,14 +331,47 @@ impl Game {
     }
 }
 
+impl Game {
+    fn print_board(&self) -> String {
+        let mut parts: Vec<String> = vec![];
+
+        parts.push(String::from("\n"));
+        for i in 0..BOARD_SIZE {
+            if i % 3 == 0 {
+                parts.push(String::from("\n|"));
+            }
+
+            let card = self.board[i];
+            let square = if card == card::EMPTY {
+                format!(" {i}")
+            } else {
+                format!("{:?}", card)
+            };
+
+            parts.push(format!(" {} |", square));
+        }
+        parts.push(String::from("\n"));
+
+        return parts.join("");
+    }
+}
+
+impl fmt::Debug for Game {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.print_board())
+    }
+}
+
+const BOARD_SIZE: usize = 9;
+
 // turn 1: 5 (card choices) to put into 9 (square choices)
 // turn 2: 5 (card choices) to put into 8 (square choices)
 // turn 3: 4 (card choices) to put into 7 (square choices)
 // ...
 // turn 9: 1 (card choices) to put into 1 (square choices)
-const TURN_MOVES: [u8; 9] = [45, 40, 28, 24, 15, 12, 6, 4, 1];
+const TURN_MOVES: [u8; BOARD_SIZE] = [45, 40, 28, 24, 15, 12, 6, 4, 1];
 
-const DEPTH_MOVES: [u64; 9] = [
+const DEPTH_MOVES: [u64; BOARD_SIZE] = [
     45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1,
     40 * 28 * 24 * 15 * 12 * 6 * 4 * 1,
     28 * 24 * 15 * 12 * 6 * 4 * 1,

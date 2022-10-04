@@ -1,10 +1,11 @@
 use crate::card;
 use crate::card::Card;
 
+type Hand = [Card; HAND_SIZE];
 #[derive(Clone, Debug)]
 pub struct Player {
     pub is_player: bool,
-    pub cards: [Card; 5],
+    pub cards: Hand,
 }
 
 impl Player {
@@ -30,3 +31,5 @@ impl Player {
         return card;
     }
 }
+
+const HAND_SIZE: usize = 5;
