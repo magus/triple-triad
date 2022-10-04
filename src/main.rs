@@ -1,5 +1,5 @@
 use rayon::prelude::*;
-use triple_triad::game::Game;
+use triple_triad::game::{constants, Game};
 use triple_triad::time::Stopwatch;
 
 fn main() {
@@ -17,7 +17,7 @@ fn explore() {
     let mut game = Game::new();
 
     // take turns to significantly cull search space
-    let simulate_turns = 3;
+    let simulate_turns = 0;
 
     for _ in 0..simulate_turns {
         game = game.simulate_simple_turn();
@@ -43,7 +43,7 @@ fn simple_simulation() {
 #[allow(dead_code)]
 fn parallel_explore_max() {
     let square_count: u64 = 9;
-    let moves_per_square = Game::total_depth_moves(0) / 9;
+    let moves_per_square = constants::total_depth_moves(0) / 9;
     let square_list: Vec<u64> = (0..square_count).collect();
 
     square_list.par_iter().for_each(|square| {
