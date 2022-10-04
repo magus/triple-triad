@@ -17,14 +17,12 @@ fn explore() {
 
     // take turns to significantly cull search space
     let simulate_turns = 0;
+
     for _ in 0..simulate_turns {
         game = game.simulate_simple_turn();
     }
 
-    println!("\n📊 results");
     game.start_explore();
-
-    println!("\n✅ done!");
     stopwatch.record("explore finished");
 }
 
