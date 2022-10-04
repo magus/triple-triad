@@ -1,4 +1,3 @@
-use rand::prelude::*;
 use rayon::prelude::*;
 
 use crate::card;
@@ -18,19 +17,40 @@ pub struct Game {
 impl Game {
     pub fn start_explore(&self) {
         let start_turn = self.turn;
-
-        let max_depth = 6;
         let depth = 0;
 
+        // on turn 1 the search space is worst case scenario
+        //
+        //     = 5 225 472 000 paths
+        //     = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
+        //
+        // so we set max_depth to 6 in order to significantly
+        // improve performance by cutting search space
+        //
+        //     =   217 728 000 paths
+        //     = 45 * 40 * 28 * 24 * 15 * 12
+        //
+        // once we have heuristics use it to cutoff instead of depth
+        // at max_depth we can instead use the score of a game to decide
+        // whether to recurse with game.explore, again culling search space
+        let max_depth = if start_turn > 0 { -1 } else { 6 };
+
+        println!("\n📊 results");
         self.explore(start_turn, max_depth, depth);
+
+        println!(
+            "\n✅ done [{} paths evaluated]",
+            Game::max_depth_moves(start_turn, max_depth + 1)
+        );
     }
 
-    fn explore(&self, start_turn: u8, max_depth: u8, depth: u8) -> u64 {
+    fn explore(&self, start_turn: u8, max_depth: i8, depth: u8) -> f64 {
         // println!("max_depth={max_depth}, start_turn={start_turn}, depth={depth}");
 
+        let target_depth = start_turn + 1;
         let next_depth = depth + 1;
-        // let depth = previous_depth + 1;
-        // println!("[depth={depth}]");
+
+        // println!("target_depth={target_depth}, depth={depth}, is_exhaustive={is_exhaustive}");
 
         // find all valid moves from this game state and execute them
         let is_player = self.turn_is_player();
@@ -43,71 +63,48 @@ impl Game {
 
         let win_count_square = square_choices.par_iter().map(|square| {
             let win_count_card = card_choices.par_iter().map(|card| {
-                // on turns 1 and 2 we cannot explore the full depth of search space
-                // so we must cutoff threads by some heuristic such as player score
-                // on turns 3+ we can fully explore the entire search space
-                // and use win/loss ratio as our ultimate heuristic
-
-                // in order to evalaute a branch of this depth-first search
-                //
-                //     heuristic_ratio = heuristic_count / total_iters
-                //
-                // total_iters: calculate for a given depth with math (based on is_player)
-                // heuristic_count: evalaluate and count the number which meet heuristic
-                // at depth 6 or 7 we can use heuristic_ratio to cutoff branches
-                // preventing us from exploring them more deeply, reducing search space
-
                 let game = self.execute_turn(is_player, *card, *square);
 
-                // prevent going too deep on first few moves
-                // this improves performance significantly
-                //
-                // worst case scenario, full depth of 8
-                //     = 5 225 472 000 paths
-                //     = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
-                //
-                // worst case scenario at depth of 5
-                //     =   217 728 000 paths
-                //     = 45 * 40 * 28 * 24 * 15 * 12
-                //
-                // once we have heuristics use it to cutoff instead of depth
-                //
                 if game.is_ended() {
-                    // calculate heuristic (win) and pass it upward
-                    // return 1;
-                    let is_win = rand::random::<f32>() < 0.2;
-                    return if is_win { 1 } else { 0 };
-                } else if next_depth == max_depth {
-                    // calculate heuristic (point) and pass it upward
-                    // return 1;
-                    let is_win = rand::random::<f32>() < 0.2;
-                    return if is_win { 1 } else { 0 };
+                    // pass win-loss back as 0 or 1
+                    let is_win = rand::random::<f64>() < 0.2;
+                    return if is_win { 1.0 } else { 0.0 };
+                } else if next_depth as i8 == max_depth {
+                    // println!("next_depth={next_depth}, max_depth={max_depth}");
+
+                    // evaluate board position as cards flipped for player
+                    // for example, `N / game.turn` will return a float in range [0,1]
+                    // this can be summed in the same way as win-loss above
+                    // let player_evaluation = rand::random::<f64>();
+                    // return player_evaluation;
+                    let is_win = rand::random::<f64>() < 0.2;
+                    return if is_win { 1.0 } else { 0.0 };
                 } else {
                     return game.explore(start_turn, max_depth, next_depth);
                 }
             });
 
-            let win_count_card_sum: u64 = win_count_card.sum();
+            let win_count_card_sum: f64 = win_count_card.sum();
             return win_count_card_sum;
         });
 
         // calculate heuristic and pass it upward
-        let win_count_square_sum: u64 = win_count_square.sum();
+        let total_wins: f64 = win_count_square.sum();
 
         // make decisions based on heuristics from one move ahead
         if depth == 1 {
             // println!("depth={depth}, start_turn={start_turn}, max_depth={max_depth}");
-            let target_depth = start_turn + 1;
+
             let total_depth_moves = Game::total_depth_moves(target_depth);
             let max_depth_moves = Game::max_depth_moves(target_depth, max_depth);
-            let score: f32 = 100.0 * (win_count_square_sum as f32 / max_depth_moves as f32);
+            let score = 100.0 * (total_wins / max_depth_moves as f64);
             println!(
-                "\n{:.4}%  ({win_count_square_sum} / {max_depth_moves}) [{total_depth_moves}]\n  {:?}",
+                "\n{:.4}%  ({total_wins} / {max_depth_moves}) [{total_depth_moves}]\n  {:?}",
                 score, self.board,
             );
         }
 
-        return win_count_square_sum;
+        return total_wins;
     }
 
     pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
@@ -203,12 +200,12 @@ impl Game {
         return self.turn == 9;
     }
 
-    pub fn max_depth_moves(target_depth: u8, max_depth: u8) -> u64 {
+    pub fn max_depth_moves(target_depth: u8, max_depth: i8) -> u64 {
         let is_exhaustive = TURN_MOVES.len() - (target_depth as usize) <= max_depth as usize;
 
-        // println!(
-        //     "target_depth={target_depth}, max_depth={max_depth}, is_exhaustive={is_exhaustive}"
-        // );
+        println!(
+            "target_depth={target_depth}, max_depth={max_depth}, is_exhaustive={is_exhaustive}"
+        );
 
         if max_depth == 0 || is_exhaustive {
             return Game::total_depth_moves(target_depth);
