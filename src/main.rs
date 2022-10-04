@@ -3,9 +3,9 @@ use triple_triad::game::Game;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    explore();
+    // explore();
 
-    // simple_simulation();
+    simple_simulation();
 
     // parallel_explore_max();
 }
@@ -33,11 +33,10 @@ fn simple_simulation() {
 
     // simulate 10 turns in sequence to verify basic game flow
     for _turn in 1..10 {
+        println!("{:?}", game);
         game = game.simulate_simple_turn();
     }
 
-    println!("");
-    println!("");
     println!("{:?}", game);
 }
 
