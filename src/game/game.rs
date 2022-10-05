@@ -75,7 +75,7 @@ impl Game {
 
         let win_count_square = square_choices.par_iter().map(|square| {
             let win_count_card = card_choices.par_iter().map(|card| {
-                let game = self.execute_turn(is_player, *card, *square);
+                let game = self.execute_turn(*card, *square);
 
                 if game.is_ended() {
                     // pass win-loss back as 0 or 1
@@ -119,10 +119,10 @@ impl Game {
         return total_wins;
     }
 
-    pub fn execute_turn(&self, is_player: bool, card_index: usize, square_index: usize) -> Game {
+    pub fn execute_turn(&self, card_index: usize, square_index: usize) -> Game {
         let mut game = self.clone();
 
-        if is_player {
+        if self.turn_is_player() {
             let card = game.player.use_card(card_index);
             game.place_card(card, square_index);
         } else {
@@ -162,7 +162,7 @@ impl Game {
             self.computer.cards_left()
         };
 
-        let game = self.execute_turn(is_player, card_choices[0], square_choices[0]);
+        let game = self.execute_turn(card_choices[0], square_choices[0]);
 
         println!("[end turn {}]", game.turn);
         println!("  [player.cards_left] {:?}", game.player.cards_left());
@@ -232,7 +232,6 @@ impl Game {
         return false;
     }
 
-    // pub fn check_sides(&self, sides: HashMap<&str, ImpactPair>) {
     pub fn check_sides(&mut self, sides: [Option<ImpactPair>; 4], is_combo: bool) {
         // println!(
         //     "{} check_sides {:?}",
