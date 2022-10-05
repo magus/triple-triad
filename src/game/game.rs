@@ -8,9 +8,10 @@ use crate::player::Player;
 
 type Board = [Card; BOARD_SIZE];
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Rules {
     pub plus: bool,
+    pub same: bool,
 }
 
 #[derive(Clone)]
@@ -245,7 +246,13 @@ impl Game {
         //    skip this step if we are already in a combo
         if !is_combo {
             if self.rules.plus {
-                let mut pair_flips = self.check_pairs(sides);
+                let mut pair_flips = self.check_pairs(sides, plus_pairs);
+                self.flip_all(&pair_flips);
+                combo_squares.append(&mut pair_flips);
+            }
+
+            if self.rules.same {
+                let mut pair_flips = self.check_pairs(sides, same_pairs);
                 self.flip_all(&pair_flips);
                 combo_squares.append(&mut pair_flips);
             }
@@ -274,72 +281,170 @@ impl Game {
         }
     }
 
+    pub fn is_valid_plus_same(&self, squares: &Vec<usize>) -> bool {
+        let is_player = self.turn_is_player();
+
+        // plus and same require at least one card in group to belong to opponent
+        return squares
+            .iter()
+            .any(|&square| self.board[square].is_player != is_player);
+    }
+
     // https://www.reddit.com/r/ffxiv/comments/p54gkq/ahhh_exactly_what_i_wanted_to_do/
     // each plus/same flipped card can create a combo
     // this means it can flip the impacted cards of the impacted card (ignoring repeat plus/same rules)
     // this process continues recursively until there are no flips
     // we can implement this by calling card_impact on plus/same flipped cards with the combo flag
-    // pub fn check_pairs(&self, sides: HashMap<&str, ImpactPair>) -> Vec<usize> {
-    pub fn check_pairs(&self, sides: [Option<ImpactPair>; 4]) -> Vec<usize> {
-        let mut flips = vec![];
+    pub fn check_pairs(
+        &self,
+        sides: [Option<ImpactPair>; 4],
+        check_fn: fn(Vec<ImpactPair>) -> Option<Vec<usize>>,
+    ) -> Vec<usize> {
+        // println!("sides {:?}", sides);
 
         if let [Some(top), Some(right), Some(bottom), Some(left)] = sides {
-            // T | R | B | L
-            // 1 | 1 | 1 | 1
-            if top.sum == right.sum && bottom.sum == left.sum && left.sum == right.sum {
-                flips = vec![top.square, right.square, bottom.square, left.square];
-            }
-        } else if let [_, Some(right), Some(bottom), Some(left)] = sides {
-            // T | R | B | L
-            // 0 | 1 | 1 | 1
-            if right.sum == bottom.sum && bottom.sum == left.sum {
-                flips = vec![right.square, bottom.square, left.square];
-            }
-        } else if let [Some(top), _, Some(bottom), Some(left)] = sides {
-            // T | R | B | L
-            // 1 | 0 | 1 | 1
-            if top.sum == bottom.sum && bottom.sum == left.sum {
-                flips = vec![top.square, bottom.square, left.square];
-            }
-        } else if let [Some(top), Some(right), _, Some(left)] = sides {
-            // T | R | B | L
-            // 1 | 1 | 0 | 1
-            if top.sum == right.sum && right.sum == left.sum {
-                flips = vec![top.square, right.square, left.square];
-            }
-        } else if let [Some(top), Some(right), Some(bottom), _] = sides {
-            // T | R | B | L
-            // 1 | 1 | 1 | 0
-            if top.sum == right.sum && right.sum == bottom.sum {
-                flips = vec![top.square, right.square, bottom.square];
-            }
-        } else if let [Some(top), Some(right), _, _] = sides {
-            // T | R | B | L
-            // 1 | 1 | 0 | 0
-            if top.sum == right.sum {
-                flips = vec![top.square, right.square];
-            }
-        } else if let [_, Some(right), Some(bottom), _] = sides {
-            // T | R | B | L
-            // 0 | 1 | 1 | 0
-            if right.sum == bottom.sum {
-                flips = vec![right.square, bottom.square];
-            }
-        } else if let [_, _, Some(bottom), Some(left)] = sides {
-            // T | R | B | L
-            // 0 | 0 | 1 | 1
-            if bottom.sum == left.sum {
-                flips = vec![bottom.square, left.square];
-            }
-        } else if let [Some(top), _, _, Some(left)] = sides {
-            // T | R | B | L
-            // 1 | 0 | 0 | 1
-            if top.sum == left.sum {
-                flips = vec![top.square, left.square];
+            //   T
+            // L   R
+            //   B
+
+            if let Some(flips) = check_fn(vec![top, right, bottom, left]) {
+                if self.is_valid_plus_same(&flips) {
+                    return flips;
+                }
             }
         }
 
-        return flips;
+        if let [_, Some(right), Some(bottom), Some(left)] = sides {
+            //   -
+            // L   R
+            //   B
+
+            if let Some(flips) = check_fn(vec![right, bottom, left]) {
+                if self.is_valid_plus_same(&flips) {
+                    return flips;
+                }
+            }
+        }
+
+        if let [Some(top), _, Some(bottom), Some(left)] = sides {
+            //   T
+            // L   -
+            //   B
+
+            if let Some(flips) = check_fn(vec![top, bottom, left]) {
+                if self.is_valid_plus_same(&flips) {
+                    return flips;
+                }
+            }
+        }
+
+        if let [Some(top), Some(right), _, Some(left)] = sides {
+            //   T
+            // L   R
+            //   -
+
+            if let Some(flips) = check_fn(vec![top, right, left]) {
+                if self.is_valid_plus_same(&flips) {
+                    return flips;
+                }
+            }
+        }
+
+        if let [Some(top), Some(right), Some(bottom), _] = sides {
+            //   T
+            // -   R
+            //   B
+
+            if let Some(flips) = check_fn(vec![top, right, bottom]) {
+                if self.is_valid_plus_same(&flips) {
+                    return flips;
+                }
+            }
+        }
+
+        // if we didn't have a pure 4 match or a 3 match then
+        // we could have 1 or 2 pairs here so we must check them all
+        //
+        // example with two pairs
+        //
+        //     2
+        //     1
+        // 1 2   2 3
+        //     3
+        //     2
+        //
+        // T + L form plus of 3
+        // R + B form plus of 5
+
+        let mut pair_flips = vec![];
+
+        if let [Some(top), Some(right), _, _] = sides {
+            //   T
+            // -   R
+            //   -
+
+            if let Some(mut flips) = check_fn(vec![top, right]) {
+                pair_flips.append(&mut flips);
+            }
+        }
+
+        if let [Some(top), _, Some(bottom), _] = sides {
+            //   T
+            // -   -
+            //   B
+
+            if let Some(mut flips) = check_fn(vec![top, bottom]) {
+                pair_flips.append(&mut flips);
+            }
+        }
+
+        if let [Some(top), _, _, Some(left)] = sides {
+            //   T
+            // L   -
+            //   -
+
+            if let Some(mut flips) = check_fn(vec![top, left]) {
+                pair_flips.append(&mut flips);
+            }
+        }
+
+        if let [_, Some(right), Some(bottom), _] = sides {
+            //   -
+            // -   R
+            //   B
+
+            if let Some(mut flips) = check_fn(vec![right, bottom]) {
+                pair_flips.append(&mut flips);
+            }
+        }
+
+        if let [_, Some(right), _, Some(left)] = sides {
+            //   -
+            // L   R
+            //   -
+
+            if let Some(mut flips) = check_fn(vec![right, left]) {
+                pair_flips.append(&mut flips);
+            }
+        }
+
+        if let [_, _, Some(bottom), Some(left)] = sides {
+            //   -
+            // L   -
+            //   B
+
+            if let Some(mut flips) = check_fn(vec![bottom, left]) {
+                pair_flips.append(&mut flips);
+            }
+        }
+
+        // println!("pair_flips {:?}", pair_flips);
+
+        if self.is_valid_plus_same(&pair_flips) {
+            return pair_flips;
+        }
+
+        return vec![];
     }
 
     pub fn card_impact(&mut self, index: usize, is_combo: bool) {
@@ -448,7 +553,10 @@ impl Game {
             ],
         };
 
-        let rules = Rules { plus: false };
+        let rules = Rules {
+            plus: false,
+            same: false,
+        };
 
         return Game {
             turn: 0,
@@ -461,4 +569,74 @@ impl Game {
             computer,
         };
     }
+}
+
+pub fn same_pairs(pairs: Vec<ImpactPair>) -> Option<Vec<usize>> {
+    match pairs.len() {
+        4 => {
+            let a = pairs[0];
+            let b = pairs[1];
+            let c = pairs[2];
+            let d = pairs[3];
+
+            if a.same && b.same && c.same && d.same {
+                return Some(vec![a.square, b.square, c.square, d.square]);
+            }
+        }
+        3 => {
+            let a = pairs[0];
+            let b = pairs[1];
+            let c = pairs[2];
+
+            if a.same && b.same && c.same {
+                return Some(vec![a.square, b.square, c.square]);
+            }
+        }
+        2 => {
+            let a = pairs[0];
+            let b = pairs[1];
+
+            if a.same && b.same {
+                return Some(vec![a.square, b.square]);
+            }
+        }
+        _ => panic!("unexpected same_pairs [{:?}]", pairs),
+    }
+
+    return None;
+}
+
+pub fn plus_pairs(pairs: Vec<ImpactPair>) -> Option<Vec<usize>> {
+    match pairs.len() {
+        4 => {
+            let a = pairs[0];
+            let b = pairs[1];
+            let c = pairs[2];
+            let d = pairs[3];
+
+            if a.sum == b.sum && c.sum == d.sum && a.sum == d.sum {
+                return Some(vec![a.square, b.square, c.square, d.square]);
+            }
+        }
+        3 => {
+            let a = pairs[0];
+            let b = pairs[1];
+            let c = pairs[2];
+
+            if a.sum == b.sum && b.sum == c.sum {
+                return Some(vec![a.square, b.square, c.square]);
+            }
+        }
+        2 => {
+            let a = pairs[0];
+            let b = pairs[1];
+
+            if a.sum == b.sum {
+                return Some(vec![a.square, b.square]);
+            }
+        }
+        _ => panic!("unexpected plus_pairs [{:?}]", pairs),
+    }
+
+    return None;
 }
