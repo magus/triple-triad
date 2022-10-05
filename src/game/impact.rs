@@ -25,17 +25,21 @@ pub struct ImpactPair {
     pub impacted: u8,
     // used for plus rule
     pub sum: u8,
+    // used for same rule
+    pub same: bool,
 }
 
 impl ImpactPair {
     pub fn new(square: usize, card: u8, impacted: u8) -> ImpactPair {
         let sum = card + impacted;
+        let same = card == impacted;
 
         ImpactPair {
             square,
             card,
             impacted,
             sum,
+            same,
         }
     }
 }
