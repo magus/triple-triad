@@ -34,8 +34,8 @@ fn explore() {
 fn custom_simulation() {
     let mut game = Game::new();
 
-    // game.rules.same = true;
-    // game.rules.plus = true;
+    game.rules.same = true;
+    game.rules.plus = true;
 
     game.player.cards = [
         Card::player("P0", 1, 1, 1, 1),
