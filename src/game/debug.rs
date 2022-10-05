@@ -1,31 +1,110 @@
+use colored::*;
 use std::fmt;
 
-use crate::card;
-use crate::game::constants::BOARD_SIZE;
+use crate::card::Card;
+use crate::game::constants::ROW_SIZE;
 use crate::game::Game;
 
+fn print_card_color(card: Card, text: String) -> String {
+    let ((t_r, t_g, t_b), (r, g, b)) = card.rgb_color();
+
+    return text
+        .truecolor(t_r, t_g, t_b)
+        .on_truecolor(r, g, b)
+        .to_string();
+}
+
 impl Game {
-    fn print_board(&self) -> String {
-        let mut parts: Vec<String> = vec![];
+    fn print_board_row(&self, row: usize) {
+        let row_start = row * ROW_SIZE;
+        let row_end = (row + 1) * ROW_SIZE;
 
-        parts.push(String::from("\n"));
-        for i in 0..BOARD_SIZE {
-            if i % 3 == 0 {
-                parts.push(String::from("\n|"));
-            }
+        println!();
 
+        for i in row_start..row_end {
             let card = self.board[i];
-            let square = if card == card::EMPTY {
-                format!("  {i}  ")
-            } else {
-                format!("{}({:?})", if card.is_player { "P" } else { "C" }, card)
-            };
 
-            parts.push(format!(" {} |", square));
+            print!(
+                "{}",
+                print_card_color(card, format!("{}          ", card.name))
+            );
+            print!(" ");
         }
-        parts.push(String::from("\n"));
 
-        return parts.join("");
+        println!();
+
+        for i in row_start..row_end {
+            let card = self.board[i];
+
+            print!(
+                "{}",
+                print_card_color(card, format!("     {}      ", card.print_top()))
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in row_start..row_end {
+            let card = self.board[i];
+
+            print!(
+                "{}",
+                print_card_color(
+                    card,
+                    format!("  {}     {}   ", card.print_left(), card.print_right())
+                )
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in row_start..row_end {
+            let card = self.board[i];
+            print!(
+                "{}",
+                print_card_color(card, format!("     {}      ", card.print_bottom()))
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in row_start..row_end {
+            let card = self.board[i];
+            print!("{}", print_card_color(card, "            ".to_string()));
+            print!(" ");
+        }
+    }
+
+    fn print_board(&self) {
+        // print diamond of sides for better card side visuals
+        //
+        // example
+        // 1. print the top of all cards in top row
+        // 2. print the left/right of all cards in top row
+        // 3. print the bottom of all cards in top row
+        // 4. repeat for middle row
+        // 5. repeat for bottom row
+        //
+        //   T      T      T
+        // L   R  L   R  L   R
+        //   B      B      B
+        //
+        // end result should be easier to read/reason about
+
+        self.print_board_row(0);
+        println!();
+        self.print_board_row(1);
+        println!();
+        self.print_board_row(2);
+        println!();
+        println!();
+    }
+
+    fn print_turn(&self) -> String {
+        return format!("Turn: {}", self.turn);
     }
 
     fn print_score(&self) -> String {
@@ -36,6 +115,14 @@ impl Game {
 
 impl fmt::Debug for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", [self.print_board(), self.print_score()].join("\n"))
+        self.print_board();
+
+        write!(
+            f,
+            "{}",
+            [&self.print_turn(), &self.print_score(), SEPARATOR].join("\n")
+        )
     }
 }
+
+const SEPARATOR: &str = "========================";
