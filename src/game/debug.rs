@@ -29,7 +29,8 @@ impl Game {
     }
 
     fn print_score(&self) -> String {
-        return format!("Score: {}", self.score);
+        let (percent, score, turn) = self.percent_score();
+        return format!("Score: {:.2}% ({} / {})", percent, score, turn);
     }
 }
 
