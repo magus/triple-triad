@@ -8,11 +8,17 @@ use crate::player::Player;
 
 type Board = [Card; BOARD_SIZE];
 
+#[derive(Copy, Clone)]
+pub struct Rules {
+    pub plus: bool,
+}
+
 #[derive(Clone)]
 pub struct Game {
     pub turn: u8,
     pub is_player_first: bool,
     pub score: i8,
+    pub rules: Rules,
     pub board: Board,
 
     pub player: Player,
@@ -238,9 +244,11 @@ impl Game {
         // 1. check same/plus pairs first for combo squares
         //    skip this step if we are already in a combo
         if !is_combo {
-            let mut pair_flips = self.check_pairs(sides);
-            self.flip_all(&pair_flips);
-            combo_squares.append(&mut pair_flips);
+            if self.rules.plus {
+                let mut pair_flips = self.check_pairs(sides);
+                self.flip_all(&pair_flips);
+                combo_squares.append(&mut pair_flips);
+            }
         }
 
         // 2. then check and flip normal sides
@@ -440,10 +448,13 @@ impl Game {
             ],
         };
 
+        let rules = Rules { plus: false };
+
         return Game {
             turn: 0,
             is_player_first: true,
             score: 0,
+            rules,
             board,
 
             player,
