@@ -2,6 +2,7 @@ use crate::card;
 use crate::card::Card;
 
 type Hand = [Card; HAND_SIZE];
+
 #[derive(Clone, Debug)]
 pub struct Player {
     pub is_player: bool,
