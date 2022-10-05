@@ -263,7 +263,10 @@ impl Game {
             if let Some(pair) = pair {
                 if self.is_flip(pair.card, pair.impacted) {
                     if self.flip(pair.square) {
-                        combo_squares.push(pair.square);
+                        // if we are in combo then normal flips can continue the combo
+                        if is_combo {
+                            combo_squares.push(pair.square);
+                        }
                     }
                 }
             }
