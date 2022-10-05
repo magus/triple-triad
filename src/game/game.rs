@@ -383,6 +383,11 @@ impl Game {
         self.turn += 1;
     }
 
+    pub fn percent_score(&self) -> (f32, i8, u8) {
+        let percent = 100.0 * (self.score as f32 / self.turn as f32);
+        return (percent, self.score, self.turn);
+    }
+
     pub fn turn_is_player(&self) -> bool {
         let remainder: u8 = if self.is_player_first { 0 } else { 1 };
         return self.turn % 2 == remainder;
