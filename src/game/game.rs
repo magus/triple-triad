@@ -536,22 +536,22 @@ impl Game {
         let player = Player {
             is_player: true,
             cards: [
+                Card::player("P0", 2, 2, 2, 2),
                 Card::player("P1", 2, 2, 2, 2),
                 Card::player("P2", 2, 2, 2, 2),
                 Card::player("P3", 2, 2, 2, 2),
                 Card::player("P4", 2, 2, 2, 2),
-                Card::player("P5", 2, 2, 2, 2),
             ],
         };
 
         let computer = Player {
             is_player: false,
             cards: [
+                Card::computer("C0", 1, 1, 1, 1),
                 Card::computer("C1", 1, 1, 1, 1),
                 Card::computer("C2", 1, 1, 1, 1),
                 Card::computer("C3", 1, 1, 1, 1),
                 Card::computer("C4", 1, 1, 1, 1),
-                Card::computer("C5", 1, 1, 1, 1),
             ],
         };
 
