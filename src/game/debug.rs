@@ -27,10 +27,14 @@ impl Game {
 
         return parts.join("");
     }
+
+    fn print_score(&self) -> String {
+        return format!("Score: {}", self.score);
+    }
 }
 
 impl fmt::Debug for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.print_board())
+        write!(f, "{}", [self.print_board(), self.print_score()].join("\n"))
     }
 }
