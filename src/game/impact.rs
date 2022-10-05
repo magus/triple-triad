@@ -17,9 +17,13 @@ pub static BOARD: [[Option<usize>; CARD_SIDES]; BOARD_SIZE] = [
 
 #[derive(Debug, Copy, Clone)]
 pub struct ImpactPair {
+    // the target of the impact, i.e. square that may be flipped
     pub square: usize,
+    // the source card value for this impact side
     pub card: u8,
+    // the target card value for this impact side
     pub impacted: u8,
+    // used for plus rule
     pub sum: u8,
 }
 
