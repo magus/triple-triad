@@ -12,6 +12,7 @@ type Board = [Card; BOARD_SIZE];
 pub struct Game {
     pub turn: u8,
     pub is_player_first: bool,
+    pub score: i8,
     pub board: Board,
 
     pub player: Player,
@@ -186,6 +187,7 @@ impl Game {
 
             let is_combo = false;
             self.card_impact(index, is_combo);
+            self.score += if self.turn_is_player() { 1 } else { 0 };
 
             return true;
         }
@@ -198,8 +200,10 @@ impl Game {
         let is_flip = self.board[square].is_player != is_player;
 
         if is_flip {
-            // println!("flip {square}");
+            // println!("♻️ flip! [{square}] for [{}]", self.player_name());
+
             self.board[square].flip(is_player);
+            self.score += if is_player { 1 } else { -1 };
         }
 
         return is_flip;
@@ -434,6 +438,7 @@ impl Game {
         return Game {
             turn: 0,
             is_player_first: true,
+            score: 0,
             board,
 
             player,
