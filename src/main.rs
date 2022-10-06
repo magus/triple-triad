@@ -37,12 +37,24 @@ fn explore() {
         Card::computer("C4", 1, 1, 1, 1),
     ];
 
-    // take turns to significantly cull search space
-    let simulate_turns = 0;
-
-    for _ in 0..simulate_turns {
-        game = game.simulate_simple_turn();
-    }
+    game = game.execute_turn(3, 8);
+    println!("{:?}", game);
+    game = game.execute_turn(3, 5);
+    println!("{:?}", game);
+    game = game.execute_turn(2, 7);
+    println!("{:?}", game);
+    game = game.execute_turn(0, 4);
+    println!("{:?}", game);
+    game = game.execute_turn(1, 6);
+    println!("{:?}", game);
+    game = game.execute_turn(1, 3);
+    println!("{:?}", game);
+    game = game.execute_turn(0, 0);
+    println!("{:?}", game);
+    game = game.execute_turn(2, 1);
+    println!("{:?}", game);
+    game = game.execute_turn(4, 2);
+    println!("{:?}", game);
 
     game.start_explore();
     stopwatch.record("explore finished");
