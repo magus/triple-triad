@@ -4,17 +4,36 @@ use triple_triad::game::{constants, Game};
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    // explore();
+    explore();
+    // simple_explore();
 
     // simple_simulation();
-
-    custom_simulation();
+    // custom_simulation();
 
     // parallel_explore_max();
 }
 
 #[allow(dead_code)]
 fn explore() {
+    let mut stopwatch = Stopwatch::start();
+
+    let mut game = Game::new();
+
+    // game.rules.plus = true;
+
+    // take turns to significantly cull search space
+    let simulate_turns = 0;
+
+    for _ in 0..simulate_turns {
+        game = game.simulate_simple_turn();
+    }
+
+    game.start_explore();
+    stopwatch.record("explore finished");
+}
+
+#[allow(dead_code)]
+fn simple_explore() {
     let mut stopwatch = Stopwatch::start();
 
     let mut game = Game::new();
