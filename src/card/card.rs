@@ -57,6 +57,8 @@ impl Card {
     fn print_side(&self, side: u8) -> String {
         return if self.is_empty {
             " ".to_string()
+        } else if side == 10 {
+            "A".to_string()
         } else {
             format!("{}", side)
         };
