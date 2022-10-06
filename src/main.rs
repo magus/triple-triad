@@ -4,11 +4,11 @@ use triple_triad::game::{constants, Game};
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    // explore();
+    explore();
     // simple_explore();
 
     // simple_simulation();
-    custom_simulation();
+    // custom_simulation();
 
     // parallel_explore_max();
 }
@@ -20,6 +20,22 @@ fn explore() {
     let mut game = Game::new();
 
     // game.rules.plus = true;
+
+    game.player.cards = [
+        Card::player("P0", 10, 10, 10, 10),
+        Card::player("P1", 1, 1, 1, 1),
+        Card::player("P2", 1, 2, 1, 1),
+        Card::player("P3", 1, 1, 1, 1),
+        Card::player("P4", 1, 2, 3, 2),
+    ];
+
+    game.computer.cards = [
+        Card::computer("C0", 1, 1, 2, 1),
+        Card::computer("C1", 1, 1, 1, 3),
+        Card::computer("C2", 2, 1, 1, 1),
+        Card::computer("C3", 4, 1, 4, 1),
+        Card::computer("C4", 1, 1, 1, 1),
+    ];
 
     // take turns to significantly cull search space
     let simulate_turns = 0;
