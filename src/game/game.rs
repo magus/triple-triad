@@ -1,4 +1,5 @@
 use rayon::prelude::*;
+use std::sync::{Arc, Mutex};
 
 use crate::card;
 use crate::card::Card;
@@ -47,8 +48,40 @@ impl Game {
         // whether to recurse with game.explore, again culling search space
         let max_depth = if start_turn > 0 { -1 } else { 6 };
 
+        // collect results across threads into shard vector
+        let results: Arc<Mutex<Vec<(f64, Game)>>> = Arc::new(Mutex::new(Vec::new()));
+
+        self.explore(start_turn, max_depth, depth, &results);
+
         println!("\n📊 results");
-        self.explore(start_turn, max_depth, depth);
+
+        // sort results by comparing score values
+        let mut safe_results = results.lock().unwrap();
+        safe_results.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+
+        // show up to top 3 moves
+        let show_count = std::cmp::min(3, safe_results.len());
+
+        for i in 0..show_count {
+            let (score, game) = &safe_results[i];
+            let total_depth_moves = constants::total_depth_moves(game.turn);
+            let max_depth_moves = constants::max_depth_moves(game.turn, max_depth);
+
+            let is_estimate = max_depth_moves < total_depth_moves;
+
+            if is_estimate {
+                println!("\n{:.4}% chance to win", score);
+                println!("{max_depth_moves} moves evaluated (out of {total_depth_moves} possible)");
+            } else {
+                println!("\n{:.4}% chance to win", score);
+                println!("{total_depth_moves} moves evaluated");
+            }
+
+            println!();
+            println!("{:?}", game);
+
+            println!("========================");
+        }
 
         println!(
             "\n✅ done [{} paths evaluated]",
@@ -56,7 +89,13 @@ impl Game {
         );
     }
 
-    fn explore(&self, start_turn: u8, max_depth: i8, depth: u8) -> f64 {
+    fn explore(
+        &self,
+        start_turn: u8,
+        max_depth: i8,
+        depth: u8,
+        results: &Arc<Mutex<Vec<(f64, Game)>>>,
+    ) -> f64 {
         // println!("max_depth={max_depth}, start_turn={start_turn}, depth={depth}");
 
         let target_depth = start_turn + 1;
@@ -87,12 +126,9 @@ impl Game {
                     // evaluate board position as cards flipped for player
                     // for example, `N / game.turn` will return a float in range [0,1]
                     // this can be summed in the same way as win-loss above
-                    // let player_evaluation = rand::random::<f64>();
-                    // return player_evaluation;
-                    let is_win = rand::random::<f64>() < 0.2;
-                    return if is_win { 100.0 } else { 0.0 };
+                    return self.percent_score();
                 } else {
-                    return game.explore(start_turn, max_depth, next_depth);
+                    return game.explore(start_turn, max_depth, next_depth, results);
                 }
             });
 
@@ -105,21 +141,10 @@ impl Game {
 
         // make decisions based on heuristics from one move ahead
         if depth == 1 {
-            // println!("depth={depth}, start_turn={start_turn}, max_depth={max_depth}");
-
-            let total_depth_moves = constants::total_depth_moves(target_depth);
             let max_depth_moves = constants::max_depth_moves(target_depth, max_depth);
             let score = total_score / max_depth_moves as f64;
 
-            let is_estimate = max_depth_moves < total_depth_moves;
-
-            if is_estimate {
-                println!("\n{:.4}%  ({max_depth_moves} / {total_depth_moves})", score);
-            } else {
-                println!("\n{:.4}%  ({total_depth_moves})", score);
-            }
-
-            println!("{:?}", self);
+            results.lock().unwrap().push((score, self.clone()));
         }
 
         return total_score;
