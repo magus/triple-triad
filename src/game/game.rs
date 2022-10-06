@@ -73,14 +73,14 @@ impl Game {
             self.computer.cards_left()
         };
 
-        let win_count_square = square_choices.par_iter().map(|square| {
-            let win_count_card = card_choices.par_iter().map(|card| {
+        let total_moves = square_choices.par_iter().map(|square| {
+            let total_square = card_choices.par_iter().map(|card| {
                 let game = self.execute_turn(*card, *square);
 
                 if game.is_ended() {
                     // pass win-loss back as 0 or 1
                     let is_win = rand::random::<f64>() < 0.2;
-                    return if is_win { 1.0 } else { 0.0 };
+                    return if is_win { 100.0 } else { 0.0 };
                 } else if next_depth as i8 == max_depth {
                     // println!("next_depth={next_depth}, max_depth={max_depth}");
 
@@ -90,18 +90,18 @@ impl Game {
                     // let player_evaluation = rand::random::<f64>();
                     // return player_evaluation;
                     let is_win = rand::random::<f64>() < 0.2;
-                    return if is_win { 1.0 } else { 0.0 };
+                    return if is_win { 100.0 } else { 0.0 };
                 } else {
                     return game.explore(start_turn, max_depth, next_depth);
                 }
             });
 
-            let win_count_card_sum: f64 = win_count_card.sum();
-            return win_count_card_sum;
+            let total_square_sum: f64 = total_square.sum();
+            return total_square_sum;
         });
 
         // calculate heuristic and pass it upward
-        let total_wins: f64 = win_count_square.sum();
+        let total_score: f64 = total_moves.sum();
 
         // make decisions based on heuristics from one move ahead
         if depth == 1 {
@@ -109,15 +109,20 @@ impl Game {
 
             let total_depth_moves = constants::total_depth_moves(target_depth);
             let max_depth_moves = constants::max_depth_moves(target_depth, max_depth);
-            let score = 100.0 * (total_wins / max_depth_moves as f64);
-            println!(
-                "\n{:.4}%  ({total_wins} / {max_depth_moves}) [{total_depth_moves}]",
-                score,
-            );
+            let score = total_score / max_depth_moves as f64;
+
+            let is_estimate = max_depth_moves < total_depth_moves;
+
+            if is_estimate {
+                println!("\n{:.4}%  ({max_depth_moves} / {total_depth_moves})", score);
+            } else {
+                println!("\n{:.4}%  ({total_depth_moves})", score);
+            }
+
             println!("{:?}", self);
         }
 
-        return total_wins;
+        return total_score;
     }
 
     pub fn execute_turn(&self, card_index: usize, square_index: usize) -> Game {
