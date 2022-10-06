@@ -111,9 +111,10 @@ impl Game {
             let max_depth_moves = constants::max_depth_moves(target_depth, max_depth);
             let score = 100.0 * (total_wins / max_depth_moves as f64);
             println!(
-                "\n{:.4}%  ({total_wins} / {max_depth_moves}) [{total_depth_moves}]\n  {:?}",
-                score, self.board,
+                "\n{:.4}%  ({total_wins} / {max_depth_moves}) [{total_depth_moves}]",
+                score,
             );
+            println!("{:?}", self);
         }
 
         return total_wins;
