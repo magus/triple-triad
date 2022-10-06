@@ -73,7 +73,7 @@ impl Game {
 
         for i in row_start..row_end {
             let card = self.board[i];
-            print!("{}", print_card_color(card, "            ".to_string()));
+            print!("{}", print_card_color(card, format!("           {}", i)));
             print!(" ");
         }
     }
@@ -94,12 +94,15 @@ impl Game {
         //
         // end result should be easier to read/reason about
 
+        println!();
         self.print_board_row(0);
         println!();
         self.print_board_row(1);
         println!();
         self.print_board_row(2);
         println!();
+        println!();
+        println!("==========================================");
         println!();
     }
 
@@ -119,14 +122,8 @@ impl Game {
 
 impl fmt::Debug for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let result = write!(f, "{}", [self.print_turn(), self.print_score()].join("\n"));
         self.print_board();
-
-        write!(
-            f,
-            "{}",
-            [&self.print_turn(), &self.print_score(), SEPARATOR].join("\n")
-        )
+        return result;
     }
 }
-
-const SEPARATOR: &str = "========================";
