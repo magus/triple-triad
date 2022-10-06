@@ -104,12 +104,16 @@ impl Game {
     }
 
     fn print_turn(&self) -> String {
+        if self.is_ended() {
+            return format!("{}", if self.is_win() { "WIN" } else { "LOSE" });
+        }
+
         return format!("Turn: {}", self.turn);
     }
 
     fn print_score(&self) -> String {
-        let (percent, score, turn) = self.percent_score();
-        return format!("Score: {:.2}% ({} / {})", percent, score, turn);
+        let percent = self.percent_score();
+        return format!("Score: {:.2}% ({} / {})", percent, self.score, self.turn);
     }
 }
 

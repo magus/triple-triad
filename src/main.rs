@@ -4,11 +4,11 @@ use triple_triad::game::{constants, Game};
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    explore();
+    // explore();
     // simple_explore();
 
     // simple_simulation();
-    // custom_simulation();
+    custom_simulation();
 
     // parallel_explore_max();
 }

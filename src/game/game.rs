@@ -504,9 +504,13 @@ impl Game {
         self.turn += 1;
     }
 
-    pub fn percent_score(&self) -> (f32, i8, u8) {
-        let percent = 100.0 * (self.score as f32 / self.turn as f32);
-        return (percent, self.score, self.turn);
+    pub fn percent_score(&self) -> f64 {
+        return 100.0 * (self.score as f64 / self.turn as f64);
+    }
+
+    pub fn is_win(&self) -> bool {
+        let is_score_over_half = self.score as f32 >= BOARD_SIZE as f32 / 2.0;
+        return self.is_ended() && is_score_over_half;
     }
 
     pub fn turn_is_player(&self) -> bool {
