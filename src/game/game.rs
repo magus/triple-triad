@@ -54,7 +54,9 @@ impl Game {
 
         self.explore(start_turn, max_depth, depth, &results);
 
-        println!("\n📊 results");
+        println!("==========================================");
+        println!("🤖 AI RECOMMENDATIONS");
+        println!("==========================================");
 
         // sort results by comparing score values
         let mut safe_results = results.lock().unwrap();
@@ -63,31 +65,25 @@ impl Game {
         // show up to top 3 moves
         let show_count = std::cmp::min(3, safe_results.len());
 
-        for i in 0..show_count {
+        for i in (0..show_count).rev() {
             let (score, game) = &safe_results[i];
-            let total_depth_moves = constants::total_depth_moves(game.turn);
-            let max_depth_moves = constants::max_depth_moves(game.turn, max_depth);
 
-            let is_estimate = max_depth_moves < total_depth_moves;
-
-            if is_estimate {
-                println!("\n{:.4}% chance to win", score);
-                println!("{max_depth_moves} moves evaluated (out of {total_depth_moves} possible)");
-            } else {
-                println!("\n{:.4}% chance to win", score);
-                println!("{total_depth_moves} moves evaluated");
-            }
-
+            println!("#{}", i + 1);
+            println!("{:.4}% chance to win", score);
             println!();
             println!("{:?}", game);
-
-            println!("========================");
         }
 
-        println!(
-            "\n✅ done [{} paths evaluated]",
-            constants::max_depth_moves(start_turn, max_depth + 1)
-        );
+        let total_depth_moves = constants::total_depth_moves(self.turn);
+        let max_depth_moves = constants::max_depth_moves(self.turn + 1, max_depth);
+        let moves_evaluated = max_depth_moves * safe_results.len() as u64;
+        let is_estimate = total_depth_moves > moves_evaluated;
+
+        if is_estimate {
+            println!("✅ done [📊 {moves_evaluated} / {total_depth_moves} moves evaluated]");
+        } else {
+            println!("✅ done [📊 {moves_evaluated} moves evaluated]");
+        }
     }
 
     fn explore(

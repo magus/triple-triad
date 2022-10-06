@@ -117,7 +117,13 @@ impl Game {
 
     fn print_turn(&self) -> String {
         if self.is_ended() {
-            return format!("{}", if self.is_win() { "WIN" } else { "LOSE" });
+            return if self.score > 5 {
+                "WIN".to_string()
+            } else if self.score < 5 {
+                "LOSE".to_string()
+            } else {
+                "DRAW".to_string()
+            };
         }
 
         return format!("Turn: {}", self.turn);
