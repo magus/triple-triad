@@ -118,9 +118,8 @@ impl Game {
                 let game = self.execute_turn(*card, *square);
 
                 if game.is_ended() {
-                    // pass win-loss back as 0 or 1
-                    let is_win = rand::random::<f64>() < 0.2;
-                    return if is_win { 100.0 } else { 0.0 };
+                    // pass win-loss back as score
+                    return if game.is_win() { 100.0 } else { 0.0 };
                 } else if next_depth as i8 == max_depth {
                     // println!("next_depth={next_depth}, max_depth={max_depth}");
 
