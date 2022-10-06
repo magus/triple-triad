@@ -22,6 +22,15 @@ impl Game {
         println!();
 
         for i in row_start..row_end {
+            let marker = if self.is_last_move(i) { "👇" } else { "  " };
+
+            print!("     {}     ", marker);
+            print!(" ");
+        }
+
+        println!();
+
+        for i in row_start..row_end {
             let card = self.board[i];
 
             print!(

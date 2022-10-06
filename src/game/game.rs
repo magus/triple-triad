@@ -22,6 +22,7 @@ pub struct Game {
     pub score: i8,
     pub rules: Rules,
     pub board: Board,
+    pub last_move: i8,
 
     pub player: Player,
     pub computer: Player,
@@ -226,6 +227,7 @@ impl Game {
             let is_combo = false;
             self.card_impact(index, is_combo);
             self.score += if self.turn_is_player() { 1 } else { 0 };
+            self.last_move = index as i8;
 
             return true;
         }
@@ -551,6 +553,14 @@ impl Game {
         }
     }
 
+    pub fn is_last_move(&self, index: usize) -> bool {
+        if self.last_move < 0 {
+            return false;
+        }
+
+        return self.last_move as usize == index;
+    }
+
     pub fn is_ended(&self) -> bool {
         return self.turn == BOARD_SIZE as u8;
     }
@@ -601,6 +611,7 @@ impl Game {
             score: 0,
             rules,
             board,
+            last_move: -1,
 
             player,
             computer,
