@@ -54,9 +54,10 @@ impl Game {
 
         self.explore(start_turn, max_depth, depth, &results);
 
-        println!("==========================================");
-        println!("🤖 AI RECOMMENDATIONS");
-        println!("==========================================");
+        println!("┌─────────────────────────────────────────┐");
+        println!("│  🤖 AI RECOMMENDATIONS (worst to best)  │");
+        println!("└─────────────────────────────────────────┘");
+        println!();
 
         // sort results by comparing score values
         let mut safe_results = results.lock().unwrap();
@@ -64,6 +65,18 @@ impl Game {
 
         // show up to top 3 moves
         let show_count = std::cmp::min(3, safe_results.len());
+
+        for i in 0..show_count {
+            let index = safe_results.len() - 1 - i;
+            let (score, game) = &safe_results[index];
+
+            println!("#{}", index + 1);
+            println!("{:.4}% chance to win", score);
+            println!();
+            println!("{:?}", game);
+        }
+
+        println!("...\n\n");
 
         for i in (0..show_count).rev() {
             let (score, game) = &safe_results[i];
