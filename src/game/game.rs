@@ -149,7 +149,7 @@ impl Game {
     pub fn execute_turn(&self, card_index: usize, square_index: usize) -> Game {
         let mut game = self.clone();
 
-        if self.turn_is_player() {
+        if game.turn_is_player() {
             let card = game.player.use_card(card_index);
             game.place_card(card, square_index);
         } else {
