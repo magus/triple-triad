@@ -4,8 +4,9 @@ use triple_triad::game::{constants, Game};
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    explore();
-    // simple_explore();
+    deep_explore();
+
+    // custom_game_b();
 
     // simple_simulation();
     // custom_simulation();
@@ -14,7 +15,7 @@ fn main() {
 }
 
 #[allow(dead_code)]
-fn explore() {
+fn custom_game_b() {
     let mut stopwatch = Stopwatch::start();
 
     let mut game = Game::new();
@@ -61,7 +62,7 @@ fn explore() {
 }
 
 #[allow(dead_code)]
-fn simple_explore() {
+fn deep_explore() {
     let mut stopwatch = Stopwatch::start();
 
     let mut game = Game::new();
