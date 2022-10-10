@@ -88,7 +88,7 @@ impl Game {
         }
     }
 
-    fn print_board(&self) {
+    pub fn print_board(&self) {
         // print diamond of sides for better card side visuals
         //
         // example
@@ -130,6 +130,23 @@ impl Game {
     fn print_score(&self) -> String {
         let percent = self.percent_score();
         return format!("Score: {:.2}% ({} / {})", percent, self.score, self.turn);
+    }
+
+    pub fn print_rules(&self) -> String {
+        let first = if self.is_player_first {
+            "player"
+        } else {
+            "computer"
+        };
+
+        return print::box_lines(
+            vec![
+                &format!("{} = {}", "first", first),
+                &format!("{} = {}", "plus", self.rules.plus),
+                &format!("{} = {}", "same", self.rules.same),
+            ],
+            2,
+        );
     }
 
     fn print_hand(&self, cards: Vec<Card>) {
@@ -194,6 +211,28 @@ impl Game {
             print!(" ");
         }
     }
+
+    pub fn print_player_hand(&self) {
+        println!();
+        println!("{}", print::box_text("Player", 1));
+        self.print_hand(Vec::from(self.player.cards));
+        println!();
+    }
+
+    pub fn print_computer_hand(&self) {
+        println!();
+        println!("{}", print::box_text("Computer", 1));
+        self.print_hand(Vec::from(self.computer.cards));
+        println!();
+    }
+
+    pub fn print_turn_hand(&self) {
+        if self.turn_is_player() {
+            self.print_player_hand();
+        } else {
+            self.print_computer_hand();
+        }
+    }
 }
 
 impl fmt::Debug for Game {
@@ -210,15 +249,8 @@ impl fmt::Debug for Game {
 
         self.print_board();
 
-        println!();
-        println!("{}", print::box_text("Player", 1));
-        self.print_hand(Vec::from(self.player.cards));
-        println!();
-
-        println!();
-        println!("{}", print::box_text("Computer", 1));
-        self.print_hand(Vec::from(self.computer.cards));
-        println!();
+        self.print_player_hand();
+        self.print_computer_hand();
 
         println!();
         println!("==========================================");

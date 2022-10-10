@@ -168,11 +168,11 @@ impl Game {
                     // // debug by returning perfect score so results should all show 100%
                     // return 100.0;
 
-                    // // evaluating score to determine boolean win shot
-                    // let is_win = self.percent_score();
-                    // return if is_win > 50.0 { 100.0 } else { 0.0 };
+                    // return self.percent_score();
 
-                    return self.percent_score();
+                    // evaluating score to determine boolean win shot
+                    let is_winning = self.percent_score() > 50.0;
+                    return if is_winning { 100.0 } else { 0.0 };
                 } else {
                     return game.explore(start_turn, max_depth, next_depth, results);
                 }
@@ -188,16 +188,6 @@ impl Game {
         // make decisions based on heuristics from one move ahead
         let target_depth = start_turn + 1;
         if self.turn == target_depth {
-            // println!(
-            //     "turn={}, target_depth={target_depth}, max_depth={max_depth}",
-            //     self.turn
-            // );
-
-            // let max_depth_moves = self.max_depth_moves(target_depth, max_depth);
-            // let score = total_score / max_depth_moves as f64;
-
-            // println!("  total_score={total_score}, max_depth_moves={max_depth_moves}");
-
             results.lock().unwrap().push((total_score, self.clone()));
         }
 
@@ -621,6 +611,14 @@ impl Game {
 
     pub fn is_ended(&self) -> bool {
         return self.turn == BOARD_SIZE as u8;
+    }
+
+    pub fn turn_player_hand_max(&self) -> usize {
+        return if self.turn_is_player() {
+            self.player.cards.len() - 1
+        } else {
+            self.computer.cards.len() - 1
+        };
     }
 
     pub fn new() -> Self {
