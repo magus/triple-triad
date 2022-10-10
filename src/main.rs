@@ -1,22 +1,12 @@
 use triple_triad::card::Card;
 use triple_triad::game::Game;
+use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    // TODO loop with a readline to pickup commands
-    // First phase sets up rules and first player
-    // Then alternate inputting in moves
-    // On each play step print game board + both player cards
+    print::drive_game_prompt();
 
-    // Examles
-    //
-    //   > plus         toggle plus game rule)
-    //   > first p      set player as first)
-    //   > first c      set computer as first)
-    //   > explore      run explore and show results
-    //   > place 3 1    place card 3 in square 1)
-
-    idle_imperial();
+    // idle_imperial();
 
     // deep_explore();
 
@@ -57,9 +47,9 @@ fn idle_imperial() {
     game = game.execute_turn(1, 8);
     println!("{:?}", game);
 
-    // computer
-    game = game.execute_turn(4, 2);
-    println!("{:?}", game);
+    // // computer
+    // game = game.execute_turn(4, 2);
+    // println!("{:?}", game);
 
     // // player
     // game = game.execute_turn(2, 7);
