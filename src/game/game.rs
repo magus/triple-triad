@@ -3,8 +3,9 @@ use std::sync::{Arc, Mutex};
 
 use crate::card;
 use crate::card::Card;
-use crate::game::constants::{self, BOARD_SIZE};
+use crate::game::constants::{BOARD_SIZE, EVALUATION_MAX};
 use crate::game::impact::{self, ImpactPair};
+use crate::player::Computer;
 use crate::player::Player;
 
 type Board = [Card; BOARD_SIZE];
@@ -25,7 +26,7 @@ pub struct Game {
     pub last_move: i8,
 
     pub player: Player,
-    pub computer: Player,
+    pub computer: Computer,
 }
 
 impl Game {
@@ -33,21 +34,45 @@ impl Game {
         let start_turn = self.turn;
         let depth = 0;
 
-        // on turn 1 the search space is worst case scenario
+        if self.is_ended() {
+            println!("❌ Game is ended.");
+            return;
+        }
+
+        if self.turn == BOARD_SIZE as u8 - 1 {
+            println!("❌ There is only one possible move.");
+            return;
+        }
+
+        let total_depth_moves = self.max_depth_moves(self.turn, -1);
+        println!("🔍 Evaluting [{total_depth_moves}] possible game states ... ");
+
+        // on turn 1 when player is first the search space is worst case scenario
+        // so we search for a safe max_depth to signficantly cut search space
         //
-        //     = 5 225 472 000 paths
-        //     = 45 * 40 * 28 * 24 * 15 * 12 * 6 * 4 * 1
-        //
-        // so we set max_depth to 6 in order to significantly
-        // improve performance by cutting search space
-        //
-        //     =   217 728 000 paths
-        //     = 45 * 40 * 28 * 24 * 15 * 12
+        //     = 36,578,304,000 paths
+        //     = 45 * 56 * 28 * 36 * 15 * 20 * 6 * 8 * 1
         //
         // once we have heuristics use it to cutoff instead of depth
         // at max_depth we can instead use the score of a game to decide
         // whether to recurse with game.explore, again culling search space
-        let max_depth = if start_turn > 0 { -1 } else { 6 };
+        let mut max_depth = BOARD_SIZE as i8;
+
+        for test_depth in (1..max_depth).rev() {
+            max_depth = test_depth;
+
+            let depth_moves = self.max_depth_moves(self.turn, max_depth);
+            if depth_moves < EVALUATION_MAX {
+                println!("✅ Found safe depth [{max_depth}] with [{depth_moves}] moves!");
+                break;
+            }
+        }
+
+        println!();
+        println!("🤖 ... thinking ...");
+        println!();
+
+        // let max_depth = if start_turn > 0 { -1 } else { 6 };
 
         // collect results across threads into shard vector
         let results: Arc<Mutex<Vec<(f64, Game)>>> = Arc::new(Mutex::new(Vec::new()));
@@ -66,12 +91,16 @@ impl Game {
         // show up to top 3 moves
         let show_count = std::cmp::min(3, safe_results.len());
 
+        let max_depth_moves = self.max_depth_moves(self.turn + 1, max_depth);
+        println!("max_depth_moves={max_depth_moves}");
+
         for i in 0..show_count {
             let index = safe_results.len() - 1 - i;
-            let (score, game) = &safe_results[index];
+            let (total_score, game) = &safe_results[index];
+            let score = total_score / max_depth_moves as f64;
 
             println!("#{}", index + 1);
-            println!("{:.4}% chance to win", score);
+            println!("{}% chance to win", score);
             println!();
             println!("{:?}", game);
         }
@@ -79,23 +108,23 @@ impl Game {
         println!("...\n\n");
 
         for i in (0..show_count).rev() {
-            let (score, game) = &safe_results[i];
+            let (total_score, game) = &safe_results[i];
+            let score = total_score / max_depth_moves as f64;
 
             println!("#{}", i + 1);
-            println!("{:.4}% chance to win", score);
+            println!("{}% chance to win", score);
             println!();
             println!("{:?}", game);
         }
 
-        let total_depth_moves = constants::total_depth_moves(self.turn);
-        let max_depth_moves = constants::max_depth_moves(self.turn + 1, max_depth);
-        let moves_evaluated = max_depth_moves * safe_results.len() as u64;
-        let is_estimate = total_depth_moves > moves_evaluated;
+        let total_depth_moves = self.max_depth_moves(self.turn, -1);
+        let actual_moves_evaluated = self.max_depth_moves(self.turn, max_depth);
+        let is_estimate = total_depth_moves > actual_moves_evaluated;
 
         if is_estimate {
-            println!("✅ done [📊 {moves_evaluated} / {total_depth_moves} moves evaluated]");
+            println!("✅ done [📊 {actual_moves_evaluated} / {total_depth_moves} moves evaluated]");
         } else {
-            println!("✅ done [📊 {moves_evaluated} moves evaluated]");
+            println!("✅ done [📊 {actual_moves_evaluated} moves evaluated]");
         }
     }
 
@@ -108,10 +137,7 @@ impl Game {
     ) -> f64 {
         // println!("max_depth={max_depth}, start_turn={start_turn}, depth={depth}");
 
-        let target_depth = start_turn + 1;
         let next_depth = depth + 1;
-
-        // println!("target_depth={target_depth}, depth={depth}, is_exhaustive={is_exhaustive}");
 
         // find all valid moves from this game state and execute them
         let is_player = self.turn_is_player();
@@ -129,12 +155,23 @@ impl Game {
                 if game.is_ended() {
                     // pass win-loss back as score
                     return if game.is_win() { 100.0 } else { 0.0 };
-                } else if next_depth as i8 == max_depth {
-                    // println!("next_depth={next_depth}, max_depth={max_depth}");
+                } else if next_depth as i8 == max_depth + 1 {
+                    // println!(
+                    //     "turn={} depth={depth} next_depth={next_depth}, max_depth={max_depth}",
+                    //     game.turn
+                    // );
 
                     // evaluate board position as cards flipped for player
                     // for example, `N / game.turn` will return a float in range [0,1]
                     // this can be summed in the same way as win-loss above
+
+                    // // debug by returning perfect score so results should all show 100%
+                    // return 100.0;
+
+                    // // evaluating score to determine boolean win shot
+                    // let is_win = self.percent_score();
+                    // return if is_win > 50.0 { 100.0 } else { 0.0 };
+
                     return self.percent_score();
                 } else {
                     return game.explore(start_turn, max_depth, next_depth, results);
@@ -149,11 +186,19 @@ impl Game {
         let total_score: f64 = total_moves.sum();
 
         // make decisions based on heuristics from one move ahead
-        if depth == 1 {
-            let max_depth_moves = constants::max_depth_moves(target_depth, max_depth);
-            let score = total_score / max_depth_moves as f64;
+        let target_depth = start_turn + 1;
+        if self.turn == target_depth {
+            // println!(
+            //     "turn={}, target_depth={target_depth}, max_depth={max_depth}",
+            //     self.turn
+            // );
 
-            results.lock().unwrap().push((score, self.clone()));
+            // let max_depth_moves = self.max_depth_moves(target_depth, max_depth);
+            // let score = total_score / max_depth_moves as f64;
+
+            // println!("  total_score={total_score}, max_depth_moves={max_depth_moves}");
+
+            results.lock().unwrap().push((total_score, self.clone()));
         }
 
         return total_score;
@@ -176,20 +221,20 @@ impl Game {
     }
 
     pub fn simulate_simple_turn(&self) -> Game {
-        println!();
-        println!();
+        // println!();
+        // println!();
 
         if self.is_ended() {
-            println!("  [game ended]");
+            // println!("  [game ended]");
             return self.clone();
         }
 
-        println!("[start turn {}] {}", self.turn + 1, self.player_name());
-        println!("  [player.cards_left] {:?}", self.player.cards_left());
+        // println!("[start turn {}] {}", self.turn + 1, self.player_name());
+        // println!("  [player.cards_left] {:?}", self.player.cards_left());
         // println!("  [player] [{:?}]", self.player.cards);
-        println!("  [computer.cards_left] {:?}", self.computer.cards_left());
+        // println!("  [computer.cards_left] {:?}", self.computer.cards_left());
         // println!("  [computer] [{:?}]", self.computer.cards);
-        println!("  [squares_empty] {:?}", self.squares_empty());
+        // println!("  [squares_empty] {:?}", self.squares_empty());
         // println!("  [board] {:?}", self.board);
 
         // find first valid move and make it
@@ -204,12 +249,12 @@ impl Game {
 
         let game = self.execute_turn(card_choices[0], square_choices[0]);
 
-        println!("[end turn {}]", game.turn);
-        println!("  [player.cards_left] {:?}", game.player.cards_left());
+        // println!("[end turn {}]", game.turn);
+        // println!("  [player.cards_left] {:?}", game.player.cards_left());
         // println!("  [player] [{:?}]", game.player.cards);
-        println!("  [computer.cards_left] {:?}", game.computer.cards_left());
+        // println!("  [computer.cards_left] {:?}", game.computer.cards_left());
         // println!("  [computer] [{:?}]", game.computer.cards);
-        println!("  [squares_empty] {:?}", game.squares_empty());
+        // println!("  [squares_empty] {:?}", game.squares_empty());
         // println!("  [board] {:?}", game.board);
 
         return game;
@@ -240,6 +285,7 @@ impl Game {
             return true;
         }
 
+        println!("❌ Invalid card choice");
         return false;
     }
 
@@ -587,7 +633,6 @@ impl Game {
         ];
 
         let player = Player {
-            is_player: true,
             cards: [
                 Card::player("P0", 2, 2, 2, 2),
                 Card::player("P1", 2, 2, 2, 2),
@@ -597,14 +642,15 @@ impl Game {
             ],
         };
 
-        let computer = Player {
-            is_player: false,
+        let computer = Computer {
             cards: [
-                Card::computer("C0", 1, 1, 1, 1),
-                Card::computer("C1", 1, 1, 1, 1),
+                Card::computer_guaranteed("C0", 1, 1, 1, 1),
+                Card::computer_guaranteed("C1", 1, 1, 1, 1),
                 Card::computer("C2", 1, 1, 1, 1),
                 Card::computer("C3", 1, 1, 1, 1),
                 Card::computer("C4", 1, 1, 1, 1),
+                Card::computer("C5", 1, 1, 1, 1),
+                Card::computer("C6", 1, 1, 1, 1),
             ],
         };
 

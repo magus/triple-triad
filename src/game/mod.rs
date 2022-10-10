@@ -2,6 +2,7 @@ pub mod constants;
 mod debug;
 mod game;
 pub mod impact;
+mod max_depth_moves;
 mod shared;
 
 pub use self::game::Game;
