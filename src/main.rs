@@ -6,6 +6,9 @@ use triple_triad::time::Stopwatch;
 fn main() {
     print::drive_game_prompt();
 
+    // TODO: implement chaos et al necessary to simulate "Idle Imperial"
+    // Use it as a test to see if the recommendations work
+
     // idle_imperial();
 
     // deep_explore();
