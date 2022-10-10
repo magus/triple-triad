@@ -55,7 +55,7 @@ pub fn drive_game_prompt() {
                 }
             }
             "s" | "search" => {
-                println!("TODO SEARCH");
+                game.start_explore();
             }
             "u" | "undo" => {
                 println!("TODO UNDO");
