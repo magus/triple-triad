@@ -53,13 +53,13 @@ fn idle_imperial() {
         Card::computer("C6", 8, 3, 8, 1),
     ];
 
-    // // player
-    // game = game.execute_turn(1, 8);
-    // println!("{:?}", game);
+    // player
+    game = game.execute_turn(1, 8);
+    println!("{:?}", game);
 
-    // // computer
-    // game = game.execute_turn(4, 2);
-    // println!("{:?}", game);
+    // computer
+    game = game.execute_turn(4, 2);
+    println!("{:?}", game);
 
     // // player
     // game = game.execute_turn(2, 7);
