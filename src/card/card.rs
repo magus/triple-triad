@@ -5,6 +5,7 @@ pub const EMPTY: Card = Card {
     sides: (0, 0, 0, 0),
     is_player: false,
     is_empty: true,
+    is_guaranteed: false,
 };
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -13,6 +14,7 @@ pub struct Card {
     pub sides: (u8, u8, u8, u8),
     pub is_player: bool,
     pub is_empty: bool,
+    pub is_guaranteed: bool,
 }
 
 impl Card {
@@ -22,6 +24,7 @@ impl Card {
             sides: (top, right, bottom, left),
             is_player: true,
             is_empty: false,
+            is_guaranteed: false,
         }
     }
 
@@ -31,6 +34,23 @@ impl Card {
             sides: (top, right, bottom, left),
             is_player: false,
             is_empty: false,
+            is_guaranteed: false,
+        }
+    }
+
+    pub fn computer_guaranteed(
+        name: &'static str,
+        top: u8,
+        right: u8,
+        bottom: u8,
+        left: u8,
+    ) -> Card {
+        Card {
+            name,
+            sides: (top, right, bottom, left),
+            is_player: false,
+            is_empty: false,
+            is_guaranteed: true,
         }
     }
 
