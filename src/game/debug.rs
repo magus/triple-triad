@@ -4,6 +4,7 @@ use std::fmt;
 use crate::card::Card;
 use crate::game::constants::ROW_SIZE;
 use crate::game::Game;
+use crate::print;
 
 fn print_card_color(card: Card, text: String) -> String {
     let ((t_r, t_g, t_b), (r, g, b)) = card.rgb_color();
@@ -110,9 +111,6 @@ impl Game {
         println!();
         self.print_board_row(2);
         println!();
-        println!();
-        println!("==========================================");
-        println!();
     }
 
     fn print_turn(&self) -> String {
@@ -126,19 +124,106 @@ impl Game {
             };
         }
 
-        return format!("Turn: {}", self.turn);
+        return format!("Turn #{}", self.turn);
     }
 
     fn print_score(&self) -> String {
         let percent = self.percent_score();
         return format!("Score: {:.2}% ({} / {})", percent, self.score, self.turn);
     }
+
+    fn print_hand(&self, cards: Vec<Card>) {
+        let start = 0;
+        let end = cards.len();
+
+        println!();
+
+        for i in start..end {
+            let card = cards[i];
+
+            print!(
+                "{}",
+                print_card_color(card, format!("{}          ", card.name))
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in start..end {
+            let card = cards[i];
+
+            print!(
+                "{}",
+                print_card_color(card, format!("     {}      ", card.print_top()))
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in start..end {
+            let card = cards[i];
+
+            print!(
+                "{}",
+                print_card_color(
+                    card,
+                    format!("  {}     {}   ", card.print_left(), card.print_right())
+                )
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in start..end {
+            let card = cards[i];
+            print!(
+                "{}",
+                print_card_color(card, format!("     {}      ", card.print_bottom()))
+            );
+            print!(" ");
+        }
+
+        println!();
+
+        for i in start..end {
+            let card = cards[i];
+            print!("{}", print_card_color(card, format!("           {}", i)));
+            print!(" ");
+        }
+    }
 }
 
 impl fmt::Debug for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let result = write!(f, "{}", [self.print_turn(), self.print_score()].join("\n"));
+        let result = write!(
+            f,
+            "{}",
+            [
+                print::box_text(&self.print_turn(), 1),
+                print::box_text(&self.print_score(), 1)
+            ]
+            .join("\n")
+        );
+
         self.print_board();
+
+        println!();
+        println!("{}", print::box_text("Player", 1));
+        self.print_hand(Vec::from(self.player.cards));
+        println!();
+
+        println!();
+        println!("{}", print::box_text("Computer", 1));
+        self.print_hand(Vec::from(self.computer.cards));
+        println!();
+
+        println!();
+        println!("==========================================");
+        println!();
+
         return result;
     }
 }
