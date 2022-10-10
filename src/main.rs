@@ -3,6 +3,19 @@ use triple_triad::game::Game;
 use triple_triad::time::Stopwatch;
 
 fn main() {
+    // TODO loop with a readline to pickup commands
+    // First phase sets up rules and first player
+    // Then alternate inputting in moves
+    // On each play step print game board + both player cards
+
+    // Examles
+    //
+    //   > plus         toggle plus game rule)
+    //   > first p      set player as first)
+    //   > first c      set computer as first)
+    //   > explore      run explore and show results
+    //   > place 3 1    place card 3 in square 1)
+
     idle_imperial();
 
     // deep_explore();
