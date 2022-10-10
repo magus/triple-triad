@@ -4,4 +4,4 @@ pub const BOARD_SIZE: usize = 9;
 
 pub const CARD_SIDES: usize = 4;
 
-pub const EVALUATION_MAX: u64 = 800_000_000;
+pub const EVALUATION_MAX: u64 = 500_000_000;
