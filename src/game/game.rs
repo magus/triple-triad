@@ -586,6 +586,10 @@ impl Game {
     }
 
     pub fn percent_score(&self) -> f64 {
+        if self.turn == 0 {
+            return 0.0;
+        }
+
         return 100.0 * (self.score as f64 / self.turn as f64);
     }
 
