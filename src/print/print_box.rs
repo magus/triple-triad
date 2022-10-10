@@ -1,9 +1,11 @@
+use unicode_width::UnicodeWidthStr;
+
 pub fn box_text(text: &str, padding_u8: u8) -> String {
     let mut parts: Vec<String> = vec![];
 
     let padding = padding_u8 as usize;
     let padding_total: usize = padding * 2;
-    let text_len = text.len();
+    let text_len = unicode_width(text);
     let length = text_len + padding_total;
 
     let side: Vec<&str> = (0..length).map(|_| "─").collect();
@@ -19,7 +21,7 @@ pub fn box_text(text: &str, padding_u8: u8) -> String {
 pub fn box_lines(lines: Vec<&str>, padding_u8: u8) -> String {
     let mut parts: Vec<String> = vec![];
 
-    let max_text_len = lines.iter().map(|l| l.len()).max().unwrap();
+    let max_text_len = lines.iter().map(|l| unicode_width(l)).max().unwrap();
 
     let padding = padding_u8 as usize;
     let padding_total: usize = padding * 2;
@@ -31,7 +33,7 @@ pub fn box_lines(lines: Vec<&str>, padding_u8: u8) -> String {
     parts.push(format!("┌{}┐", side.join("")));
 
     for line in lines {
-        let line_pad_len = max_text_len - line.len();
+        let line_pad_len = max_text_len - unicode_width(line);
         let line_pad: Vec<&str> = (0..line_pad_len).map(|_| " ").collect();
         parts.push(format!(
             "│{}{}{}{}│",
@@ -45,4 +47,8 @@ pub fn box_lines(lines: Vec<&str>, padding_u8: u8) -> String {
     parts.push(format!("└{}┘", side.join("")));
 
     return parts.join("\n");
+}
+
+fn unicode_width(text: &str) -> usize {
+    return UnicodeWidthStr::width(text);
 }
