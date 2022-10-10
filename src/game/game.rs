@@ -100,7 +100,7 @@ impl Game {
             let score = total_score / max_depth_moves as f64;
 
             println!("#{}", index + 1);
-            println!("{}% chance to win", score);
+            println!("{:.2}% chance to win", score);
             println!();
             println!("{:?}", game);
         }
@@ -112,7 +112,7 @@ impl Game {
             let score = total_score / max_depth_moves as f64;
 
             println!("#{}", i + 1);
-            println!("{}% chance to win", score);
+            println!("{:.2}% chance to win", score);
             println!();
             println!("{:?}", game);
         }
