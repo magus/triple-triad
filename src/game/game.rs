@@ -197,15 +197,9 @@ impl Game {
     pub fn execute_turn(&self, card_index: usize, square_index: usize) -> Game {
         let mut game = self.clone();
 
-        if game.turn_is_player() {
-            let card = game.player.use_card(card_index);
-            game.place_card(card, square_index);
-        } else {
-            let card = game.computer.use_card(card_index);
-            game.place_card(card, square_index);
-        };
-
-        game.finish_turn();
+        if game.place_card(card_index, square_index) {
+            game.finish_turn();
+        }
 
         return game;
     }
@@ -262,19 +256,29 @@ impl Game {
         return card_index_list;
     }
 
-    pub fn place_card(&mut self, card: Card, index: usize) -> bool {
-        if card != card::EMPTY && self.board[index] == card::EMPTY {
-            // place the card in this board square
-            self.board[index] = card;
+    pub fn place_card(&mut self, card_index: usize, index: usize) -> bool {
+        if self.board[index] == card::EMPTY {
+            // get the card from the correct players hand
+            let card = if self.turn_is_player() {
+                self.player.use_card(card_index)
+            } else {
+                self.computer.use_card(card_index)
+            };
 
-            let is_combo = false;
-            self.card_impact(index, is_combo);
-            self.score += if self.turn_is_player() { 1 } else { 0 };
-            self.last_move = index as i8;
+            if card != card::EMPTY {
+                // place the card in this board square
+                self.board[index] = card;
 
-            return true;
+                let is_combo = false;
+                self.card_impact(index, is_combo);
+                self.score += if self.turn_is_player() { 1 } else { 0 };
+                self.last_move = index as i8;
+
+                return true;
+            }
         }
 
+        // if we got here it means we failed for some reason
         println!("❌ Invalid card choice");
         return false;
     }
