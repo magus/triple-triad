@@ -258,8 +258,10 @@ impl Game {
 
     pub fn place_card(&mut self, card_index: usize, index: usize) -> bool {
         if self.board[index] == card::EMPTY {
+            let is_player = self.turn_is_player();
+
             // get the card from the correct players hand
-            let card = if self.turn_is_player() {
+            let card = if is_player {
                 self.player.use_card(card_index)
             } else {
                 self.computer.use_card(card_index)
@@ -271,8 +273,13 @@ impl Game {
 
                 let is_combo = false;
                 self.card_impact(index, is_combo);
-                self.score += if self.turn_is_player() { 1 } else { 0 };
+                self.score += if is_player { 1 } else { 0 };
                 self.last_move = index as i8;
+
+                // now that card is placed, can we guarantee computer cards?
+                if !is_player {
+                    self.computer.maybe_filter_hand_guaranteed();
+                }
 
                 return true;
             }
@@ -649,6 +656,7 @@ impl Game {
         };
 
         let computer = Computer {
+            cards_used: 0,
             cards: [
                 Card::computer_guaranteed("C0", 1, 1, 1, 1),
                 Card::computer_guaranteed("C1", 1, 1, 1, 1),
@@ -657,6 +665,7 @@ impl Game {
                 Card::computer("C4", 1, 1, 1, 1),
                 Card::computer("C5", 1, 1, 1, 1),
                 Card::computer("C6", 1, 1, 1, 1),
+                card::EMPTY,
             ],
         };
 

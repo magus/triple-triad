@@ -1,3 +1,4 @@
+use triple_triad::card;
 use triple_triad::card::Card;
 use triple_triad::game::Game;
 use triple_triad::print;
@@ -9,12 +10,70 @@ fn main() {
     // TODO: implement chaos et al necessary to simulate "Idle Imperial"
     // Use it as a test to see if the recommendations work
 
+    // guaranteed_card_left();
+
     // idle_imperial();
 
     // deep_explore();
 
     // simple_simulation();
     // custom_simulation();
+}
+
+#[allow(dead_code)]
+// https://arrtripletriad.com/en/npc-idle-imperial
+fn guaranteed_card_left() {
+    let mut stopwatch = Stopwatch::start();
+
+    let mut game = Game::new();
+
+    game.is_player_first = false;
+
+    // game.rules.plus = true;
+
+    game.player.cards = [
+        Card::player("P0", 8, 8, 2, 3),
+        Card::player("P1", 8, 2, 3, 8),
+        Card::player("P2", 1, 8, 3, 8),
+        Card::player("P3", 1, 5, 9, 9),
+        Card::player("P4", 6, 10, 10, 1),
+    ];
+
+    game.computer.cards = [
+        Card::computer_guaranteed("C0", 6, 3, 7, 3),
+        Card::computer_guaranteed("C1", 9, 7, 8, 1),
+        Card::computer("C2", 4, 1, 8, 7),
+        Card::computer("C3", 7, 1, 6, 7),
+        Card::computer("C4", 1, 4, 8, 8),
+        Card::computer("C5", 7, 1, 3, 7),
+        Card::computer("C6", 8, 3, 8, 1),
+        card::EMPTY,
+    ];
+
+    // computer
+    game = game.execute_turn(2, 8);
+    println!("{:?}", game);
+
+    // player
+    game = game.execute_turn(4, 2);
+    println!("{:?}", game);
+
+    // computer
+    game = game.execute_turn(3, 7);
+    println!("{:?}", game);
+
+    // player
+    game = game.execute_turn(0, 4);
+    println!("{:?}", game);
+
+    // computer
+    game = game.execute_turn(4, 6);
+    println!("{:?}", game);
+
+    // cards are guaranteed to be 0 and 1 at this point
+    // since they have not been used but are guaranteed
+
+    stopwatch.record("guaranteed_card_left finished");
 }
 
 #[allow(dead_code)]
@@ -44,6 +103,7 @@ fn idle_imperial() {
         Card::computer("C4", 1, 4, 8, 8),
         Card::computer("C5", 7, 1, 3, 7),
         Card::computer("C6", 8, 3, 8, 1),
+        card::EMPTY,
     ];
 
     // player
@@ -126,6 +186,7 @@ fn custom_simulation() {
         Card::computer("C4", 1, 1, 1, 1),
         Card::computer("C5", 1, 1, 1, 1),
         Card::computer("C6", 1, 1, 1, 1),
+        card::EMPTY,
     ];
 
     game = game.execute_turn(0, 0);
