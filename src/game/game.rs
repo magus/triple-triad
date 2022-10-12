@@ -12,6 +12,7 @@ type Board = [Card; BOARD_SIZE];
 
 #[derive(Copy, Clone, Debug)]
 pub struct Rules {
+    pub chaos: bool,
     pub plus: bool,
     pub same: bool,
 }
@@ -24,6 +25,7 @@ pub struct Game {
     pub rules: Rules,
     pub board: Board,
     pub last_move: i8,
+    pub chaos_card: Option<usize>,
 
     pub player: Player,
     pub computer: Computer,
@@ -143,7 +145,7 @@ impl Game {
         let is_player = self.turn_is_player();
         let square_choices = self.squares_empty();
         let card_choices = if is_player {
-            self.player.cards_left()
+            self.player.cards_left(self.chaos_card)
         } else {
             self.computer.cards_left()
         };
@@ -226,7 +228,7 @@ impl Game {
         let is_player = self.turn_is_player();
 
         let card_choices = if is_player {
-            self.player.cards_left()
+            self.player.cards_left(self.chaos_card)
         } else {
             self.computer.cards_left()
         };
@@ -583,6 +585,9 @@ impl Game {
     }
 
     pub fn finish_turn(&mut self) {
+        // clear potential chaos_card
+        self.chaos_card = None;
+        // increment turn counter driving game forward
         self.turn += 1;
     }
 
@@ -670,6 +675,7 @@ impl Game {
         };
 
         let rules = Rules {
+            chaos: false,
             plus: false,
             same: false,
         };
@@ -681,6 +687,7 @@ impl Game {
             rules,
             board,
             last_move: -1,
+            chaos_card: None,
 
             player,
             computer,

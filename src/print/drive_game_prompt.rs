@@ -1,3 +1,4 @@
+use crate::card;
 use crate::card::Card;
 use crate::game::constants;
 use crate::game::Game;
@@ -77,6 +78,32 @@ pub fn drive_game_prompt() {
                 }
             }
             "s" | "search" => {
+                // handle chaos when search for moves with explore
+                if game.turn_is_player() && game.rules.chaos {
+                    game.print_turn_hand();
+                    println!();
+                    println!("{}", print::box_text("Which card did chaos select?", 1));
+                    let maybe_card = print::prompt().parse::<usize>();
+                    if let Ok(card) = maybe_card {
+                        let hand_max = game.turn_player_hand_max();
+
+                        if card > hand_max {
+                            println!("❌ card must be between 0 and {}", hand_max);
+                            return;
+                        }
+
+                        if game.player.cards[card] == card::EMPTY {
+                            println!("❌ there is no card at {}", card);
+                            return;
+                        }
+
+                        game.chaos_card = Some(card);
+                    } else {
+                        println!("❌ card must be a positive number");
+                        return;
+                    }
+                }
+
                 game.start_explore();
             }
             "u" | "undo" => {
@@ -112,6 +139,10 @@ fn setup_game() -> Game {
         match input.as_str() {
             "f" | "first" => {
                 game.is_player_first = !game.is_player_first;
+                println!("{}", game.print_rules());
+            }
+            "c" | "chaos" => {
+                game.rules.chaos = !game.rules.chaos;
                 println!("{}", game.print_rules());
             }
             "p" | "plus" => {
@@ -151,6 +182,11 @@ fn print_setup_help() {
         "{}\tToggle the {} player",
         "(f)irst".white().bold(),
         "first".white().bold(),
+    );
+    println!(
+        "{}\tToggle the {} rule",
+        "(c)haos".white().bold(),
+        "chaos".white().bold(),
     );
     println!(
         "{}\tToggle the {} rule",
