@@ -66,6 +66,8 @@ pub fn drive_game_prompt() {
         }
     }
 
+    println!("{:?}", game);
+
     print_drive_game_help();
 
     loop {
