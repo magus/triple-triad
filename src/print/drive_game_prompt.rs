@@ -45,16 +45,10 @@ pub fn drive_game_prompt() {
                 game.print_turn_hand();
                 println!();
                 println!("{}", print::box_text("Which card?", 1));
-                let maybe_card = print::prompt().parse::<usize>();
-                if let Ok(card) = maybe_card {
-                    let hand_max = game.turn_player_hand_max();
+                let is_player = game.turn_is_player();
+                let maybe_card = prompt_card_index(&mut game, is_player);
 
-                    if card > hand_max {
-                        println!("❌ card must be between 0 and {}", hand_max);
-                        return;
-                    }
-                } else {
-                    println!("❌ card must be a positive number");
+                if maybe_card == None {
                     return;
                 }
 
@@ -72,7 +66,7 @@ pub fn drive_game_prompt() {
                     return;
                 }
 
-                if let (Ok(card), Ok(square)) = (maybe_card, maybe_square) {
+                if let (Some(card), Ok(square)) = (maybe_card, maybe_square) {
                     game = game.execute_turn(card, square);
                     println!("{:?}", game);
                 }
@@ -83,23 +77,11 @@ pub fn drive_game_prompt() {
                     game.print_turn_hand();
                     println!();
                     println!("{}", print::box_text("Which card did chaos select?", 1));
-                    let maybe_card = print::prompt().parse::<usize>();
-                    if let Ok(card) = maybe_card {
-                        let hand_max = game.turn_player_hand_max();
+                    let maybe_card = prompt_card_index(&mut game, true);
 
-                        if card > hand_max {
-                            println!("❌ card must be between 0 and {}", hand_max);
-                            return;
-                        }
-
-                        if game.player.cards[card] == card::EMPTY {
-                            println!("❌ there is no card at {}", card);
-                            return;
-                        }
-
+                    if let Some(card) = maybe_card {
                         game.chaos_card = Some(card);
                     } else {
-                        println!("❌ card must be a positive number");
                         return;
                     }
                 }
@@ -236,4 +218,37 @@ fn print_drive_game_help() {
         "(enter {} to quit at any time)",
         "q".truecolor(197, 3, 3).bold()
     );
+}
+
+fn prompt_card_index(game: &mut Game, is_player: bool) -> Option<usize> {
+    let maybe_card = print::prompt().parse::<usize>();
+
+    if let Ok(card) = maybe_card {
+        let hand_max = if is_player {
+            game.player.cards.len() - 1
+        } else {
+            game.computer.cards.len() - 1
+        };
+
+        if card > hand_max {
+            println!("❌ card must be between 0 and {}", hand_max);
+            return None;
+        }
+
+        let is_invalid = if is_player {
+            game.player.cards[card] == card::EMPTY
+        } else {
+            game.computer.cards[card] == card::EMPTY
+        };
+
+        if is_invalid {
+            println!("❌ there is no card at {}", card);
+            return None;
+        }
+
+        return Some(card);
+    } else {
+        println!("❌ card must be a positive number");
+        return None;
+    }
 }
