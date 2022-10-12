@@ -1,4 +1,5 @@
 use rayon::prelude::*;
+use std::ops::Deref;
 use std::sync::{Arc, Mutex};
 
 use crate::card;
@@ -33,18 +34,18 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn start_explore(&self) {
+    pub fn start_explore(&self) -> Vec<(f64, Game)> {
         let start_turn = self.turn;
         let depth = 0;
 
         if self.is_ended() {
             println!("❌ Game is ended.");
-            return;
+            return vec![];
         }
 
         if self.turn == BOARD_SIZE as u8 - 1 {
             println!("❌ There is only one possible move.");
-            return;
+            return vec![];
         }
 
         let total_depth_moves = self.max_depth_moves(self.turn, -1);
@@ -88,7 +89,7 @@ impl Game {
         println!();
 
         // sort results by comparing score values
-        let mut safe_results = results.lock().unwrap();
+        let mut safe_results = results.lock().unwrap().deref().clone();
         safe_results.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
 
         // show up to top 3 moves
@@ -128,6 +129,8 @@ impl Game {
         } else {
             println!("✅ done [📊 {actual_moves_evaluated} moves evaluated]");
         }
+
+        return safe_results;
     }
 
     fn explore(

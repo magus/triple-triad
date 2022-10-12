@@ -106,7 +106,7 @@ pub fn drive_game_prompt() {
                     println!("{:?}", game);
                 }
             }
-            "s" | "search" => {
+            "a" | "auto" | "s" | "search" => {
                 // handle chaos when search for moves with explore
                 if game.turn_is_player() && game.rules.chaos {
                     game.print_turn_hand();
@@ -121,7 +121,21 @@ pub fn drive_game_prompt() {
                     }
                 }
 
-                game.start_explore();
+                let moves = game.start_explore();
+
+                match input.as_str() {
+                    "a" | "auto" => {
+                        if let Some((_, move_game)) = moves.first() {
+                            if let Some((card_index, square_index)) = move_game.last_move {
+                                game = game.execute_turn(card_index, square_index);
+                            }
+                        }
+                    }
+                    // "s" | "search" => {}
+                    _ => {
+                        // do nothing just explore
+                    }
+                }
             }
             "u" | "undo" => {
                 println!("TODO UNDO");
@@ -200,32 +214,32 @@ fn setup_game() -> Game {
 
 fn print_setup_help() {
     println!(
-        "{}\tToggle the {} player",
+        "{}\ttoggle the {} player",
         "(f)irst".white().bold(),
         "first".white().bold(),
     );
     println!(
-        "{}\tToggle the {} rule",
+        "{}\ttoggle the {} rule",
         "(c)haos".white().bold(),
         "chaos".white().bold(),
     );
     println!(
-        "{}\tToggle the {} rule",
+        "{}\ttoggle the {} rule",
         "(p)lus".white().bold(),
         "plus".white().bold(),
     );
     println!(
-        "{}\tToggle the {} rule",
+        "{}\ttoggle the {} rule",
         "(s)ame".white().bold(),
         "same".white().bold(),
     );
     println!(
-        "{}\tToggle the {} rule",
+        "{}\ttoggle the {} rule",
         "s(w)ap".white().bold(),
         "swap".white().bold(),
     );
     println!(
-        "{}\tSetup for game is {}, ready to play",
+        "{}\tsetup for game is {}, ready to play",
         "(d)one".white().bold(),
         "done".white().bold(),
     );
@@ -238,7 +252,12 @@ fn print_setup_help() {
 
 fn print_drive_game_help() {
     println!(
-        "{}\t\tBegin {}ing a card on the board",
+        "{}\t\t{}matically play best AI recommended move",
+        "(a)uto".white().bold(),
+        "auto".white().bold(),
+    );
+    println!(
+        "{}\t\tbegin {}ing a card on the board",
         "(p)ut".white().bold(),
         "put".white().bold(),
     );
