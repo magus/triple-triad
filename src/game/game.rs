@@ -629,14 +629,6 @@ impl Game {
         return self.turn == BOARD_SIZE as u8;
     }
 
-    pub fn turn_player_hand_max(&self) -> usize {
-        return if self.turn_is_player() {
-            self.player.cards.len() - 1
-        } else {
-            self.computer.cards.len() - 1
-        };
-    }
-
     pub fn new() -> Self {
         let board = [
             card::EMPTY,
