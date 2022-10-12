@@ -15,6 +15,7 @@ pub struct Rules {
     pub chaos: bool,
     pub plus: bool,
     pub same: bool,
+    pub swap: bool,
 }
 
 #[derive(Clone)]
@@ -591,6 +592,19 @@ impl Game {
         self.turn += 1;
     }
 
+    pub fn execute_swap(&mut self, player_card_index: usize, computer_card_index: usize) {
+        let mut computer_card = self.computer.cards[computer_card_index];
+        computer_card.is_player = true;
+
+        let mut player_card = self.player.cards[player_card_index];
+        player_card.is_player = false;
+        // always mark guaranteed since we know it's there since we swapped it in
+        player_card.is_guaranteed = true;
+
+        self.player.cards[player_card_index] = computer_card;
+        self.computer.cards[computer_card_index] = player_card;
+    }
+
     pub fn percent_score(&self) -> f64 {
         if self.turn == 0 {
             return 0.0;
@@ -670,6 +684,7 @@ impl Game {
             chaos: false,
             plus: false,
             same: false,
+            swap: false,
         };
 
         return Game {
