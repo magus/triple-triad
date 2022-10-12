@@ -1,3 +1,4 @@
+use crate::card::Card;
 use crate::game::constants;
 use crate::game::Game;
 use crate::print;
@@ -9,6 +10,27 @@ pub fn drive_game_prompt() {
     // On each play step print game board + both player cards
 
     let mut game = setup_game();
+
+    // https://arrtripletriad.com/en/npc-idle-imperial
+
+    game.player.cards = [
+        Card::player("P0", 8, 8, 2, 3),
+        Card::player("P1", 8, 2, 3, 8),
+        Card::player("P2", 1, 8, 3, 8),
+        Card::player("P3", 1, 5, 9, 9),
+        Card::player("P4", 6, 10, 10, 1),
+    ];
+
+    game.computer.cards = [
+        Card::computer_guaranteed("C0", 6, 3, 7, 3),
+        Card::computer_guaranteed("C1", 9, 7, 8, 1),
+        Card::computer("C2", 4, 1, 8, 7),
+        Card::computer("C3", 7, 1, 6, 7),
+        Card::computer("C4", 1, 4, 8, 8),
+        Card::computer("C5", 7, 1, 3, 7),
+        Card::computer("C6", 8, 3, 8, 1),
+        card::EMPTY,
+    ];
 
     print_drive_game_help();
 
