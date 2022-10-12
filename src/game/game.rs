@@ -25,7 +25,7 @@ pub struct Game {
     pub score: i8,
     pub rules: Rules,
     pub board: Board,
-    pub last_move: i8,
+    pub last_move: Option<(usize, usize)>,
     pub chaos_card: Option<usize>,
 
     pub player: Player,
@@ -276,7 +276,7 @@ impl Game {
                 let is_combo = false;
                 self.card_impact(index, is_combo);
                 self.score += if is_player { 1 } else { 0 };
-                self.last_move = index as i8;
+                self.last_move = Some((card_index, index));
 
                 // now that card is placed, can we guarantee computer cards?
                 if !is_player {
@@ -631,11 +631,11 @@ impl Game {
     }
 
     pub fn is_last_move(&self, index: usize) -> bool {
-        if self.last_move < 0 {
-            return false;
+        if let Some((_, square_index)) = self.last_move {
+            return square_index == index;
         }
 
-        return self.last_move as usize == index;
+        return false;
     }
 
     pub fn is_ended(&self) -> bool {
@@ -692,7 +692,7 @@ impl Game {
             score: 0,
             rules,
             board,
-            last_move: -1,
+            last_move: None,
             chaos_card: None,
 
             player,
