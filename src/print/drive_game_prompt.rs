@@ -33,6 +33,39 @@ pub fn drive_game_prompt() {
         card::EMPTY,
     ];
 
+    // handle swap
+    if game.rules.swap {
+        println!("🔀 Swap");
+        loop {
+            println!("{}", print::box_text("Which card was taken from you?", 1));
+            game.print_player_hand();
+            let maybe_player_card = prompt_card_index(&mut game, true);
+            if maybe_player_card == None {
+                continue;
+            }
+            println!("{}", print::box_text("Which card was given to you?", 1));
+            game.print_computer_hand();
+            let maybe_computer_card = prompt_card_index(&mut game, false);
+            if maybe_computer_card == None {
+                continue;
+            }
+
+            if let (Some(player_card), Some(computer_card)) =
+                (maybe_player_card, maybe_computer_card)
+            {
+                println!(
+                    "🔀 Exchanging [{player_card}] (player) with [{computer_card}] from (computer)"
+                );
+                println!();
+
+                game.execute_swap(player_card, computer_card);
+
+                // exit loop
+                break;
+            }
+        }
+    }
+
     print_drive_game_help();
 
     loop {
@@ -135,6 +168,10 @@ fn setup_game() -> Game {
                 game.rules.same = !game.rules.same;
                 println!("{}", game.print_rules());
             }
+            "w" | "swap" => {
+                game.rules.swap = !game.rules.swap;
+                println!("{}", game.print_rules());
+            }
             "d" | "done" => {
                 println!("{}", game.print_rules());
                 break;
@@ -179,6 +216,11 @@ fn print_setup_help() {
         "{}\tToggle the {} rule",
         "(s)ame".white().bold(),
         "same".white().bold(),
+    );
+    println!(
+        "{}\tToggle the {} rule",
+        "s(w)ap".white().bold(),
+        "swap".white().bold(),
     );
     println!(
         "{}\tSetup for game is {}, ready to play",

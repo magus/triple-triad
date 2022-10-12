@@ -147,6 +147,7 @@ impl Game {
                 &format!("{:<name$} = {}", "chaos", self.rules.chaos),
                 &format!("{:<name$} = {}", "plus", self.rules.plus),
                 &format!("{:<name$} = {}", "same", self.rules.same),
+                &format!("{:<name$} = {}", "swap", self.rules.swap),
             ],
             2,
         );
