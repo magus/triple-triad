@@ -139,12 +139,14 @@ impl Game {
             "computer"
         };
 
+        let name = 8;
+
         return print::box_lines(
             vec![
-                &format!("{} = {}", "first", first),
-                &format!("{} = {}", "chaos", self.rules.chaos),
-                &format!("{} = {}", "plus", self.rules.plus),
-                &format!("{} = {}", "same", self.rules.same),
+                &format!("{:<name$} = {}", "first", first),
+                &format!("{:<name$} = {}", "chaos", self.rules.chaos),
+                &format!("{:<name$} = {}", "plus", self.rules.plus),
+                &format!("{:<name$} = {}", "same", self.rules.same),
             ],
             2,
         );
