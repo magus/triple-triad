@@ -153,7 +153,7 @@ impl Game {
         );
     }
 
-    fn print_hand(&self, cards: Vec<Card>) {
+    fn print_hand(&self, cards: Vec<Card>, maybe_last_move: Option<usize>) {
         let start = 0;
         let end = cards.len();
 
@@ -214,19 +214,60 @@ impl Game {
             print!("{}", print_card_color(card, format!("           {}", i)));
             print!(" ");
         }
+
+        println!();
+
+        for i in start..end {
+            let marker = if let Some(last_move) = maybe_last_move {
+                if i == last_move {
+                    "☝️"
+                } else {
+                    "  "
+                }
+            } else {
+                " "
+            };
+
+            print!("     {}     ", marker);
+            print!(" ");
+        }
     }
 
     pub fn print_player_hand(&self) {
         println!();
         println!("{}", print::box_text("Player", 1));
-        self.print_hand(Vec::from(self.player.cards));
+
+        let last_move_player = !self.turn_is_player();
+        let last_move = if last_move_player {
+            if let Some((card_index, _)) = self.last_move {
+                Some(card_index)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        self.print_hand(Vec::from(self.player.cards), last_move);
         println!();
     }
 
     pub fn print_computer_hand(&self) {
         println!();
         println!("{}", print::box_text("Computer", 1));
-        self.print_hand(Vec::from(self.computer.cards));
+
+        let last_move_computer = self.turn_is_player();
+        let last_move = if last_move_computer {
+            if let Some((card_index, _)) = self.last_move {
+                Some(card_index)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        self.print_hand(Vec::from(self.computer.cards), last_move);
         println!();
     }
 
