@@ -95,7 +95,6 @@ impl Game {
         let show_count = std::cmp::min(3, safe_results.len());
 
         let max_depth_moves = self.max_depth_moves(self.turn + 1, max_depth);
-        println!("max_depth_moves={max_depth_moves}");
 
         for i in 0..show_count {
             let index = safe_results.len() - 1 - i;
