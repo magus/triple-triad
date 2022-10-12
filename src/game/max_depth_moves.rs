@@ -32,7 +32,7 @@ impl Game {
             let is_player = game.turn_is_player();
 
             let card_choices = if is_player {
-                game.player.cards_left()
+                game.player.cards_left(self.chaos_card)
             } else {
                 game.computer.cards_left()
             };

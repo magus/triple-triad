@@ -142,6 +142,7 @@ impl Game {
         return print::box_lines(
             vec![
                 &format!("{} = {}", "first", first),
+                &format!("{} = {}", "chaos", self.rules.chaos),
                 &format!("{} = {}", "plus", self.rules.plus),
                 &format!("{} = {}", "same", self.rules.same),
             ],
