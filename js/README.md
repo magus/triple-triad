@@ -10,6 +10,12 @@ git submodule init
 git submodule update
 ```
 
+## run
+
+```
+yarn buid
+```
+
 ## data
 
 https://github.com/xivapi/ffxiv-datamining
