@@ -2,6 +2,14 @@
 
 quick scripts to grab metadata about cards
 
+## setup
+
+> **fetch the `xivapi/ffxiv-datamining` submodule**
+```
+git submodule init
+git submodule update
+```
+
 ## data
 
 https://github.com/xivapi/ffxiv-datamining
