@@ -13,23 +13,25 @@ pub struct RuleData {
     rules: Vec<RuleJson>,
 }
 
-const JSON_PATH: &str = "./js/dist/rules.json";
+impl RuleData {
+    pub fn read() -> RuleData {
+        let file = fs::File::open(JSON_PATH).expect("file should open read only");
+        let json: serde_json::Value =
+            serde_json::from_reader(file).expect("file should be proper JSON");
 
-pub fn parse_rules() -> RuleData {
-    let file = fs::File::open(JSON_PATH).expect("file should open read only");
-    let json: serde_json::Value =
-        serde_json::from_reader(file).expect("file should be proper JSON");
+        let rule_list = json.as_array().unwrap();
 
-    let rule_list = json.as_array().unwrap();
+        let mut rules: Vec<RuleJson> = vec![];
 
-    let mut rules: Vec<RuleJson> = vec![];
+        for rule_value in rule_list {
+            let rule_json = RuleJson::deserialize(rule_value).unwrap();
+            rules.push(rule_json);
+        }
 
-    for rule_value in rule_list {
-        let rule_json = RuleJson::deserialize(rule_value).unwrap();
-        rules.push(rule_json);
+        let data = RuleData { rules };
+
+        return data;
     }
-
-    let data = RuleData { rules };
-
-    return data;
 }
+
+const JSON_PATH: &str = "./js/dist/rules.json";
