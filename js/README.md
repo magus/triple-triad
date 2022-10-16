@@ -13,7 +13,7 @@ git submodule update
 ## run
 
 ```
-yarn buid
+yarn build
 ```
 
 ## data
