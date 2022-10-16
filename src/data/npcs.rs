@@ -15,6 +15,21 @@ pub struct NpcData {
     npcs: Vec<NpcJson>,
 }
 
+impl NpcData {
+    pub fn find_all_npc(&self, search: &str) -> Vec<&NpcJson> {
+        let normalized_search = search.to_lowercase();
+        let mut npc_list = vec![];
+
+        for npc in self.npcs.iter() {
+            if npc.name.contains(&normalized_search) {
+                npc_list.push(npc);
+            }
+        }
+
+        return npc_list;
+    }
+}
+
 const JSON_PATH: &str = "./js/dist/npcs.json";
 
 pub fn parse_npcs() -> NpcData {

@@ -7,15 +7,13 @@ use triple_triad::time::Stopwatch;
 
 fn main() {
     let rule_data = data::rules::parse_rules();
-    println!("{:#?}", rule_data);
     let card_data = data::cards::parse_cards();
-    println!("{:#?}", card_data);
     let npc_data = data::npcs::parse_npcs();
-    println!("{:#?}", npc_data);
 
     // use npc data to allow selecting npc in prompt
     // use npc card data to set game cards with correct values
     // convert search input to lowercase for comparison
+    println!("{:#?}", npc_data.find_all_npc("world"));
 
     return;
 
