@@ -12,7 +12,7 @@ pub struct NpcJson {
     rules: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct NpcData {
     npcs: Vec<NpcJson>,
 }

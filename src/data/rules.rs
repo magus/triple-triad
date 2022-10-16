@@ -8,7 +8,7 @@ pub struct RuleJson {
     description: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct RuleData {
     rules: Vec<RuleJson>,
 }

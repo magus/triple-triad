@@ -16,7 +16,7 @@ pub struct CardJson {
     order: u16,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct CardData {
     cards: Vec<CardJson>,
 }
