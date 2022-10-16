@@ -1,6 +1,6 @@
 import fs from "fs";
 import * as csv from "csv-parse/sync";
-import * as list from "./list.js";
+import * as list from "../list.js";
 
 export function parse_npcs() {
   const NPCCardList = csv.parse(
@@ -8,7 +8,7 @@ export function parse_npcs() {
     {
       from_line: 4,
       on_record: (record, options) => {
-        if (record.variable_0 === "0" && record.fixed_0 === "0") {
+        if (is_zero(record.variable_0) && is_zero(record.fixed_0)) {
           return null;
         }
 
@@ -18,10 +18,7 @@ export function parse_npcs() {
           record.fixed_2,
           record.fixed_3,
           record.fixed_4,
-        ]
-
-          .map((v) => parseInt(v, 10))
-          .filter(Boolean);
+        ].filter(is_not_zero);
 
         const variable = [
           record.variable_0,
@@ -29,15 +26,9 @@ export function parse_npcs() {
           record.variable_2,
           record.variable_3,
           record.variable_4,
-        ]
+        ].filter(is_not_zero);
 
-          .map((v) => parseInt(v, 10))
-          .filter(Boolean);
-
-        const rules = [record.rule_0, record.rule_1]
-
-          .map((v) => parseInt(v, 10))
-          .filter(Boolean);
+        const rules = [record.rule_0, record.rule_1].filter(is_not_zero);
 
         const output_record = {
           id: record.id,
@@ -302,11 +293,35 @@ export function parse_npcs() {
   // join back data from BaseNPCNameList to the NPCCardMap
   for (const npc of BaseNPCNameList) {
     const card_npc = NPCCardMap[npc.TripleTriadNpcId];
-    card_npc.name = npc.name;
+    card_npc.name = npc.name.toLowerCase();
   }
 
+  // console.debug("BaseNPCNameList", BaseNPCNameList.length);
+  // console.debug("NPCCardList", NPCCardList.length);
+
+  const final_npc_card_list = [];
+
+  for (const npc of NPCCardList) {
+    if (!npc.name) {
+      console.error("missing npc", npc);
+      continue;
+    }
+
+    final_npc_card_list.push(npc);
+  }
+
+  // console.debug("final_npc_card_list", final_npc_card_list.length);
+
   return {
-    list: NPCCardList,
+    list: final_npc_card_list,
     map: NPCCardMap,
   };
+}
+
+function is_zero(value) {
+  return value === "0";
+}
+
+function is_not_zero(value) {
+  return value !== "0";
 }

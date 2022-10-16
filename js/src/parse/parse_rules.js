@@ -1,6 +1,6 @@
 import fs from "fs";
 import * as csv from "csv-parse/sync";
-import * as list from "./list.js";
+import * as list from "../list.js";
 
 export function parse_rules() {
   const RuleList = csv.parse(
