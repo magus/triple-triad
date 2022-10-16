@@ -6,9 +6,9 @@ use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    let rule_data = data::rules::parse_rules();
-    let card_data = data::cards::parse_cards();
-    let npc_data = data::npcs::parse_npcs();
+    let rule_data = data::RuleData::read();
+    let card_data = data::CardData::read();
+    let npc_data = data::NpcData::read();
 
     // use npc data to allow selecting npc in prompt
     // use npc card data to set game cards with correct values

@@ -21,23 +21,25 @@ pub struct CardData {
     cards: Vec<CardJson>,
 }
 
-const JSON_PATH: &str = "./js/dist/cards.json";
+impl CardData {
+    pub fn read() -> CardData {
+        let file = fs::File::open(JSON_PATH).expect("file should open read only");
+        let json: serde_json::Value =
+            serde_json::from_reader(file).expect("file should be proper JSON");
 
-pub fn parse_cards() -> CardData {
-    let file = fs::File::open(JSON_PATH).expect("file should open read only");
-    let json: serde_json::Value =
-        serde_json::from_reader(file).expect("file should be proper JSON");
+        let card_list = json.as_array().unwrap();
 
-    let card_list = json.as_array().unwrap();
+        let mut cards: Vec<CardJson> = vec![];
 
-    let mut cards: Vec<CardJson> = vec![];
+        for rule_value in card_list {
+            let card_json = CardJson::deserialize(rule_value).unwrap();
+            cards.push(card_json);
+        }
 
-    for rule_value in card_list {
-        let card_json = CardJson::deserialize(rule_value).unwrap();
-        cards.push(card_json);
+        let data = CardData { cards };
+
+        return data;
     }
-
-    let data = CardData { cards };
-
-    return data;
 }
+
+const JSON_PATH: &str = "./js/dist/cards.json";
