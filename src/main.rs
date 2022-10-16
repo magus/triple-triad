@@ -1,10 +1,24 @@
 use triple_triad::card;
 use triple_triad::card::Card;
+use triple_triad::data;
 use triple_triad::game::Game;
 use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
+    let rule_data = data::rules::parse_rules();
+    println!("{:#?}", rule_data);
+    let card_data = data::cards::parse_cards();
+    println!("{:#?}", card_data);
+    let npc_data = data::npcs::parse_npcs();
+    println!("{:#?}", npc_data);
+
+    // use npc data to allow selecting npc in prompt
+    // use npc card data to set game cards with correct values
+    // convert search input to lowercase for comparison
+
+    return;
+
     print::drive_game_prompt();
 
     // TODO: implement chaos et al necessary to simulate "Idle Imperial"
