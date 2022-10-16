@@ -2,11 +2,6 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CardData {
-    cards: Vec<CardJson>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 pub struct CardJson {
     id: String,
     name: String,
@@ -19,6 +14,11 @@ pub struct CardJson {
     tribe: u16,
     sort: u16,
     order: u16,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CardData {
+    cards: Vec<CardJson>,
 }
 
 const JSON_PATH: &str = "./js/dist/cards.json";

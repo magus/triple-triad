@@ -2,17 +2,17 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct NpcData {
-    npcs: Vec<NpcJson>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 pub struct NpcJson {
     id: String,
     name: String,
     guaranteed: Vec<String>,
     variable: Vec<String>,
     rules: Vec<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NpcData {
+    npcs: Vec<NpcJson>,
 }
 
 const JSON_PATH: &str = "./js/dist/npcs.json";

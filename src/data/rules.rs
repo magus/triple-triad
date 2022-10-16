@@ -2,15 +2,15 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct RuleData {
-    rules: Vec<RuleJson>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 pub struct RuleJson {
     id: String,
     name: String,
     description: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RuleData {
+    rules: Vec<RuleJson>,
 }
 
 const JSON_PATH: &str = "./js/dist/rules.json";
