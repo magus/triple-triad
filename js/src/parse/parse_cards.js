@@ -1,6 +1,6 @@
 import fs from "fs";
 import * as csv from "csv-parse/sync";
-import * as list from "./list.js";
+import * as list from "../list.js";
 
 export function parse_cards() {
   const CardNameList = csv.parse(
@@ -14,7 +14,7 @@ export function parse_cards() {
 
         const output_record = {
           id: record.id,
-          name: record.name,
+          name: record.name.toLowerCase(),
         };
 
         return output_record;
