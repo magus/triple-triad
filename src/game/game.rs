@@ -14,20 +14,31 @@ type Board = [Card; BOARD_SIZE];
 
 #[derive(Copy, Clone, Debug)]
 pub struct Rules {
+    // ❌ TODO
     pub roulette: bool,
+    // ❌ TODO
     pub all_open: bool,
+    // ❌ TODO
     pub three_open: bool,
     pub same: bool,
+    // ❌ TODO
     pub sudden_death: bool,
     pub plus: bool,
+    // ❌ TODO
     pub random: bool,
+    // ❌ TODO
     pub order: bool,
     pub chaos: bool,
+    // ❌ TODO
     pub reverse: bool,
+    // ❌ TODO
     pub fallen_ace: bool,
+    // ❌ TODO
     pub ascension: bool,
+    // ❌ TODO
     pub descension: bool,
     pub swap: bool,
+    // ❌ TODO
     pub draft: bool,
 }
 
