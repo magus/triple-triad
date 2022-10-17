@@ -47,7 +47,7 @@ fn drive_game(input_game: Game) {
                 println!();
                 println!("{}", print::box_text("Which card?", 1));
                 let is_player = game.turn_is_player();
-                let maybe_card = prompt_card_index(&mut game, is_player);
+                let maybe_card = prompt_card_index(&game, is_player);
 
                 if maybe_card == None {
                     return;
@@ -78,7 +78,7 @@ fn drive_game(input_game: Game) {
                     game.print_turn_hand();
                     println!();
                     println!("{}", print::box_text("Which card did chaos select?", 1));
-                    let maybe_card = prompt_card_index(&mut game, true);
+                    let maybe_card = prompt_card_index(&game, true);
 
                     if let Some(card) = maybe_card {
                         game.chaos_card = Some(card);
@@ -368,13 +368,13 @@ fn post_setup_game(input_game: Game) -> Game {
         loop {
             println!("{}", print::box_text("Which card was taken from you?", 1));
             game.print_player_hand();
-            let maybe_player_card = prompt_card_index(&mut game, true);
+            let maybe_player_card = prompt_card_index(&game, true);
             if maybe_player_card == None {
                 continue;
             }
             println!("{}", print::box_text("Which card was given to you?", 1));
             game.print_computer_hand();
-            let maybe_computer_card = prompt_card_index(&mut game, false);
+            let maybe_computer_card = prompt_card_index(&game, false);
             if maybe_computer_card == None {
                 continue;
             }
@@ -461,7 +461,7 @@ fn print_drive_game_help() {
     );
 }
 
-fn prompt_card_index(game: &mut Game, is_player: bool) -> Option<usize> {
+fn prompt_card_index(game: &Game, is_player: bool) -> Option<usize> {
     let maybe_card = print::prompt().parse::<usize>();
 
     if let Ok(card) = maybe_card {
