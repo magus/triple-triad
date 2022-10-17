@@ -60,7 +60,7 @@ impl NpcData {
 
             for card_id in npc_json.guaranteed {
                 if let Some(card_json) = card_data.by_id(&card_id) {
-                    let name = card_name(cards.len());
+                    let name = Card::card_name(cards.len());
 
                     cards.push(Card::computer_guaranteed(
                         name,
@@ -76,7 +76,7 @@ impl NpcData {
 
             for card_id in npc_json.variable {
                 if let Some(card_json) = card_data.by_id(&card_id) {
-                    let name = card_name(cards.len());
+                    let name = Card::card_name(cards.len());
 
                     cards.push(Card::computer(
                         name,
@@ -113,19 +113,3 @@ impl NpcData {
 }
 
 const JSON_PATH: &str = "./js/dist/npcs.json";
-
-fn card_name(size: usize) -> &'static str {
-    return match size {
-        0 => "C0",
-        1 => "C1",
-        2 => "C2",
-        3 => "C3",
-        4 => "C4",
-        5 => "C5",
-        6 => "C6",
-        7 => "C7",
-        8 => "C8",
-        9 => "C9",
-        _ => panic!("unexpected number of npc cards [{}]", size),
-    };
-}
