@@ -5,7 +5,7 @@ use std::sync::{Arc, Mutex};
 use crate::card;
 use crate::card::Card;
 use crate::data::RuleJson;
-use crate::game::constants::{BOARD_SIZE, EVALUATION_MAX};
+use crate::game::constants::BOARD_SIZE;
 use crate::game::impact::{self, ImpactPair};
 use crate::player::Computer;
 use crate::player::Player;
@@ -105,12 +105,19 @@ pub struct Game {
     pub board: Board,
     pub last_move: Option<(usize, usize)>,
     pub chaos_card: Option<usize>,
+    pub evaluation_max: u64,
 
     pub player: Player,
     pub computer: Computer,
 }
 
+const DEFAULT_EVALUATION_MAX: u64 = 500_000_000;
+
 impl Game {
+    pub fn reset_evaluation_max(&mut self) {
+        self.evaluation_max = DEFAULT_EVALUATION_MAX;
+    }
+
     pub fn start_explore(&self) -> Vec<(f64, Game)> {
         let start_turn = self.turn;
         let depth = 0;
@@ -143,7 +150,7 @@ impl Game {
             max_depth = test_depth;
 
             let depth_moves = self.max_depth_moves(self.turn, max_depth);
-            if depth_moves < EVALUATION_MAX {
+            if depth_moves < self.evaluation_max {
                 println!("✅ Found safe depth [{max_depth}] with [{depth_moves}] moves!");
                 break;
             }
@@ -787,6 +794,7 @@ impl Game {
             board,
             last_move: None,
             chaos_card: None,
+            evaluation_max: 500_000_000,
 
             player,
             computer,
