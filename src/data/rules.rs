@@ -33,8 +33,8 @@ impl RuleData {
 
         let mut rules = vec![];
 
-        for rule_value in rule_list {
-            let rule_json = RuleJson::deserialize(rule_value).unwrap();
+        for json_value in rule_list {
+            let rule_json = RuleJson::deserialize(json_value).unwrap();
 
             rules.push(rule_json);
         }
