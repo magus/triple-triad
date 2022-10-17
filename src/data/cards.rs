@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::fs;
+use std::{collections::HashMap, fs};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CardJson {
@@ -18,18 +18,31 @@ pub struct CardJson {
 
 #[derive(Debug)]
 pub struct CardData {
-    cards: Vec<CardJson>,
+    cards_list: Vec<CardJson>,
+    cards_map: HashMap<String, CardJson>,
 }
 
 impl CardData {
     pub fn by_id(&self, id: &str) -> Option<CardJson> {
-        for card in self.cards.iter() {
-            if card.id == id {
-                return Some(card.clone());
-            }
+        if let Some(card) = self.cards_map.get(id) {
+            return Some(card.clone());
         }
 
         return None;
+    }
+
+    pub fn search(&self, search: &str) -> Vec<&CardJson> {
+        let normalized_search = search.to_lowercase();
+        let mut card_list = vec![];
+
+        for card in self.cards_list.iter() {
+            let normalized_name = card.name.to_lowercase();
+            if normalized_name.contains(&normalized_search) {
+                card_list.push(card);
+            }
+        }
+
+        return card_list;
     }
 
     pub fn read() -> CardData {
@@ -39,14 +52,20 @@ impl CardData {
 
         let card_list = json.as_array().unwrap();
 
-        let mut cards: Vec<CardJson> = vec![];
+        let mut cards_list: Vec<CardJson> = vec![];
+        let mut cards_map: HashMap<String, CardJson> = HashMap::new();
 
         for json_value in card_list {
             let card_json = CardJson::deserialize(json_value).unwrap();
-            cards.push(card_json);
+
+            cards_list.push(card_json.clone());
+            cards_map.insert(card_json.id.clone(), card_json.clone());
         }
 
-        let data = CardData { cards };
+        let data = CardData {
+            cards_list,
+            cards_map,
+        };
 
         return data;
     }

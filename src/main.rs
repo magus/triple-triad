@@ -8,7 +8,7 @@ use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    // search_data();
+    search_data();
 
     // print::drive_game_prompt();
 
@@ -17,7 +17,7 @@ fn main() {
 
     // guaranteed_card_left();
 
-    idle_imperial();
+    // idle_imperial();
 
     // deep_explore();
 
@@ -31,15 +31,21 @@ fn search_data() {
     let mut stopwatch = Stopwatch::start();
 
     let rule_data = data::RuleData::read();
+    stopwatch.record("rule data loaded");
     let card_data = data::CardData::read();
+    stopwatch.record("card data loaded");
     let npc_data = data::NpcData::read(&card_data, &rule_data);
+    stopwatch.record("npc data loaded");
 
     // use npc data to allow selecting npc in prompt
     // use npc card data to set game cards with correct values
     // convert search input to lowercase for comparison
-    println!("{:#?}", npc_data.find_all_npc("idle"));
 
-    stopwatch.record("search_data finished");
+    println!("{:#?}", npc_data.search("idle"));
+    stopwatch.record("npc_data.search(\"idle\")");
+
+    println!("{:#?}", card_data.search("arm"));
+    stopwatch.record("card_data.search(\"arm\")");
 }
 
 #[allow(dead_code)]
@@ -106,7 +112,7 @@ fn idle_imperial() {
     let card_data = data::CardData::read();
     let npc_data = data::NpcData::read(&card_data, &rule_data);
 
-    let idle_imperial = npc_data.find_all_npc("idle").first().unwrap().clone();
+    let idle_imperial = npc_data.search("idle").first().unwrap().clone();
 
     let mut game = Game::new();
 
