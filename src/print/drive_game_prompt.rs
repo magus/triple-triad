@@ -4,6 +4,7 @@ use crate::card;
 use crate::card::Card;
 use crate::data;
 use crate::data::NpcData;
+use crate::data::RuleData;
 use crate::game::constants;
 use crate::game::Game;
 use crate::print;
@@ -19,7 +20,7 @@ pub fn drive_game_prompt() {
     stopwatch.record("drive_game_prompt load game data");
 
     // First phase sets up rules, first player, etc.
-    let game = setup_game(&npc_data);
+    let game = setup_game(&npc_data, &rule_data);
 
     // Handle things like swap, reveal, etc.
     let game = post_setup_game(game);
@@ -124,12 +125,12 @@ fn drive_game(input_game: Game) {
     }
 }
 
-fn setup_game(npc_data: &NpcData) -> Game {
+fn setup_game(npc_data: &NpcData, rule_data: &RuleData) -> Game {
     let mut game = Game::new();
 
-    print_setup_help();
-
     loop {
+        print_setup_help();
+
         let input = print::prompt();
 
         match input.as_str() {
@@ -197,30 +198,88 @@ fn setup_game(npc_data: &NpcData) -> Game {
                 game.computer.cards = game.computer.cards_from(npc.cards.clone());
                 game.print_computer_hand();
                 game.rules.from(&npc.rules);
-                println!("{}", game.print_rules());
+                println!("{}", game.print_rules(rule_data));
             }
             "f" | "first" => {
                 game.is_player_first = !game.is_player_first;
-                println!("{}", game.print_rules());
+                println!("{}", game.print_rules(rule_data));
             }
-            "c" | "chaos" => {
-                game.rules.chaos = !game.rules.chaos;
-                println!("{}", game.print_rules());
-            }
-            "p" | "plus" => {
-                game.rules.plus = !game.rules.plus;
-                println!("{}", game.print_rules());
-            }
-            "s" | "same" => {
-                game.rules.same = !game.rules.same;
-                println!("{}", game.print_rules());
-            }
-            "w" | "swap" => {
-                game.rules.swap = !game.rules.swap;
-                println!("{}", game.print_rules());
+            "r" | "rules" => {
+                loop {
+                    println!();
+
+                    println!("{}", game.print_rules(rule_data));
+                    println!();
+                    println!(
+                        "(enter {} to finish editing rules)",
+                        "d".truecolor(197, 3, 3).bold()
+                    );
+
+                    let maybe_id = print::prompt().parse::<String>();
+
+                    if let Ok(input) = maybe_id.clone() {
+                        match input.as_str() {
+                            "d" | "done" | "q" | "quit" => {
+                                break;
+                            }
+                            _ => {}
+                        }
+                    }
+
+                    if let Err(_) = maybe_id {
+                        println!("❌ invalid selection");
+                        continue;
+                    }
+
+                    let id = maybe_id.unwrap();
+                    let maybe_rule = rule_data.by_id(&id);
+
+                    if let Some(_) = maybe_rule {
+                    } else {
+                        println!("❌ invalid selection");
+                        continue;
+                    }
+
+                    let rule = maybe_rule.unwrap();
+
+                    if false {
+                    } else if rule.is_roulette() {
+                        game.rules.roulette = !game.rules.roulette;
+                    } else if rule.is_all_open() {
+                        game.rules.all_open = !game.rules.all_open;
+                    } else if rule.is_three_open() {
+                        game.rules.three_open = !game.rules.three_open;
+                    } else if rule.is_same() {
+                        game.rules.same = !game.rules.same;
+                    } else if rule.is_sudden_death() {
+                        game.rules.sudden_death = !game.rules.sudden_death;
+                    } else if rule.is_plus() {
+                        game.rules.plus = !game.rules.plus;
+                    } else if rule.is_random() {
+                        game.rules.random = !game.rules.random;
+                    } else if rule.is_order() {
+                        game.rules.order = !game.rules.order;
+                    } else if rule.is_chaos() {
+                        game.rules.chaos = !game.rules.chaos;
+                    } else if rule.is_reverse() {
+                        game.rules.reverse = !game.rules.reverse;
+                    } else if rule.is_fallen_ace() {
+                        game.rules.fallen_ace = !game.rules.fallen_ace;
+                    } else if rule.is_ascension() {
+                        game.rules.ascension = !game.rules.ascension;
+                    } else if rule.is_descension() {
+                        game.rules.descension = !game.rules.descension;
+                    } else if rule.is_swap() {
+                        game.rules.swap = !game.rules.swap;
+                    } else if rule.is_draft() {
+                        game.rules.draft = !game.rules.draft;
+                    }
+                }
+
+                println!("{}", game.print_rules(rule_data));
             }
             "d" | "done" => {
-                println!("{}", game.print_rules());
+                println!("{}", game.print_rules(rule_data));
                 break;
             }
             "q" | "quit" => {
@@ -307,24 +366,9 @@ fn print_setup_help() {
         "first".white().bold(),
     );
     println!(
-        "{}\ttoggle the {} rule",
-        "(c)haos".white().bold(),
-        "chaos".white().bold(),
-    );
-    println!(
-        "{}\ttoggle the {} rule",
-        "(p)lus".white().bold(),
-        "plus".white().bold(),
-    );
-    println!(
-        "{}\ttoggle the {} rule",
-        "(s)ame".white().bold(),
-        "same".white().bold(),
-    );
-    println!(
-        "{}\ttoggle the {} rule",
-        "s(w)ap".white().bold(),
-        "swap".white().bold(),
+        "{}\tselect {} to toggle from list",
+        "(r)ules".white().bold(),
+        "rules".white().bold(),
     );
     println!(
         "{}\tsetup for game is {}, ready to play",

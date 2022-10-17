@@ -3,8 +3,8 @@ use std::fs;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RuleJson {
-    id: String,
-    name: String,
+    pub id: String,
+    pub name: String,
     description: String,
 }
 
@@ -72,7 +72,7 @@ impl RuleJson {
 
 #[derive(Debug)]
 pub struct RuleData {
-    rules: Vec<RuleJson>,
+    pub rules: Vec<RuleJson>,
 }
 
 impl RuleData {

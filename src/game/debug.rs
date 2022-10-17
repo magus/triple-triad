@@ -2,6 +2,7 @@ use colored::*;
 use std::fmt;
 
 use crate::card::Card;
+use crate::data::RuleData;
 use crate::game::constants::ROW_SIZE;
 use crate::game::Game;
 use crate::print;
@@ -132,25 +133,59 @@ impl Game {
         return format!("Score: {:.2}% ({} / {})", percent, self.score, self.turn);
     }
 
-    pub fn print_rules(&self) -> String {
+    pub fn print_rules(&self, rule_data: &RuleData) -> String {
         let first = if self.is_player_first {
             "player"
         } else {
             "computer"
         };
 
-        let name = 8;
+        let name = 14;
 
-        return print::box_lines(
-            vec![
-                &format!("{:<name$} = {}", "first", first),
-                &format!("{:<name$} = {}", "chaos", self.rules.chaos),
-                &format!("{:<name$} = {}", "plus", self.rules.plus),
-                &format!("{:<name$} = {}", "same", self.rules.same),
-                &format!("{:<name$} = {}", "swap", self.rules.swap),
-            ],
-            2,
-        );
+        let mut lines = vec![];
+
+        lines.push(format!("{:<name$}      = {}", "first", first));
+        lines.push(format!(""));
+
+        for rule in rule_data.rules.iter() {
+            let value = if rule.is_roulette() {
+                self.rules.roulette
+            } else if rule.is_all_open() {
+                self.rules.all_open
+            } else if rule.is_three_open() {
+                self.rules.three_open
+            } else if rule.is_same() {
+                self.rules.same
+            } else if rule.is_sudden_death() {
+                self.rules.sudden_death
+            } else if rule.is_plus() {
+                self.rules.plus
+            } else if rule.is_random() {
+                self.rules.random
+            } else if rule.is_order() {
+                self.rules.order
+            } else if rule.is_chaos() {
+                self.rules.chaos
+            } else if rule.is_reverse() {
+                self.rules.reverse
+            } else if rule.is_fallen_ace() {
+                self.rules.fallen_ace
+            } else if rule.is_ascension() {
+                self.rules.ascension
+            } else if rule.is_descension() {
+                self.rules.descension
+            } else if rule.is_swap() {
+                self.rules.swap
+            } else if rule.is_draft() {
+                self.rules.draft
+            } else {
+                false
+            };
+
+            lines.push(format!("[{:>2}] {:<name$} = {value}", rule.id, rule.name));
+        }
+
+        return print::box_lines(lines, 2);
     }
 
     fn print_hand(&self, cards: Vec<Card>, maybe_last_move: Option<usize>) {

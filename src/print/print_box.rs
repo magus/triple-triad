@@ -18,7 +18,7 @@ pub fn box_text(text: &str, padding_u8: u8) -> String {
     return parts.join("\n");
 }
 
-pub fn box_lines(lines: Vec<&str>, padding_u8: u8) -> String {
+pub fn box_lines(lines: Vec<String>, padding_u8: u8) -> String {
     let mut parts: Vec<String> = vec![];
 
     let max_text_len = lines.iter().map(|l| unicode_width(l)).max().unwrap();
@@ -33,7 +33,7 @@ pub fn box_lines(lines: Vec<&str>, padding_u8: u8) -> String {
     parts.push(format!("┌{}┐", side.join("")));
 
     for line in lines {
-        let line_pad_len = max_text_len - unicode_width(line);
+        let line_pad_len = max_text_len - unicode_width(&line);
         let line_pad: Vec<&str> = (0..line_pad_len).map(|_| " ").collect();
         parts.push(format!(
             "│{}{}{}{}│",

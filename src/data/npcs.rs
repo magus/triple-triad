@@ -19,7 +19,6 @@ pub struct Npc {
     id: String,
     pub name: String,
     pub cards: Vec<Card>,
-    #[allow(dead_code)]
     pub rules: Vec<RuleJson>,
 }
 
