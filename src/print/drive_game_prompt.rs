@@ -20,15 +20,20 @@ pub fn drive_game_prompt() {
     stopwatch.record("drive_game_prompt load game data");
 
     // First phase sets up rules, first player, etc.
-    let game = setup_game(&npc_data, &rule_data);
+    let init_game = setup_game(&npc_data, &rule_data);
 
-    // Handle things like swap, reveal, etc.
-    let game = post_setup_game(game);
-    println!("{:?}", game);
+    loop {
+        // ensure fresh instance of game on each loop
+        let game = init_game.clone();
 
-    // Then alternate inputting in moves
-    // On each play step print game board + both player cards
-    drive_game(game);
+        // Handle things like swap, reveal, etc.
+        let game = post_setup_game(game);
+        println!("{:?}", game);
+
+        // Then alternate inputting in moves
+        // On each play step print game board + both player cards
+        drive_game(game);
+    }
 }
 
 fn drive_game(input_game: Game) {
@@ -39,9 +44,7 @@ fn drive_game(input_game: Game) {
     loop {
         let input = print::prompt();
 
-        // close is to capture returns allowing us to break out of match
-        // in order to rerun our outer control prompt loop
-        (|| match input.as_str() {
+        match input.as_str() {
             "p" | "put" => {
                 game.print_turn_hand();
                 println!();
@@ -50,7 +53,7 @@ fn drive_game(input_game: Game) {
                 let maybe_card = prompt_card_index(&game, is_player);
 
                 if maybe_card == None {
-                    return;
+                    continue;
                 }
 
                 game.print_board();
@@ -60,11 +63,11 @@ fn drive_game(input_game: Game) {
                 if let Ok(square) = maybe_square {
                     if square > constants::BOARD_SIZE {
                         println!("❌ square must be between 0 and {}", constants::BOARD_SIZE);
-                        return;
+                        continue;
                     }
                 } else {
                     println!("❌ square must be a positive number");
-                    return;
+                    continue;
                 }
 
                 if let (Some(card), Ok(square)) = (maybe_card, maybe_square) {
@@ -83,7 +86,7 @@ fn drive_game(input_game: Game) {
                     if let Some(card) = maybe_card {
                         game.chaos_card = Some(card);
                     } else {
-                        return;
+                        continue;
                     }
                 }
 
@@ -130,7 +133,8 @@ fn drive_game(input_game: Game) {
                 println!("TODO REDO");
             }
             "q" | "quit" => {
-                panic!("❌ aborting game")
+                println!("❌ restarting game");
+                return;
             }
             "h" | "help" => {
                 print_drive_game_help();
@@ -141,7 +145,7 @@ fn drive_game(input_game: Game) {
                 input,
                 "(h)elp".white().bold()
             ),
-        })()
+        }
     }
 }
 
