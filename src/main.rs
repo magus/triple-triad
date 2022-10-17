@@ -6,7 +6,7 @@ use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    search_data();
+    // search_data();
 
     // print::drive_game_prompt();
 
@@ -15,7 +15,7 @@ fn main() {
 
     // guaranteed_card_left();
 
-    // idle_imperial();
+    idle_imperial();
 
     // deep_explore();
 
@@ -100,6 +100,12 @@ fn guaranteed_card_left() {
 fn idle_imperial() {
     let mut stopwatch = Stopwatch::start();
 
+    let rule_data = data::RuleData::read();
+    let card_data = data::CardData::read();
+    let npc_data = data::NpcData::read(&card_data, &rule_data);
+
+    let idle_imperial = npc_data.find_all_npc("idle").first().unwrap().clone();
+
     let mut game = Game::new();
 
     // game.is_player_first = false;
@@ -114,15 +120,7 @@ fn idle_imperial() {
         Card::player("P4", 6, 10, 10, 1),
     ];
 
-    game.computer.cards = game.computer.cards_from(vec![
-        Card::computer_guaranteed("C0", 6, 3, 7, 3),
-        Card::computer_guaranteed("C1", 9, 7, 8, 1),
-        Card::computer("C2", 4, 1, 8, 7),
-        Card::computer("C3", 7, 1, 6, 7),
-        Card::computer("C4", 1, 4, 8, 8),
-        Card::computer("C5", 7, 1, 3, 7),
-        Card::computer("C6", 8, 3, 8, 1),
-    ]);
+    game.computer.cards = game.computer.cards_from(idle_imperial.cards.clone());
 
     // player
     game = game.execute_turn(1, 8);

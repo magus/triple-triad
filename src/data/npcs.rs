@@ -17,7 +17,7 @@ pub struct NpcJson {
 pub struct Npc {
     id: String,
     name: String,
-    cards: Vec<Card>,
+    pub cards: Vec<Card>,
     rules: Vec<RuleJson>,
 }
 
