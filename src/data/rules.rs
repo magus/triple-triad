@@ -15,7 +15,7 @@ pub struct RuleData {
 
 impl RuleData {
     pub fn by_id(&self, id: &str) -> Option<RuleJson> {
-        for rule in self.rules {
+        for rule in self.rules.iter() {
             if rule.id == id {
                 return Some(rule.clone());
             }
