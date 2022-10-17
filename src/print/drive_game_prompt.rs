@@ -195,7 +195,7 @@ fn setup_game(npc_data: &NpcData, rule_data: &RuleData) -> Game {
 
                 // use the npc to setup game
                 game = Game::new();
-                game.computer.cards = game.computer.cards_from(npc.cards.clone());
+                game.computer.cards_from(npc.cards.clone());
                 game.print_computer_hand();
                 game.rules.from(&npc.rules);
                 println!("{}", game.print_rules(rule_data));

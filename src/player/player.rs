@@ -112,10 +112,10 @@ impl Computer {
         }
     }
 
-    pub fn cards_from(&self, cards: Vec<Card>) -> ComputerCardsArray {
+    pub fn cards_from(&mut self, cards: Vec<Card>) {
         let size = cards.len();
 
-        return match size {
+        self.cards = match size {
             5 => [
                 cards[0],
                 cards[1],
