@@ -399,25 +399,27 @@ fn post_setup_game(input_game: Game) -> Game {
 }
 
 fn print_setup_help() {
+    let cmd = 10;
+
     println!();
 
     println!(
-        "{}\tsearch {} by name and load",
+        "{:<cmd$} search {} by name and load",
         "(n)npc".white().bold(),
         "npc".white().bold(),
     );
     println!(
-        "{}\ttoggle the {} player",
+        "{:<cmd$} toggle the {} player",
         "(f)irst".white().bold(),
         "first".white().bold(),
     );
     println!(
-        "{}\tselect {} to toggle from list",
+        "{:<cmd$} select {} to toggle from list",
         "(r)ules".white().bold(),
         "rules".white().bold(),
     );
     println!(
-        "{}\tsetup for game is {}, ready to play",
+        "{:<cmd$} setup for game is {}, ready to play",
         "(d)one".white().bold(),
         "done".white().bold(),
     );
@@ -429,28 +431,37 @@ fn print_setup_help() {
 }
 
 fn print_drive_game_help() {
+    let cmd = 18;
+
+    println!();
+
     println!(
-        "{}\t\t{}matically play best AI recommended move",
+        "{:<cmd$} {}matically play best AI recommended move",
         "(a)uto".white().bold(),
         "auto".white().bold(),
     );
     println!(
-        "{}\t\tbegin {}ing a card on the board",
+        "{:<cmd$} begin {}ing a card on the board",
         "(p)ut".white().bold(),
         "put".white().bold(),
     );
     println!(
-        "{}\t{} for 🤖 AI recommended moves",
+        "{:<cmd$} {} for 🤖 AI recommended moves",
         "(s)earch".white().bold(),
         "search".white().bold(),
     );
     println!(
-        "{}\t\t{} the last move",
+        "{:<cmd$} set {} for 🤖 AI recommended moves",
+        "(e)valuation max".white().bold(),
+        "evaluation max".white().bold(),
+    );
+    println!(
+        "{:<cmd$} {} the last move",
         "(u)ndo".white().bold(),
         "undo".white().bold(),
     );
     println!(
-        "{}\t\t{} the last undo",
+        "{:<cmd$} {} the last undo",
         "(r)edo".white().bold(),
         "redo".white().bold(),
     );
