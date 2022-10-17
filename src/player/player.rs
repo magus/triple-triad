@@ -41,11 +41,13 @@ impl Player {
     }
 }
 
-const MAX_COMPUTER_HAND_SIZE: usize = 8;
+const MAX_COMPUTER_HAND_SIZE: usize = 10;
+
+type ComputerCardsArray = [Card; MAX_COMPUTER_HAND_SIZE];
 
 #[derive(Clone, Debug)]
 pub struct Computer {
-    pub cards: [Card; MAX_COMPUTER_HAND_SIZE],
+    pub cards: ComputerCardsArray,
     pub cards_used: usize,
 }
 
@@ -73,9 +75,12 @@ impl Computer {
         return card;
     }
 
-    // computer can have between 6-8 cards it seems
-    // of those between 2-4 seem to be guaranteed
-    // we can use this fact to predict remaining cards
+    // computer can have between 0-5 guaranteed and variable cards
+    // that means there are 10 total card slots in worst case
+    // most have between 2-4 guaranteed and 3-4 variable
+    // totally between 6-8 possible cards in general
+    //
+    // we can use the guaranteed cards to predict remaining cards
     //
     // examples
     // https://arrtripletriad.com/en/npc-droyn
@@ -105,5 +110,77 @@ impl Computer {
                 }
             }
         }
+    }
+
+    pub fn cards_from(&self, cards: Vec<Card>) -> ComputerCardsArray {
+        let size = cards.len();
+
+        return match size {
+            5 => [
+                cards[0],
+                cards[1],
+                cards[2],
+                cards[3],
+                cards[4],
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+            ],
+            6 => [
+                cards[0],
+                cards[1],
+                cards[2],
+                cards[3],
+                cards[4],
+                cards[5],
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+            ],
+            7 => [
+                cards[0],
+                cards[1],
+                cards[2],
+                cards[3],
+                cards[4],
+                cards[5],
+                cards[6],
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+            ],
+            8 => [
+                cards[0],
+                cards[1],
+                cards[2],
+                cards[3],
+                cards[4],
+                cards[5],
+                cards[6],
+                cards[7],
+                card::EMPTY,
+                card::EMPTY,
+            ],
+            9 => [
+                cards[0],
+                cards[1],
+                cards[2],
+                cards[3],
+                cards[4],
+                cards[5],
+                cards[6],
+                cards[7],
+                cards[8],
+                card::EMPTY,
+            ],
+            10 => [
+                cards[0], cards[1], cards[2], cards[3], cards[4], cards[5], cards[6], cards[7],
+                cards[8], cards[9],
+            ],
+            _ => panic!("unexpected number of computer cards"),
+        };
     }
 }

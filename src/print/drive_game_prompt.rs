@@ -22,7 +22,7 @@ pub fn drive_game_prompt() {
         Card::player("P4", 6, 10, 10, 1),
     ];
 
-    game.computer.cards = [
+    game.computer.cards = game.computer.cards_from(vec![
         Card::computer_guaranteed("C0", 6, 3, 7, 3),
         Card::computer_guaranteed("C1", 9, 7, 8, 1),
         Card::computer("C2", 4, 1, 8, 7),
@@ -30,8 +30,7 @@ pub fn drive_game_prompt() {
         Card::computer("C4", 1, 4, 8, 8),
         Card::computer("C5", 7, 1, 3, 7),
         Card::computer("C6", 8, 3, 8, 1),
-        card::EMPTY,
-    ];
+    ]);
 
     // handle swap
     if game.rules.swap {
