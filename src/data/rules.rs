@@ -39,9 +39,7 @@ impl RuleData {
             rules.push(rule_json);
         }
 
-        let data = RuleData { rules };
-
-        return data;
+        return RuleData { rules };
     }
 }
 
