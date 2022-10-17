@@ -72,7 +72,7 @@ fn drive_game(input_game: Game) {
                     println!("{:?}", game);
                 }
             }
-            "a" | "auto" | "s" | "search" => {
+            "a" | "auto" | "s" | "search" | "e" | "max" | "evaluation max" => {
                 // handle chaos when search for moves with explore
                 if game.turn_is_player() && game.rules.chaos {
                     game.print_turn_hand();
@@ -84,6 +84,24 @@ fn drive_game(input_game: Game) {
                         game.chaos_card = Some(card);
                     } else {
                         return;
+                    }
+                }
+
+                // handle evaluation max set
+                match input.as_str() {
+                    "e" | "max" | "evaluation max" => {
+                        println!();
+                        println!("{}", print::box_text("Evaluation Max", 1));
+                        let maybe_evaluation_max = print::prompt().parse::<u64>();
+
+                        if let Err(_) = maybe_evaluation_max {
+                            println!("❌ invalid max must be between 1 and {}", u64::MAX);
+                        } else {
+                            game.evaluation_max = maybe_evaluation_max.unwrap();
+                        }
+                    }
+                    _ => {
+                        // do nothing
                     }
                 }
 
@@ -102,6 +120,8 @@ fn drive_game(input_game: Game) {
                         // do nothing just explore
                     }
                 }
+
+                game.reset_evaluation_max();
             }
             "u" | "undo" => {
                 println!("TODO UNDO");
