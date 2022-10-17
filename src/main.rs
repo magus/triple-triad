@@ -1,7 +1,9 @@
+#[allow(unused_imports)]
 use triple_triad::card;
 use triple_triad::card::Card;
 use triple_triad::data;
 use triple_triad::game::Game;
+#[allow(unused_imports)]
 use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
