@@ -29,7 +29,7 @@ pub struct NpcData {
 }
 
 impl NpcData {
-    pub fn find_all_npc(&self, search: &str) -> Vec<&Npc> {
+    pub fn search(&self, search: &str) -> Vec<&Npc> {
         let normalized_search = search.to_lowercase();
         let mut npc_list = vec![];
 
