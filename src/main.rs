@@ -6,18 +6,9 @@ use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    let rule_data = data::RuleData::read();
-    let card_data = data::CardData::read();
-    let npc_data = data::NpcData::read();
+    search_data();
 
-    // use npc data to allow selecting npc in prompt
-    // use npc card data to set game cards with correct values
-    // convert search input to lowercase for comparison
-    println!("{:#?}", npc_data.find_all_npc("world"));
-
-    return;
-
-    print::drive_game_prompt();
+    // print::drive_game_prompt();
 
     // TODO: implement chaos et al necessary to simulate "Idle Imperial"
     // Use it as a test to see if the recommendations work
@@ -30,6 +21,23 @@ fn main() {
 
     // simple_simulation();
     // custom_simulation();
+}
+
+#[allow(dead_code)]
+// https://arrtripletriad.com/en/npc-idle-imperial
+fn search_data() {
+    let mut stopwatch = Stopwatch::start();
+
+    let rule_data = data::RuleData::read();
+    let card_data = data::CardData::read();
+    let npc_data = data::NpcData::read(&card_data, &rule_data);
+
+    // use npc data to allow selecting npc in prompt
+    // use npc card data to set game cards with correct values
+    // convert search input to lowercase for comparison
+    println!("{:#?}", npc_data.find_all_npc("idle"));
+
+    stopwatch.record("search_data finished");
 }
 
 #[allow(dead_code)]

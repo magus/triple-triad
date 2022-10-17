@@ -1,17 +1,17 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CardJson {
     id: String,
-    name: String,
-    top: u16,
-    right: u16,
-    bottom: u16,
-    left: u16,
+    pub name: String,
+    pub top: u8,
+    pub right: u8,
+    pub bottom: u8,
+    pub left: u8,
     // we must rename because `type` keyword is reserved
     #[serde(rename = "type")]
-    tribe: u16,
+    pub tribe: u16,
     sort: u16,
     order: u16,
 }
@@ -22,6 +22,16 @@ pub struct CardData {
 }
 
 impl CardData {
+    pub fn by_id(&self, id: &str) -> Option<CardJson> {
+        for card in self.cards {
+            if card.id == id {
+                return Some(card.clone());
+            }
+        }
+
+        return None;
+    }
+
     pub fn read() -> CardData {
         let file = fs::File::open(JSON_PATH).expect("file should open read only");
         let json: serde_json::Value =
