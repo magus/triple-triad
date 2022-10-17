@@ -39,6 +39,26 @@ impl Player {
 
         return card;
     }
+
+    pub fn cards_from(&mut self, cards: Vec<Card>) {
+        let size = cards.len();
+
+        self.cards = match size {
+            0 => [
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+            ],
+            1 => [cards[0], card::EMPTY, card::EMPTY, card::EMPTY, card::EMPTY],
+            2 => [cards[0], cards[1], card::EMPTY, card::EMPTY, card::EMPTY],
+            3 => [cards[0], cards[1], cards[2], card::EMPTY, card::EMPTY],
+            4 => [cards[0], cards[1], cards[2], cards[3], card::EMPTY],
+            5 => [cards[0], cards[1], cards[2], cards[3], cards[4]],
+            _ => panic!("unexpected number of computer cards"),
+        };
+    }
 }
 
 const MAX_COMPUTER_HAND_SIZE: usize = 10;
