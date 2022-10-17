@@ -21,7 +21,7 @@ pub fn drive_game_prompt() {
     stopwatch.record("drive_game_prompt load game data");
 
     // First phase sets up rules, first player, etc.
-    let init_game = setup_game(&npc_data, &rule_data);
+    let init_game = setup_game(&npc_data, &rule_data, &card_data);
 
     loop {
         // ensure fresh instance of game on each loop
@@ -150,7 +150,7 @@ fn drive_game(input_game: Game) {
     }
 }
 
-fn setup_game(npc_data: &NpcData, rule_data: &RuleData) -> Game {
+fn setup_game(npc_data: &NpcData, rule_data: &RuleData, card_data: &CardData) -> Game {
     let mut game = Game::new();
 
     loop {
@@ -159,6 +159,9 @@ fn setup_game(npc_data: &NpcData, rule_data: &RuleData) -> Game {
         let input = print::prompt();
 
         match input.as_str() {
+            "p" | "player" => {
+                game = select_player_cards(&game, &card_data);
+            }
             "n" | "npc" => {
                 // close is to capture returns allowing us to break out of match
                 // in order to rerun our outer control prompt loop
@@ -438,7 +441,12 @@ fn print_setup_help() {
     println!();
 
     println!(
-        "{:<cmd$} search {} by name and load",
+        "{:<cmd$} select {} cards by name",
+        "(p)layer".white().bold(),
+        "player".white().bold(),
+    );
+    println!(
+        "{:<cmd$} select {} by name and load",
         "(n)npc".white().bold(),
         "npc".white().bold(),
     );
