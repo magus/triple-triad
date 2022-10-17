@@ -14,7 +14,7 @@ export function parse_cards() {
 
         const output_record = {
           id: record.id,
-          name: record.name.toLowerCase(),
+          name: record.name,
         };
 
         return output_record;
