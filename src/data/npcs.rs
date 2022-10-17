@@ -52,8 +52,8 @@ impl NpcData {
 
         let mut npcs = vec![];
 
-        for rule_value in npc_list {
-            let npc_json = NpcJson::deserialize(rule_value).unwrap();
+        for json_value in npc_list {
+            let npc_json = NpcJson::deserialize(json_value).unwrap();
 
             // use card_data and rule_data to hydrate the npc as we read it in
 

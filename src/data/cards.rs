@@ -41,8 +41,8 @@ impl CardData {
 
         let mut cards: Vec<CardJson> = vec![];
 
-        for rule_value in card_list {
-            let card_json = CardJson::deserialize(rule_value).unwrap();
+        for json_value in card_list {
+            let card_json = CardJson::deserialize(json_value).unwrap();
             cards.push(card_json);
         }
 
