@@ -33,7 +33,8 @@ impl NpcData {
         let mut npc_list = vec![];
 
         for npc in self.npcs.iter() {
-            if npc.name.contains(&normalized_search) {
+            let normalized_name = npc.name.to_lowercase();
+            if normalized_name.contains(&normalized_search) {
                 npc_list.push(npc);
             }
         }

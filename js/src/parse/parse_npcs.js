@@ -293,7 +293,7 @@ export function parse_npcs() {
   // join back data from BaseNPCNameList to the NPCCardMap
   for (const npc of BaseNPCNameList) {
     const card_npc = NPCCardMap[npc.TripleTriadNpcId];
-    card_npc.name = npc.name.toLowerCase();
+    card_npc.name = npc.name;
   }
 
   // console.debug("BaseNPCNameList", BaseNPCNameList.length);
