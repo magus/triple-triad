@@ -8,6 +8,68 @@ pub struct RuleJson {
     description: String,
 }
 
+impl RuleJson {
+    pub fn is_roulette(&self) -> bool {
+        self.id == "1"
+    }
+
+    pub fn is_all_open(&self) -> bool {
+        self.id == "2"
+    }
+
+    pub fn is_three_open(&self) -> bool {
+        self.id == "3"
+    }
+
+    pub fn is_same(&self) -> bool {
+        self.id == "4"
+    }
+
+    pub fn is_sudden_death(&self) -> bool {
+        self.id == "5"
+    }
+
+    pub fn is_plus(&self) -> bool {
+        self.id == "6"
+    }
+
+    pub fn is_random(&self) -> bool {
+        self.id == "7"
+    }
+
+    pub fn is_order(&self) -> bool {
+        self.id == "8"
+    }
+
+    pub fn is_chaos(&self) -> bool {
+        self.id == "9"
+    }
+
+    pub fn is_reverse(&self) -> bool {
+        self.id == "10"
+    }
+
+    pub fn is_fallen_ace(&self) -> bool {
+        self.id == "11"
+    }
+
+    pub fn is_ascension(&self) -> bool {
+        self.id == "12"
+    }
+
+    pub fn is_descension(&self) -> bool {
+        self.id == "13"
+    }
+
+    pub fn is_swap(&self) -> bool {
+        self.id == "14"
+    }
+
+    pub fn is_draft(&self) -> bool {
+        self.id == "15"
+    }
+}
+
 #[derive(Debug)]
 pub struct RuleData {
     rules: Vec<RuleJson>,

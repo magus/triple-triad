@@ -1,71 +1,37 @@
+use colored::*;
+
 use crate::card;
 use crate::card::Card;
+use crate::data;
+use crate::data::NpcData;
 use crate::game::constants;
 use crate::game::Game;
 use crate::print;
-use colored::*;
+use crate::time::Stopwatch;
 
 pub fn drive_game_prompt() {
-    // First phase sets up rules and first player
+    let mut stopwatch = Stopwatch::start();
+
+    let rule_data = data::RuleData::read();
+    let card_data = data::CardData::read();
+    let npc_data = data::NpcData::read(&card_data, &rule_data);
+
+    stopwatch.record("drive_game_prompt load game data");
+
+    // First phase sets up rules, first player, etc.
+    let game = setup_game(&npc_data);
+
+    // Handle things like swap, reveal, etc.
+    let game = post_setup_game(game);
+    println!("{:?}", game);
+
     // Then alternate inputting in moves
     // On each play step print game board + both player cards
+    drive_game(game);
+}
 
-    let mut game = setup_game();
-
-    // https://arrtripletriad.com/en/npc-idle-imperial
-
-    game.player.cards = [
-        Card::player("P0", 8, 8, 2, 3),
-        Card::player("P1", 8, 2, 3, 8),
-        Card::player("P2", 1, 8, 3, 8),
-        Card::player("P3", 1, 5, 9, 9),
-        Card::player("P4", 6, 10, 10, 1),
-    ];
-
-    game.computer.cards = game.computer.cards_from(vec![
-        Card::computer_guaranteed("C0", 6, 3, 7, 3),
-        Card::computer_guaranteed("C1", 9, 7, 8, 1),
-        Card::computer("C2", 4, 1, 8, 7),
-        Card::computer("C3", 7, 1, 6, 7),
-        Card::computer("C4", 1, 4, 8, 8),
-        Card::computer("C5", 7, 1, 3, 7),
-        Card::computer("C6", 8, 3, 8, 1),
-    ]);
-
-    // handle swap
-    if game.rules.swap {
-        println!("🔀 Swap");
-        loop {
-            println!("{}", print::box_text("Which card was taken from you?", 1));
-            game.print_player_hand();
-            let maybe_player_card = prompt_card_index(&mut game, true);
-            if maybe_player_card == None {
-                continue;
-            }
-            println!("{}", print::box_text("Which card was given to you?", 1));
-            game.print_computer_hand();
-            let maybe_computer_card = prompt_card_index(&mut game, false);
-            if maybe_computer_card == None {
-                continue;
-            }
-
-            if let (Some(player_card), Some(computer_card)) =
-                (maybe_player_card, maybe_computer_card)
-            {
-                println!(
-                    "🔀 Exchanging [{player_card}] (player) with [{computer_card}] from (computer)"
-                );
-                println!();
-
-                game.execute_swap(player_card, computer_card);
-
-                // exit loop
-                break;
-            }
-        }
-    }
-
-    println!("{:?}", game);
+fn drive_game(input_game: Game) {
+    let mut game = input_game.clone();
 
     print_drive_game_help();
 
@@ -158,7 +124,7 @@ pub fn drive_game_prompt() {
     }
 }
 
-fn setup_game() -> Game {
+fn setup_game(npc_data: &NpcData) -> Game {
     let mut game = Game::new();
 
     print_setup_help();
@@ -167,6 +133,72 @@ fn setup_game() -> Game {
         let input = print::prompt();
 
         match input.as_str() {
+            "n" | "npc" => {
+                // close is to capture returns allowing us to break out of match
+                // in order to rerun our outer control prompt loop
+                let maybe_npc = (|| {
+                    loop {
+                        println!();
+                        println!("{}", print::box_text("🔍 Search for NPC", 1));
+                        let maybe_search = print::prompt().parse::<String>();
+                        if let Err(_) = maybe_search {
+                            // this should never happen but just handle err case
+                            // so we can unwrap below, to be super explicit
+                            println!("❌ invalid search input");
+                            continue;
+                        }
+
+                        let search = maybe_search.unwrap();
+                        let results = npc_data.search(&search);
+                        match results.len() {
+                            0 => {
+                                println!("❌ no results found");
+                                continue;
+                            }
+                            1 => {
+                                // exact match, proceed with npc
+                                let npc = results.first().unwrap().clone();
+                                return Some(npc);
+                            }
+                            _ => {
+                                println!("{}", print::box_text("Which NPC?", 1));
+
+                                for i in 0..results.len() {
+                                    let npc = results[i];
+                                    println!("[{i}] {}", npc.name);
+                                }
+
+                                let maybe_i = print::prompt().parse::<usize>();
+
+                                if let Err(_) = maybe_i {
+                                    println!("❌ invalid selection");
+                                    continue;
+                                }
+
+                                let i = maybe_i.unwrap();
+
+                                if !(i < results.len()) {
+                                    println!("❌ invalid selection");
+                                    continue;
+                                }
+
+                                let npc = results[i];
+                                return Some(npc);
+                            }
+                        }
+                    }
+                })();
+
+                let npc = maybe_npc.unwrap();
+                println!("{:#?}", npc);
+
+                // use the npc to setup game
+                game = Game::new();
+                game.computer.cards = game.computer.cards_from(npc.cards.clone());
+                game.print_computer_hand();
+                game.rules.from(&npc.rules);
+                println!("{}", game.print_rules());
+            }
             "f" | "first" => {
                 game.is_player_first = !game.is_player_first;
                 println!("{}", game.print_rules());
@@ -206,12 +238,69 @@ fn setup_game() -> Game {
         }
     }
 
+    // manually setting up cards for now
+    // todo handle setting up player and computer via commands above
+
+    game.player.cards = [
+        Card::player("P0", 8, 8, 2, 3),
+        Card::player("P1", 8, 2, 3, 8),
+        Card::player("P2", 1, 8, 3, 8),
+        Card::player("P3", 1, 5, 9, 9),
+        Card::player("P4", 6, 10, 10, 1),
+    ];
+
     println!("{}", print::box_text("✅ Setup complete!", 1));
 
     return game;
 }
 
+fn post_setup_game(input_game: Game) -> Game {
+    let mut game = input_game.clone();
+
+    // handle swap
+    if game.rules.swap {
+        println!("🔀 Swap");
+        loop {
+            println!("{}", print::box_text("Which card was taken from you?", 1));
+            game.print_player_hand();
+            let maybe_player_card = prompt_card_index(&mut game, true);
+            if maybe_player_card == None {
+                continue;
+            }
+            println!("{}", print::box_text("Which card was given to you?", 1));
+            game.print_computer_hand();
+            let maybe_computer_card = prompt_card_index(&mut game, false);
+            if maybe_computer_card == None {
+                continue;
+            }
+
+            if let (Some(player_card), Some(computer_card)) =
+                (maybe_player_card, maybe_computer_card)
+            {
+                println!(
+                    "🔀 Exchanging [{player_card}] (player) with [{computer_card}] from (computer)"
+                );
+                println!();
+
+                game.execute_swap(player_card, computer_card);
+
+                // exit loop
+                break;
+            }
+        }
+    }
+
+    return game;
+}
+
 fn print_setup_help() {
+    println!();
+
+    println!(
+        "{}\tsearch {} by name and load",
+        "(n)npc".white().bold(),
+        "npc".white().bold(),
+    );
     println!(
         "{}\ttoggle the {} player",
         "(f)irst".white().bold(),

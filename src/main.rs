@@ -8,9 +8,9 @@ use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    search_data();
+    // search_data();
 
-    // print::drive_game_prompt();
+    print::drive_game_prompt();
 
     // TODO: implement chaos et al necessary to simulate "Idle Imperial"
     // Use it as a test to see if the recommendations work
@@ -112,6 +112,8 @@ fn idle_imperial() {
     let card_data = data::CardData::read();
     let npc_data = data::NpcData::read(&card_data, &rule_data);
 
+    stopwatch.record("idle_imperial load game data");
+
     let idle_imperial = npc_data.search("idle").first().unwrap().clone();
 
     let mut game = Game::new();
@@ -167,7 +169,7 @@ fn idle_imperial() {
     // println!("{:?}", game);
 
     game.start_explore();
-    stopwatch.record("explore finished");
+    stopwatch.record("idle_imperial finished");
 }
 
 #[allow(dead_code)]
