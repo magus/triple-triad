@@ -59,7 +59,7 @@ fn guaranteed_card_left() {
         Card::player("P4", 6, 10, 10, 1),
     ];
 
-    game.computer.cards = [
+    game.computer.cards = game.computer.cards_from(vec![
         Card::computer_guaranteed("C0", 6, 3, 7, 3),
         Card::computer_guaranteed("C1", 9, 7, 8, 1),
         Card::computer("C2", 4, 1, 8, 7),
@@ -67,8 +67,7 @@ fn guaranteed_card_left() {
         Card::computer("C4", 1, 4, 8, 8),
         Card::computer("C5", 7, 1, 3, 7),
         Card::computer("C6", 8, 3, 8, 1),
-        card::EMPTY,
-    ];
+    ]);
 
     // computer
     game = game.execute_turn(2, 8);
@@ -115,7 +114,7 @@ fn idle_imperial() {
         Card::player("P4", 6, 10, 10, 1),
     ];
 
-    game.computer.cards = [
+    game.computer.cards = game.computer.cards_from(vec![
         Card::computer_guaranteed("C0", 6, 3, 7, 3),
         Card::computer_guaranteed("C1", 9, 7, 8, 1),
         Card::computer("C2", 4, 1, 8, 7),
@@ -123,8 +122,7 @@ fn idle_imperial() {
         Card::computer("C4", 1, 4, 8, 8),
         Card::computer("C5", 7, 1, 3, 7),
         Card::computer("C6", 8, 3, 8, 1),
-        card::EMPTY,
-    ];
+    ]);
 
     // player
     game = game.execute_turn(1, 8);
@@ -198,7 +196,7 @@ fn custom_simulation() {
         Card::player("P4", 1, 2, 3, 2),
     ];
 
-    game.computer.cards = [
+    game.computer.cards = game.computer.cards_from(vec![
         Card::computer_guaranteed("C0", 1, 1, 2, 1),
         Card::computer_guaranteed("C1", 1, 1, 1, 3),
         Card::computer("C2", 2, 1, 1, 1),
@@ -206,8 +204,7 @@ fn custom_simulation() {
         Card::computer("C4", 1, 1, 1, 1),
         Card::computer("C5", 1, 1, 1, 1),
         Card::computer("C6", 1, 1, 1, 1),
-        card::EMPTY,
-    ];
+    ]);
 
     game = game.execute_turn(0, 0);
     println!("{:?}", game);

@@ -679,6 +679,8 @@ impl Game {
                 Card::computer("C5", 1, 1, 1, 1),
                 Card::computer("C6", 1, 1, 1, 1),
                 card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
             ],
         };
 
