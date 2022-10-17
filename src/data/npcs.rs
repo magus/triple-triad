@@ -17,10 +17,10 @@ pub struct NpcJson {
 pub struct Npc {
     #[allow(dead_code)]
     id: String,
-    name: String,
+    pub name: String,
     pub cards: Vec<Card>,
     #[allow(dead_code)]
-    rules: Vec<RuleJson>,
+    pub rules: Vec<RuleJson>,
 }
 
 #[derive(Debug)]

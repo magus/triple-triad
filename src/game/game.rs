@@ -4,6 +4,7 @@ use std::sync::{Arc, Mutex};
 
 use crate::card;
 use crate::card::Card;
+use crate::data::RuleJson;
 use crate::game::constants::{BOARD_SIZE, EVALUATION_MAX};
 use crate::game::impact::{self, ImpactPair};
 use crate::player::Computer;
@@ -13,10 +14,76 @@ type Board = [Card; BOARD_SIZE];
 
 #[derive(Copy, Clone, Debug)]
 pub struct Rules {
-    pub chaos: bool,
-    pub plus: bool,
+    pub roulette: bool,
+    pub all_open: bool,
+    pub three_open: bool,
     pub same: bool,
+    pub sudden_death: bool,
+    pub plus: bool,
+    pub random: bool,
+    pub order: bool,
+    pub chaos: bool,
+    pub reverse: bool,
+    pub fallen_ace: bool,
+    pub ascension: bool,
+    pub descension: bool,
     pub swap: bool,
+    pub draft: bool,
+}
+
+impl Rules {
+    pub fn from(&mut self, rules: &Vec<RuleJson>) {
+        self.roulette = false;
+        self.all_open = false;
+        self.three_open = false;
+        self.same = false;
+        self.sudden_death = false;
+        self.plus = false;
+        self.random = false;
+        self.order = false;
+        self.chaos = false;
+        self.reverse = false;
+        self.fallen_ace = false;
+        self.ascension = false;
+        self.descension = false;
+        self.swap = false;
+        self.draft = false;
+
+        for rule in rules {
+            if false {
+            } else if rule.is_roulette() {
+                self.roulette = true;
+            } else if rule.is_all_open() {
+                self.all_open = true;
+            } else if rule.is_three_open() {
+                self.three_open = true;
+            } else if rule.is_same() {
+                self.same = true;
+            } else if rule.is_sudden_death() {
+                self.sudden_death = true;
+            } else if rule.is_plus() {
+                self.plus = true;
+            } else if rule.is_random() {
+                self.random = true;
+            } else if rule.is_order() {
+                self.order = true;
+            } else if rule.is_chaos() {
+                self.chaos = true;
+            } else if rule.is_reverse() {
+                self.reverse = true;
+            } else if rule.is_fallen_ace() {
+                self.fallen_ace = true;
+            } else if rule.is_ascension() {
+                self.ascension = true;
+            } else if rule.is_descension() {
+                self.descension = true;
+            } else if rule.is_swap() {
+                self.swap = true;
+            } else if rule.is_draft() {
+                self.draft = true;
+            }
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -685,10 +752,21 @@ impl Game {
         };
 
         let rules = Rules {
-            chaos: false,
-            plus: false,
+            roulette: false,
+            all_open: false,
+            three_open: false,
             same: false,
+            sudden_death: false,
+            plus: false,
+            random: false,
+            order: false,
+            chaos: false,
+            reverse: false,
+            fallen_ace: false,
+            ascension: false,
+            descension: false,
             swap: false,
+            draft: false,
         };
 
         return Game {
