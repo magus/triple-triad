@@ -109,9 +109,7 @@ impl NpcData {
             });
         }
 
-        let data = NpcData { npcs };
-
-        return data;
+        return NpcData { npcs };
     }
 }
 

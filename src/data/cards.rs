@@ -62,12 +62,10 @@ impl CardData {
             cards_map.insert(card_json.id.clone(), card_json.clone());
         }
 
-        let data = CardData {
+        return CardData {
             cards_list,
             cards_map,
         };
-
-        return data;
     }
 }
 
