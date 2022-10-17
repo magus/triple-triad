@@ -333,7 +333,10 @@ fn setup_game(npc_data: &NpcData, rule_data: &RuleData, card_data: &CardData) ->
 fn post_setup_game(input_game: Game, card_data: &CardData) -> Game {
     let mut game = input_game.clone();
 
-    if game.rules.random {
+    if game.rules.draft {
+        println!("🎲 Draft");
+        game = select_player_cards(&game, &card_data);
+    } else if game.rules.random {
         println!("🎲 Random");
         game = select_player_cards(&game, &card_data);
     }

@@ -34,7 +34,6 @@ pub struct Rules {
     // ❌ TODO
     pub descension: bool,
     pub swap: bool,
-    // ❌ TODO
     pub draft: bool,
 }
 
