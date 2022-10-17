@@ -340,9 +340,13 @@ fn post_setup_game(input_game: Game) -> Game {
         println!("👀 All Open");
         let mut cards = vec![];
         let mut temp_game = game.clone();
+        let required_cards: usize = 5;
 
         loop {
-            let message = format!("Which cards are revealed? [{} / 5]", cards.len() + 1);
+            let message = format!(
+                "Which cards are revealed? [{} / {required_cards}]",
+                cards.len() + 1
+            );
             println!("{}", print::box_text(&message, 1));
 
             temp_game.print_computer_hand();
@@ -355,12 +359,43 @@ fn post_setup_game(input_game: Game) -> Game {
             cards.push(temp_game.computer.cards[computer_card]);
             temp_game.computer.cards[computer_card] = card::EMPTY;
 
-            if cards.len() == 5 {
+            if cards.len() == required_cards {
                 break;
             }
         }
 
         game.computer.cards_from(cards);
+    } else if game.rules.three_open {
+        println!("👀 Three Open");
+        let mut cards = vec![];
+        let mut temp_game = game.clone();
+        let required_cards: usize = 3;
+
+        loop {
+            let message = format!(
+                "Which cards are revealed? [{} / {required_cards}]",
+                cards.len() + 1
+            );
+            println!("{}", print::box_text(&message, 1));
+
+            temp_game.print_computer_hand();
+            let maybe_computer_card = prompt_card_index(&temp_game, false);
+            if maybe_computer_card == None {
+                continue;
+            }
+
+            let computer_card = maybe_computer_card.unwrap();
+            cards.push(computer_card);
+            temp_game.computer.cards[computer_card] = card::EMPTY;
+
+            if cards.len() == required_cards {
+                break;
+            }
+        }
+
+        for card_index in cards {
+            game.computer.cards[card_index].is_guaranteed = true;
+        }
     }
 
     if game.rules.swap {

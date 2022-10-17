@@ -16,7 +16,6 @@ type Board = [Card; BOARD_SIZE];
 pub struct Rules {
     pub roulette: bool,
     pub all_open: bool,
-    // ❌ TODO
     pub three_open: bool,
     pub same: bool,
     // ❌ TODO
