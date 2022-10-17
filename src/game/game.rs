@@ -14,7 +14,6 @@ type Board = [Card; BOARD_SIZE];
 
 #[derive(Copy, Clone, Debug)]
 pub struct Rules {
-    // ❌ TODO
     pub roulette: bool,
     // ❌ TODO
     pub all_open: bool,
