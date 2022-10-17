@@ -336,7 +336,33 @@ fn setup_game(npc_data: &NpcData, rule_data: &RuleData) -> Game {
 fn post_setup_game(input_game: Game) -> Game {
     let mut game = input_game.clone();
 
-    // handle swap
+    if game.rules.all_open {
+        println!("👀 All Open");
+        let mut cards = vec![];
+        let mut temp_game = game.clone();
+
+        loop {
+            let message = format!("Which cards are revealed? [{} / 5]", cards.len() + 1);
+            println!("{}", print::box_text(&message, 1));
+
+            temp_game.print_computer_hand();
+            let maybe_computer_card = prompt_card_index(&temp_game, false);
+            if maybe_computer_card == None {
+                continue;
+            }
+
+            let computer_card = maybe_computer_card.unwrap();
+            cards.push(temp_game.computer.cards[computer_card]);
+            temp_game.computer.cards[computer_card] = card::EMPTY;
+
+            if cards.len() == 5 {
+                break;
+            }
+        }
+
+        game.computer.cards_from(cards);
+    }
+
     if game.rules.swap {
         println!("🔀 Swap");
         loop {
