@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RuleJson {
     id: String,
     name: String,
@@ -14,6 +14,16 @@ pub struct RuleData {
 }
 
 impl RuleData {
+    pub fn by_id(&self, id: &str) -> Option<RuleJson> {
+        for rule in self.rules {
+            if rule.id == id {
+                return Some(rule.clone());
+            }
+        }
+
+        return None;
+    }
+
     pub fn read() -> RuleData {
         let file = fs::File::open(JSON_PATH).expect("file should open read only");
         let json: serde_json::Value =
@@ -21,10 +31,11 @@ impl RuleData {
 
         let rule_list = json.as_array().unwrap();
 
-        let mut rules: Vec<RuleJson> = vec![];
+        let mut rules = vec![];
 
         for rule_value in rule_list {
             let rule_json = RuleJson::deserialize(rule_value).unwrap();
+
             rules.push(rule_json);
         }
 
