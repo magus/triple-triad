@@ -23,7 +23,7 @@ pub struct CardData {
 
 impl CardData {
     pub fn by_id(&self, id: &str) -> Option<CardJson> {
-        for card in self.cards {
+        for card in self.cards.iter() {
             if card.id == id {
                 return Some(card.clone());
             }
