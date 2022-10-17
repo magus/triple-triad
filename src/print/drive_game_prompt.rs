@@ -3,6 +3,7 @@ use colored::*;
 use crate::card;
 use crate::card::Card;
 use crate::data;
+use crate::data::CardData;
 use crate::data::NpcData;
 use crate::data::RuleData;
 use crate::game::constants;
@@ -27,7 +28,7 @@ pub fn drive_game_prompt() {
         let game = init_game.clone();
 
         // Handle things like swap, reveal, etc.
-        let game = post_setup_game(game);
+        let game = post_setup_game(game, &card_data);
         println!("{:?}", game);
 
         // Then alternate inputting in moves
@@ -321,24 +322,18 @@ fn setup_game(npc_data: &NpcData, rule_data: &RuleData) -> Game {
         }
     }
 
-    // manually setting up cards for now
-    // todo handle setting up player and computer via commands above
-
-    game.player.cards = [
-        Card::player("P0", 8, 8, 2, 3),
-        Card::player("P1", 8, 2, 3, 8),
-        Card::player("P2", 1, 8, 3, 8),
-        Card::player("P3", 1, 5, 9, 9),
-        Card::player("P4", 6, 10, 10, 1),
-    ];
-
     println!("{}", print::box_text("✅ Setup complete!", 1));
 
     return game;
 }
 
-fn post_setup_game(input_game: Game) -> Game {
+fn post_setup_game(input_game: Game, card_data: &CardData) -> Game {
     let mut game = input_game.clone();
+
+    if game.rules.random {
+        println!("🎲 Random");
+        game = select_player_cards(&game, &card_data);
+    }
 
     if game.rules.all_open {
         println!("👀 All Open");
@@ -541,5 +536,90 @@ fn prompt_card_index(game: &Game, is_player: bool) -> Option<usize> {
     } else {
         println!("❌ card must be a positive number");
         return None;
+    }
+}
+
+fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
+    let mut game = game.clone();
+
+    let mut cards = vec![];
+
+    let required_cards: usize = 5;
+
+    loop {
+        game.print_player_hand();
+
+        let message = format!(
+            "🔍 Search for Card [{} / {required_cards}]",
+            cards.len() + 1
+        );
+        println!("{}", print::box_text(&message, 1));
+
+        let maybe_search = print::prompt().parse::<String>();
+        if let Err(_) = maybe_search {
+            // this should never happen but just handle err case
+            // so we can unwrap below, to be super explicit
+            println!("❌ invalid search input");
+            continue;
+        }
+
+        let search = maybe_search.unwrap();
+        let results = card_data.search(&search);
+        match results.len() {
+            0 => {
+                println!("❌ no results found");
+                continue;
+            }
+            1 => {
+                // exact match, proceed with card
+                let card = results.first().unwrap().clone();
+
+                cards.push(Card::player(
+                    Card::card_name(cards.len()),
+                    card.top,
+                    card.right,
+                    card.bottom,
+                    card.left,
+                ));
+            }
+            _ => {
+                println!("{}", print::box_text("Which Card?", 1));
+
+                for i in 0..results.len() {
+                    let result = results[i];
+                    println!("[{i}] {}", result.name);
+                }
+
+                let maybe_i = print::prompt().parse::<usize>();
+
+                if let Err(_) = maybe_i {
+                    println!("❌ invalid selection");
+                    continue;
+                }
+
+                let i = maybe_i.unwrap();
+
+                if !(i < results.len()) {
+                    println!("❌ invalid selection");
+                    continue;
+                }
+
+                let card = results[i];
+                cards.push(Card::player(
+                    Card::card_name(cards.len()),
+                    card.top,
+                    card.right,
+                    card.bottom,
+                    card.left,
+                ));
+            }
+        }
+
+        // sync cards back to game
+        game.player.cards_from(cards.clone());
+
+        if cards.len() == required_cards {
+            return game;
+        }
     }
 }

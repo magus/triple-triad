@@ -21,7 +21,6 @@ pub struct Rules {
     // ❌ TODO
     pub sudden_death: bool,
     pub plus: bool,
-    // ❌ TODO
     pub random: bool,
     // ❌ TODO
     pub order: bool,
