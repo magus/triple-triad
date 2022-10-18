@@ -586,7 +586,7 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
                 let card = results.first().unwrap().clone();
 
                 cards.push(Card::player(
-                    Card::card_name(cards.len()),
+                    Card::player_name(cards.len()),
                     card.top,
                     card.right,
                     card.bottom,
@@ -617,7 +617,7 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
 
                 let card = results[i];
                 cards.push(Card::player(
-                    Card::card_name(cards.len()),
+                    Card::player_name(cards.len()),
                     card.top,
                     card.right,
                     card.bottom,
