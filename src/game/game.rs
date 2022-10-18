@@ -21,7 +21,6 @@ pub struct Rules {
     pub sudden_death: bool,
     pub plus: bool,
     pub random: bool,
-    // ❌ TODO
     pub order: bool,
     pub chaos: bool,
     // ❌ TODO
@@ -227,7 +226,7 @@ impl Game {
         let is_player = self.turn_is_player();
         let square_choices = self.squares_empty();
         let card_choices = if is_player {
-            self.player.cards_left(self.chaos_card)
+            self.player.cards_left(self.chaos_card, self.rules.order)
         } else {
             self.computer.cards_left()
         };
@@ -310,7 +309,7 @@ impl Game {
         let is_player = self.turn_is_player();
 
         let card_choices = if is_player {
-            self.player.cards_left(self.chaos_card)
+            self.player.cards_left(self.chaos_card, self.rules.order)
         } else {
             self.computer.cards_left()
         };
