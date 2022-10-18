@@ -9,9 +9,7 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn cards_left(&self, maybe_chaos_card: Option<usize>) -> Vec<usize> {
-        let mut card_index_list = vec![];
-
+    pub fn cards_left(&self, maybe_chaos_card: Option<usize>, is_order: bool) -> Vec<usize> {
         // handle potential chaos flagged card
         if let Some(chaos_card) = maybe_chaos_card {
             if self.cards[chaos_card] != card::EMPTY {
@@ -20,7 +18,18 @@ impl Player {
             }
         }
 
+        if is_order {
+            for i in 0..PLAYER_HAND_SIZE {
+                if self.cards[i] != card::EMPTY {
+                    return vec![i];
+                }
+            }
+        }
+
         // otherwise, return all cards in hand
+
+        let mut card_index_list = vec![];
+
         for i in 0..PLAYER_HAND_SIZE {
             if self.cards[i] != card::EMPTY {
                 card_index_list.push(i);
