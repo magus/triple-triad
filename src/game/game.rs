@@ -9,6 +9,7 @@ use crate::game::constants::BOARD_SIZE;
 use crate::game::impact::{self, ImpactPair};
 use crate::player::Computer;
 use crate::player::Player;
+use crate::time::Stopwatch;
 
 type Board = [Card; BOARD_SIZE];
 
@@ -113,6 +114,8 @@ impl Game {
     }
 
     pub fn start_explore(&self) -> Vec<(f64, Game)> {
+        let mut stopwatch = Stopwatch::start();
+
         let start_turn = self.turn;
         let depth = 0;
 
@@ -207,6 +210,8 @@ impl Game {
         } else {
             println!("✅ done [📊 {actual_moves_evaluated} moves evaluated]");
         }
+
+        stopwatch.record("start_explore");
 
         return safe_results;
     }
