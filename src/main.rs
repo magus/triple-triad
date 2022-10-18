@@ -51,8 +51,6 @@ fn search_data() {
 #[allow(dead_code)]
 // https://arrtripletriad.com/en/npc-idle-imperial
 fn guaranteed_card_left() {
-    let mut stopwatch = Stopwatch::start();
-
     let mut game = Game::new();
 
     game.is_player_first = false;
@@ -99,20 +97,14 @@ fn guaranteed_card_left() {
 
     // cards are guaranteed to be 0 and 1 at this point
     // since they have not been used but are guaranteed
-
-    stopwatch.record("guaranteed_card_left finished");
 }
 
 #[allow(dead_code)]
 // https://arrtripletriad.com/en/npc-idle-imperial
 fn idle_imperial() {
-    let mut stopwatch = Stopwatch::start();
-
     let rule_data = data::RuleData::read();
     let card_data = data::CardData::read();
     let npc_data = data::NpcData::read(&card_data, &rule_data);
-
-    stopwatch.record("idle_imperial load game data");
 
     let idle_imperial = npc_data.search("idle").first().unwrap().clone();
 
@@ -169,13 +161,10 @@ fn idle_imperial() {
     // println!("{:?}", game);
 
     game.start_explore();
-    stopwatch.record("idle_imperial finished");
 }
 
 #[allow(dead_code)]
 fn deep_explore() {
-    let mut stopwatch = Stopwatch::start();
-
     let mut game = Game::new();
 
     // take turns to significantly cull search space
@@ -186,7 +175,6 @@ fn deep_explore() {
     }
 
     game.start_explore();
-    stopwatch.record("explore finished");
 }
 
 #[allow(dead_code)]
