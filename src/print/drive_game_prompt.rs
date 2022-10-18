@@ -564,6 +564,9 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
 
     let required_cards: usize = 5;
 
+    // sync cards back to game
+    game.player.cards_from(cards.clone());
+
     loop {
         game.print_player_hand();
 
