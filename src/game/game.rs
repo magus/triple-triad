@@ -18,7 +18,6 @@ pub struct Rules {
     pub all_open: bool,
     pub three_open: bool,
     pub same: bool,
-    // ❌ TODO
     pub sudden_death: bool,
     pub plus: bool,
     pub random: bool,
