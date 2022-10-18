@@ -18,7 +18,18 @@ pub struct Card {
 }
 
 impl Card {
-    pub fn card_name(size: usize) -> &'static str {
+    pub fn player_name(size: usize) -> &'static str {
+        return match size {
+            0 => "P0",
+            1 => "P1",
+            2 => "P2",
+            3 => "P3",
+            4 => "P4",
+            _ => panic!("unexpected number of player cards [{}]", size),
+        };
+    }
+
+    pub fn computer_name(size: usize) -> &'static str {
         return match size {
             0 => "C0",
             1 => "C1",

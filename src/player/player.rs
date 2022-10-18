@@ -56,7 +56,7 @@ impl Player {
             3 => [cards[0], cards[1], cards[2], card::EMPTY, card::EMPTY],
             4 => [cards[0], cards[1], cards[2], cards[3], card::EMPTY],
             5 => [cards[0], cards[1], cards[2], cards[3], cards[4]],
-            _ => panic!("unexpected number of computer cards"),
+            _ => panic!("unexpected number of player cards [{size}]"),
         };
     }
 }
@@ -200,7 +200,7 @@ impl Computer {
                 cards[0], cards[1], cards[2], cards[3], cards[4], cards[5], cards[6], cards[7],
                 cards[8], cards[9],
             ],
-            _ => panic!("unexpected number of computer cards"),
+            _ => panic!("unexpected number of computer cards [{size}]"),
         };
     }
 }
