@@ -142,7 +142,7 @@ fn drive_game(input_game: Game) -> Game {
             }
             "q" | "quit" => {
                 println!("❌ restarting game");
-                return;
+                return game;
             }
             "h" | "help" => {
                 print_drive_game_help();
@@ -155,6 +155,8 @@ fn drive_game(input_game: Game) -> Game {
             ),
         }
     }
+
+    return game;
 }
 
 fn setup_game(npc_data: &NpcData, rule_data: &RuleData, card_data: &CardData) -> Game {
@@ -337,7 +339,7 @@ fn setup_game(npc_data: &NpcData, rule_data: &RuleData, card_data: &CardData) ->
     return game;
 }
 
-fn post_setup_game(input_game: Game, card_data: &CardData) -> Game {
+fn pre_game(input_game: Game, card_data: &CardData) -> Game {
     let mut game = input_game.clone();
 
     if game.rules.draft {
@@ -443,6 +445,51 @@ fn post_setup_game(input_game: Game, card_data: &CardData) -> Game {
     }
 
     return game;
+}
+
+fn post_game(game: &Game, init_game: &Game) -> Game {
+    let game = game.clone();
+
+    if !game.is_ended() {
+        return init_game.clone();
+    }
+
+    if game.rules.sudden_death && game.score == 5 {
+        println!("☠️ Sudden Death");
+
+        let mut player_cards = vec![];
+        let mut computer_cards = vec![];
+
+        for card in game.board {
+            if card.is_player {
+                player_cards.push(card);
+            } else {
+                // mark card guaranteed to optimize next run
+                let mut edit_card = card.clone();
+                edit_card.is_guaranteed = true;
+                computer_cards.push(edit_card);
+            }
+        }
+
+        for card in game.player.cards {
+            if card != card::EMPTY {
+                player_cards.push(card);
+            }
+        }
+
+        for card in game.computer.cards {
+            if card != card::EMPTY {
+                computer_cards.push(card);
+            }
+        }
+
+        let mut new_init_game = init_game.clone();
+        new_init_game.player.cards_from(player_cards);
+        new_init_game.computer.cards_from(computer_cards);
+        return new_init_game;
+    }
+
+    return init_game.clone();
 }
 
 fn print_setup_help() {
