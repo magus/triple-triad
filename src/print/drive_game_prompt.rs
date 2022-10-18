@@ -21,28 +21,35 @@ pub fn drive_game_prompt() {
     stopwatch.record("drive_game_prompt load game data");
 
     // First phase sets up rules, first player, etc.
-    let init_game = setup_game(&npc_data, &rule_data, &card_data);
+    let mut init_game = setup_game(&npc_data, &rule_data, &card_data);
 
     loop {
         // ensure fresh instance of game on each loop
         let game = init_game.clone();
 
         // Handle things like swap, reveal, etc.
-        let game = post_setup_game(game, &card_data);
+        let game = pre_game(game, &card_data);
         println!("{:?}", game);
 
         // Then alternate inputting in moves
         // On each play step print game board + both player cards
-        drive_game(game);
+        let game = drive_game(game);
+
+        // Handle things like sudden death
+        init_game = post_game(&game, &init_game);
     }
 }
 
-fn drive_game(input_game: Game) {
+fn drive_game(input_game: Game) -> Game {
     let mut game = input_game.clone();
 
     print_drive_game_help();
 
     loop {
+        if game.is_ended() {
+            break;
+        }
+
         let input = print::prompt();
 
         match input.as_str() {
