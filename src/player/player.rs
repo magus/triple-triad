@@ -120,6 +120,14 @@ impl Computer {
             }
         }
 
+        if guaranteed_remaining.len() > hand_remaining {
+            panic!(
+                "❌ Too many guaranteed cards [{}] vs cards remaining in hand [{}]",
+                guaranteed_remaining.len(),
+                hand_remaining
+            );
+        }
+
         // if equal, remove non-guaranteed cards from hand
         if hand_remaining == guaranteed_remaining.len() {
             // println!("🚨 Guaranteed remaining cards!");
