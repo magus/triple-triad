@@ -68,6 +68,7 @@ impl NpcData {
                         card_json.right,
                         card_json.bottom,
                         card_json.left,
+                        card_json.tribe,
                     ));
                 } else {
                     panic!("unexpected card_id [{card_id}]");
@@ -84,6 +85,7 @@ impl NpcData {
                         card_json.right,
                         card_json.bottom,
                         card_json.left,
+                        card_json.tribe,
                     ));
                 } else {
                     panic!("unexpected card_id [{card_id}]");

@@ -3,6 +3,8 @@ use std::fmt;
 pub const EMPTY: Card = Card {
     name: "  ",
     sides: (0, 0, 0, 0),
+    modifier: 0,
+    tribe: 0,
     is_player: false,
     is_empty: true,
     is_guaranteed: false,
@@ -12,12 +14,36 @@ pub const EMPTY: Card = Card {
 pub struct Card {
     pub name: &'static str,
     pub sides: (u8, u8, u8, u8),
+    pub modifier: i8,
+    pub tribe: u8,
     pub is_player: bool,
     pub is_empty: bool,
     pub is_guaranteed: bool,
 }
 
 impl Card {
+    pub const TRIBE_NONE: u8 = 0;
+    pub const TRIBE_PRIMAL: u8 = 1;
+    pub const TRIBE_SCION: u8 = 2;
+    pub const TRIBE_BEASTMAN: u8 = 3;
+    pub const TRIBE_GARLEAN: u8 = 4;
+
+    pub fn is_primal(&self) -> bool {
+        self.tribe == Card::TRIBE_PRIMAL
+    }
+
+    pub fn is_scion(&self) -> bool {
+        self.tribe == Card::TRIBE_SCION
+    }
+
+    pub fn is_beastman(&self) -> bool {
+        self.tribe == Card::TRIBE_BEASTMAN
+    }
+
+    pub fn is_garlean(&self) -> bool {
+        self.tribe == Card::TRIBE_GARLEAN
+    }
+
     pub fn player_name(size: usize) -> &'static str {
         return match size {
             0 => "P0",
@@ -45,20 +71,31 @@ impl Card {
         };
     }
 
-    pub fn player(name: &'static str, top: u8, right: u8, bottom: u8, left: u8) -> Card {
+    pub fn player(name: &'static str, top: u8, right: u8, bottom: u8, left: u8, tribe: u8) -> Card {
         Card {
             name,
             sides: (top, right, bottom, left),
+            modifier: 0,
+            tribe,
             is_player: true,
             is_empty: false,
             is_guaranteed: false,
         }
     }
 
-    pub fn computer(name: &'static str, top: u8, right: u8, bottom: u8, left: u8) -> Card {
+    pub fn computer(
+        name: &'static str,
+        top: u8,
+        right: u8,
+        bottom: u8,
+        left: u8,
+        tribe: u8,
+    ) -> Card {
         Card {
             name,
             sides: (top, right, bottom, left),
+            modifier: 0,
+            tribe,
             is_player: false,
             is_empty: false,
             is_guaranteed: false,
@@ -71,10 +108,13 @@ impl Card {
         right: u8,
         bottom: u8,
         left: u8,
+        tribe: u8,
     ) -> Card {
         Card {
             name,
             sides: (top, right, bottom, left),
+            modifier: 0,
+            tribe,
             is_player: false,
             is_empty: false,
             is_guaranteed: true,

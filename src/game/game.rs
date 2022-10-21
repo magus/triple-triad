@@ -743,24 +743,24 @@ impl Game {
 
         let player = Player {
             cards: [
-                Card::player("P0", 2, 2, 2, 2),
-                Card::player("P1", 2, 2, 2, 2),
-                Card::player("P2", 2, 2, 2, 2),
-                Card::player("P3", 2, 2, 2, 2),
-                Card::player("P4", 2, 2, 2, 2),
+                Card::player("P0", 2, 2, 2, 2, Card::TRIBE_NONE),
+                Card::player("P1", 2, 2, 2, 2, Card::TRIBE_NONE),
+                Card::player("P2", 2, 2, 2, 2, Card::TRIBE_NONE),
+                Card::player("P3", 2, 2, 2, 2, Card::TRIBE_NONE),
+                Card::player("P4", 2, 2, 2, 2, Card::TRIBE_NONE),
             ],
         };
 
         let computer = Computer {
             cards_used: 0,
             cards: [
-                Card::computer_guaranteed("C0", 1, 1, 1, 1),
-                Card::computer_guaranteed("C1", 1, 1, 1, 1),
-                Card::computer("C2", 1, 1, 1, 1),
-                Card::computer("C3", 1, 1, 1, 1),
-                Card::computer("C4", 1, 1, 1, 1),
-                Card::computer("C5", 1, 1, 1, 1),
-                Card::computer("C6", 1, 1, 1, 1),
+                Card::computer_guaranteed("C0", 1, 1, 1, 1, Card::TRIBE_NONE),
+                Card::computer_guaranteed("C1", 1, 1, 1, 1, Card::TRIBE_NONE),
+                Card::computer("C2", 1, 1, 1, 1, Card::TRIBE_NONE),
+                Card::computer("C3", 1, 1, 1, 1, Card::TRIBE_NONE),
+                Card::computer("C4", 1, 1, 1, 1, Card::TRIBE_NONE),
+                Card::computer("C5", 1, 1, 1, 1, Card::TRIBE_NONE),
+                Card::computer("C6", 1, 1, 1, 1, Card::TRIBE_NONE),
                 card::EMPTY,
                 card::EMPTY,
                 card::EMPTY,

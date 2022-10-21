@@ -10,14 +10,14 @@ use triple_triad::time::Stopwatch;
 fn main() {
     // search_data();
 
-    print::drive_game_prompt();
+    // print::drive_game_prompt();
 
     // TODO: implement chaos et al necessary to simulate "Idle Imperial"
     // Use it as a test to see if the recommendations work
 
     // guaranteed_card_left();
 
-    // idle_imperial();
+    idle_imperial();
 
     // deep_explore();
 
@@ -58,21 +58,21 @@ fn guaranteed_card_left() {
     // game.rules.plus = true;
 
     game.player.cards = [
-        Card::player("P0", 8, 8, 2, 3),
-        Card::player("P1", 8, 2, 3, 8),
-        Card::player("P2", 1, 8, 3, 8),
-        Card::player("P3", 1, 5, 9, 9),
-        Card::player("P4", 6, 10, 10, 1),
+        Card::player("P0", 8, 8, 2, 3, Card::TRIBE_NONE),
+        Card::player("P1", 8, 2, 3, 8, Card::TRIBE_NONE),
+        Card::player("P2", 1, 8, 3, 8, Card::TRIBE_NONE),
+        Card::player("P3", 1, 5, 9, 9, Card::TRIBE_NONE),
+        Card::player("P4", 6, 10, 10, 1, Card::TRIBE_NONE),
     ];
 
     game.computer.cards_from(vec![
-        Card::computer_guaranteed("C0", 6, 3, 7, 3),
-        Card::computer_guaranteed("C1", 9, 7, 8, 1),
-        Card::computer("C2", 4, 1, 8, 7),
-        Card::computer("C3", 7, 1, 6, 7),
-        Card::computer("C4", 1, 4, 8, 8),
-        Card::computer("C5", 7, 1, 3, 7),
-        Card::computer("C6", 8, 3, 8, 1),
+        Card::computer_guaranteed("C0", 6, 3, 7, 3, Card::TRIBE_NONE),
+        Card::computer_guaranteed("C1", 9, 7, 8, 1, Card::TRIBE_NONE),
+        Card::computer("C2", 4, 1, 8, 7, Card::TRIBE_NONE),
+        Card::computer("C3", 7, 1, 6, 7, Card::TRIBE_NONE),
+        Card::computer("C4", 1, 4, 8, 8, Card::TRIBE_NONE),
+        Card::computer("C5", 7, 1, 3, 7, Card::TRIBE_NONE),
+        Card::computer("C6", 8, 3, 8, 1, Card::TRIBE_NONE),
     ]);
 
     // computer
@@ -115,11 +115,11 @@ fn idle_imperial() {
     // game.rules.plus = true;
 
     game.player.cards = [
-        Card::player("P0", 8, 8, 2, 3),
-        Card::player("P1", 8, 2, 3, 8),
-        Card::player("P2", 1, 8, 3, 8),
-        Card::player("P3", 1, 5, 9, 9),
-        Card::player("P4", 6, 10, 10, 1),
+        Card::player("P0", 8, 8, 2, 3, Card::TRIBE_NONE),
+        Card::player("P1", 8, 2, 3, 8, Card::TRIBE_NONE),
+        Card::player("P2", 1, 8, 3, 8, Card::TRIBE_NONE),
+        Card::player("P3", 1, 5, 9, 9, Card::TRIBE_NONE),
+        Card::player("P4", 6, 10, 10, 1, Card::TRIBE_NONE),
     ];
 
     game.computer.cards_from(idle_imperial.cards.clone());
@@ -185,21 +185,21 @@ fn custom_simulation() {
     game.rules.plus = true;
 
     game.player.cards = [
-        Card::player("P0", 1, 1, 1, 1),
-        Card::player("P1", 1, 1, 1, 1),
-        Card::player("P2", 1, 2, 1, 1),
-        Card::player("P3", 1, 1, 1, 1),
-        Card::player("P4", 1, 2, 3, 2),
+        Card::player("P0", 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::player("P1", 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::player("P2", 1, 2, 1, 1, Card::TRIBE_NONE),
+        Card::player("P3", 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::player("P4", 1, 2, 3, 2, Card::TRIBE_NONE),
     ];
 
     game.computer.cards_from(vec![
-        Card::computer_guaranteed("C0", 1, 1, 2, 1),
-        Card::computer_guaranteed("C1", 1, 1, 1, 3),
-        Card::computer("C2", 2, 1, 1, 1),
-        Card::computer("C3", 4, 1, 4, 1),
-        Card::computer("C4", 1, 1, 1, 1),
-        Card::computer("C5", 1, 1, 1, 1),
-        Card::computer("C6", 1, 1, 1, 1),
+        Card::computer_guaranteed("C0", 1, 1, 2, 1, Card::TRIBE_NONE),
+        Card::computer_guaranteed("C1", 1, 1, 1, 3, Card::TRIBE_NONE),
+        Card::computer("C2", 2, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer("C3", 4, 1, 4, 1, Card::TRIBE_NONE),
+        Card::computer("C4", 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer("C5", 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer("C6", 1, 1, 1, 1, Card::TRIBE_NONE),
     ]);
 
     game = game.execute_turn(0, 0);
