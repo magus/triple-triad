@@ -648,6 +648,7 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
                     card.right,
                     card.bottom,
                     card.left,
+                    card.tribe,
                 ));
             }
             _ => {
@@ -679,6 +680,7 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
                     card.right,
                     card.bottom,
                     card.left,
+                    card.tribe,
                 ));
             }
         }
