@@ -1,7 +1,8 @@
-import fs from "fs";
 import * as csv from "csv-parse/sync";
+
 import { parse } from "./parse/parse.js";
 import { cli } from "./cli.js";
+import * as json from "./json.js";
 import { game_dir } from "./constants.js";
 
 // unzip game data so it is available
@@ -17,9 +18,5 @@ write_json_list("npcs", data);
 function write_json_list(name, data) {
   const output_path = game_dir(`${name}.json`);
   const output_data = data[name].list;
-  fs.writeFileSync(output_path, pretty(output_data));
-}
-
-function pretty(obj) {
-  return JSON.stringify(obj, null, 2);
+  json.write(output_path, output_data);
 }
