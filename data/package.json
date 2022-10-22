@@ -1,0 +1,13 @@
+{
+  "name": "js",
+  "license": "MIT",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node src/index.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.3.1"
+  }
+}
