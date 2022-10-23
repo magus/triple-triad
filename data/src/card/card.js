@@ -3,21 +3,37 @@ import Jimp from 'jimp';
 import { game_dir } from '../constants.js';
 
 export async function create(params) {
-  const image = await create_card_base(params);
+  const card_image = await Jimp.read(card_image_path(params.id));
 
-  const star_count = params.stars;
+  // start with fresh image with correct dimensions
+  const image = new Jimp(card_image.getWidth(), card_image.getHeight(), 'transparent');
 
-  // draw stars in reverse order so 4 and 5 are under 2 and 3
-  for (let i = 0; i < star_count; i++) {
-    const [x, y] = POSITION.StarList[star_count - i - 1];
-    image.composite(IMAGES.Star, x, y);
+  if (params.background) {
+    image.composite(IMAGES.Background[params.background], 0, 0);
+  }
+
+  image.composite(card_image, 0, 0);
+
+  image.crop(...crop, width, height);
+
+  if (params.stars) {
+    const star_count = params.stars;
+
+    // draw stars in reverse order so 4 and 5 are under 2 and 3
+    for (let i = 0; i < star_count; i++) {
+      const [x, y] = POSITION.StarList[star_count - i - 1];
+      image.composite(IMAGES.Star, x, y);
+    }
   }
 
   for (const num_meta of POSITION.NumberList) {
-    const [x, y] = num_meta.pos;
-    const num_image = IMAGES.Number[params[num_meta.side]];
+    let side_value = params[num_meta.side];
 
-    image.composite(num_image, x, y);
+    if (side_value) {
+      const num_image = IMAGES.Number[side_value];
+      const [x, y] = num_meta.pos;
+      image.composite(num_image, x, y);
+    }
   }
 
   if (params.tribe) {
@@ -35,29 +51,19 @@ IMAGES.Background.gray = await Jimp.read(game_dir('images', 'background-gray.png
 IMAGES.Background.blue = await Jimp.read(game_dir('images', 'background-blue.png'));
 IMAGES.Background.red = await Jimp.read(game_dir('images', 'background-red.png'));
 
-export const { scale, width, height } = await (async function () {
-  // read in first card to capture measurements
-  const image = await create_card_base({ id: '1', background: 'gray' });
+// constants below are calculated by using reference photos from game
+// see https://www.figma.com/file/O39AUh8Rbog2MQRykgrorO/FFXIV-Triple-Triad?node-id=0%3A1
+// 90 is the width of the reference card in figma
+// 208x256    hd card image
+// 200x252    actual card dimensions excluding padding
+export const width = 200;
+export const height = 252;
+const crop = [4, 2];
 
-  // 208x256    hd card image
-  // 200x252    actual card dimensions excluding padding
-  // we can autocrop to actual card dimensions
-  image.autocrop();
-
-  const width = image.getWidth();
-  const height = image.getHeight();
-
-  // constants below are calculated by using reference photos from game
-  // see https://www.figma.com/file/O39AUh8Rbog2MQRykgrorO/FFXIV-Triple-Triad?node-id=0%3A1
-  // 90 is the width of the reference card in figma
+export function scale(value) {
   const scalar = width / 90;
-
-  function scale(value) {
-    return Math.round(value * scalar);
-  }
-
-  return { scale, width, height };
-})();
+  return Math.round(value * scalar);
+}
 
 IMAGES.Number = {};
 for (let i = 0; i < 10; i++) {
@@ -94,17 +100,6 @@ POSITION.NumberList = [
 ];
 
 POSITION.Tribe = [scale(70), scale(1)];
-
-async function create_card_base(params) {
-  // start with clone of background and composite on top of it
-  const image = IMAGES.Background[params.background].clone();
-
-  const card_id = params.id;
-  const card_image = await Jimp.read(card_image_path(card_id));
-  image.composite(card_image, 0, 0);
-
-  return image;
-}
 
 function card_image_path(card_id) {
   return game_image_path(82100, card_id);

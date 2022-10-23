@@ -15,7 +15,6 @@ async function main() {
 
   const params = {
     id: '74',
-    background: 'gray',
     stars: 5,
     top: 9,
     right: 10,
