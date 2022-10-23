@@ -32,7 +32,7 @@ export function parse_cards() {
         return null;
       }
 
-      const int_field_list = ['top', 'right', 'bottom', 'left', 'type', 'sort', 'order'];
+      const int_field_list = ['top', 'right', 'bottom', 'left', 'tribe', 'stars', 'sort', 'order'];
 
       const id = record.id;
       const card_name = CardNameMap[id];
@@ -59,8 +59,8 @@ export function parse_cards() {
       'bottom',
       'left',
       'right',
-      'rarity',
-      'type',
+      'stars',
+      'tribe',
       'sell',
       'sort',
       'order',

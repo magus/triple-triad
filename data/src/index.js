@@ -14,6 +14,7 @@ const data = parse();
 write_json_list('rules', data);
 write_json_list('cards', data);
 write_json_list('npcs', data);
+write_json_list('tribes', data);
 
 function write_json_list(name, data) {
   const output_path = game_dir(`${name}.json`);
