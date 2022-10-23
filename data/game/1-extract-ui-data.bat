@@ -1,8 +1,6 @@
 @echo off
 
 SET GAMEPATH="C:\Program Files (x86)\SquareEnix\FINAL FANTASY XIV - A Realm Reborn"
-SET REPOPATH="C:\Users\noah\github\xiv-data"
-SET FFMPEG="C:\Users\noah\software\ffmpeg-5.0.1-full_build\bin\ffmpeg.exe"
 SET /p VERSION=<%GAMEPATH%\game\ffxivgame.ver
 SET DATAPATH="%CD%\%VERSION%"
 
