@@ -159,12 +159,9 @@ async function create_card(params) {
     image.composite(IMAGES.Star, x, y);
   }
 
-  const { top, right, bottom, left } = params;
-  const card = { top, right, bottom, left };
-
   for (const num_pos of POS.NumberList) {
     const [x, y] = num_pos.pos;
-    const num_image = IMAGES.Number[card[num_pos.side]];
+    const num_image = IMAGES.Number[params[num_pos.side]];
 
     image.composite(num_image, x, y);
   }
