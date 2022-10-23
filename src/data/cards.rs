@@ -9,8 +9,6 @@ pub struct CardJson {
     pub right: u8,
     pub bottom: u8,
     pub left: u8,
-    // we must rename because `type` keyword is reserved
-    #[serde(rename = "type")]
     pub tribe: u8,
     sort: u16,
     order: u16,
