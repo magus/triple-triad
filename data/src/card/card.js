@@ -9,19 +9,19 @@ export async function create(params) {
 
   // draw stars in reverse order so 4 and 5 are under 2 and 3
   for (let i = 0; i < star_count; i++) {
-    const [x, y] = POS.StarList[star_count - i - 1];
+    const [x, y] = POSITION.StarList[star_count - i - 1];
     image.composite(IMAGES.Star, x, y);
   }
 
-  for (const num_pos of POS.NumberList) {
-    const [x, y] = num_pos.pos;
-    const num_image = IMAGES.Number[params[num_pos.side]];
+  for (const num_meta of POSITION.NumberList) {
+    const [x, y] = num_meta.pos;
+    const num_image = IMAGES.Number[params[num_meta.side]];
 
     image.composite(num_image, x, y);
   }
 
   if (params.tribe) {
-    const [x, y] = POS.Tribe;
+    const [x, y] = POSITION.Tribe;
     image.composite(IMAGES.Tribe[params.tribe], x, y);
   }
 
@@ -77,8 +77,8 @@ IMAGES.Tribe.primal = await Jimp.read(game_dir('images', 'primal.png'));
 IMAGES.Tribe.scion = await Jimp.read(game_dir('images', 'scion.png'));
 IMAGES.Tribe.beastman = await Jimp.read(game_dir('images', 'beastman.png'));
 
-const POS = {};
-POS.StarList = [
+const POSITION = {};
+POSITION.StarList = [
   [scale(13), scale(4)],
   [scale(5), scale(9)],
   [scale(21), scale(9)],
@@ -86,14 +86,14 @@ POS.StarList = [
   [scale(18), scale(17)],
 ];
 
-POS.NumberList = [
+POSITION.NumberList = [
   { side: 'top', pos: [scale(37), scale(80)] },
   { side: 'right', pos: [scale(48), scale(85)] },
   { side: 'bottom', pos: [scale(37), scale(91)] },
   { side: 'left', pos: [scale(26), scale(85)] },
 ];
 
-POS.Tribe = [scale(70), scale(1)];
+POSITION.Tribe = [scale(70), scale(1)];
 
 async function create_card_base(params) {
   // start with clone of background and composite on top of it
