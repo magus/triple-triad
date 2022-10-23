@@ -1,15 +1,18 @@
 import Jimp from 'jimp';
 
 import { game_dir } from '../constants.js';
-import * as json from '../json.js';
 import * as Card from './card.js';
-
-const CARDS = json.read(game_dir('cards.json'));
-// console.debug({ CARDS });
+import { OutputImage } from './OutputImage.js';
 
 await main();
 
 async function main() {
+  const output = new OutputImage({
+    columns: 5,
+    rows: 5,
+    padding: [32, 32],
+  });
+
   const params = {
     id: '74',
     background: 'gray',
@@ -19,34 +22,6 @@ async function main() {
     bottom: 9,
     left: 1,
   };
-
-  const output = (function (columns, rows) {
-    let x = 0;
-    let y = 0;
-    const card_width = Card.width + 16;
-    const card_height = Card.height + 16;
-
-    const image = new Jimp(card_width * 5, card_height * 5, 'transparent');
-
-    function move_right() {
-      const result = [x, y];
-      x += card_width;
-      return result;
-    }
-
-    function move_down() {
-      const result = [x, y];
-      y += card_height;
-      x = 0;
-      return result;
-    }
-
-    function write(add_image) {
-      image.composite(add_image, ...move_right());
-    }
-
-    return { write, move_down, image };
-  })();
 
   for (const background of Object.keys(Card.IMAGES.Background)) {
     output.write(await Card.create({ ...params, background }));
