@@ -15,4 +15,5 @@ web-build/
 # game used as output folder, ignore everything except single file
 game/*
 !1-extract-ui-data.bat
+!images
 
