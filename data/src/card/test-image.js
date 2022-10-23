@@ -1,8 +1,8 @@
 import Jimp from 'jimp';
 
-import { game_dir } from './constants.js';
-import * as json from './json.js';
-import * as Card from './card/card.js';
+import { game_dir } from '../constants.js';
+import * as json from '../json.js';
+import * as Card from './card.js';
 
 const CARDS = json.read(game_dir('cards.json'));
 // console.debug({ CARDS });
@@ -76,5 +76,5 @@ async function main() {
     }
   }
 
-  output.image.write('output.png');
+  output.image.write(game_dir('test-image.png'));
 }

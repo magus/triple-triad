@@ -10,8 +10,14 @@ extract and parse game data, textures and images from ffxiv files
 
 ## run
 
+> **Generate game data json files consumed by triple-triad rust program**
 ```
 yarn build
+```
+
+> **Test the card image creation with a specific card and permuting params**
+```
+yarn test:card
 ```
 
 ## setup `data/game`
