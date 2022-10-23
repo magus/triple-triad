@@ -1,6 +1,6 @@
 import Jimp from 'jimp';
 
-import { game_dir } from '../constants.js';
+import { game_dir, TRIBE } from '../constants.js';
 
 export async function create(params) {
   const card_image = await Jimp.read(card_image_path(params.id));
@@ -37,8 +37,26 @@ export async function create(params) {
   }
 
   if (params.tribe) {
+    // normalize tribe from number to string
+    const tribe = (function () {
+      if (typeof params.tribe === 'string') {
+        return params.tribe;
+      }
+
+      switch (params.tribe) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          return TRIBE[params.tribe].name.toLowerCase();
+
+        default:
+          throw new Error(`❌ unexpected tribe [${tribe}]`);
+      }
+    })();
+
     const [x, y] = POSITION.Tribe;
-    image.composite(IMAGES.Tribe[params.tribe], x, y);
+    image.composite(IMAGES.Tribe[tribe], x, y);
   }
 
   return image;
