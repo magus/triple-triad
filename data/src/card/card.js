@@ -3,18 +3,16 @@ import Jimp from 'jimp';
 import { game_dir, TRIBE } from '../constants.js';
 
 export async function create(params) {
-  const card_image = await Jimp.read(card_image_path(params.id));
-
   // start with fresh image with correct dimensions
-  const image = new Jimp(card_image.getWidth(), card_image.getHeight(), 'transparent');
+  const image = new Jimp(width, height, 'transparent');
 
   if (params.background) {
     image.composite(IMAGES.Background[params.background], 0, 0);
   }
 
+  const card_image = await Jimp.read(card_image_path(params.id));
+  card_image.crop(...crop, width, height);
   image.composite(card_image, 0, 0);
-
-  image.crop(...crop, width, height);
 
   if (params.stars) {
     const star_count = params.stars;
