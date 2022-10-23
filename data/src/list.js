@@ -1,5 +1,5 @@
 export function preview(list) {
-  console.log(list.length, "items");
+  console.log(list.length, 'items');
   console.log(list[0]);
   console.log(list[list.length - 1]);
 }

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 
 export function read(filepath) {
   const content = fs.readFileSync(filepath);
