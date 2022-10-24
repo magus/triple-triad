@@ -1,3 +1,8 @@
+#![cfg_attr(
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
+)]
+
 #[allow(unused_imports)]
 use triple_triad::card;
 use triple_triad::card::Card;
@@ -7,7 +12,18 @@ use triple_triad::game::Game;
 use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+#[tauri::command]
+fn greet(name: &str) -> String {
+    format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
 fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![greet])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+
     // print::drive_game_prompt();
 
     // search_data();
@@ -17,7 +33,7 @@ fn main() {
 
     // guaranteed_card_left();
 
-    idle_imperial();
+    // idle_imperial();
 
     // deep_explore();
 
