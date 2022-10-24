@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev -p 1420",
     "build": "next build && next export -o dist",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "build:data": "node data/src/index.js",
+    "build:spritesheet": "node data/src/card/spritesheet.js",
+    "test:card": "node data/src/card/test-image.js"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.1.0",
@@ -18,6 +21,8 @@
     "@types/node": "^18.7.11",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "csv-parse": "^5.3.1",
+    "jimp": "^0.16.2",
     "typescript": "^4.7.4"
   }
 }

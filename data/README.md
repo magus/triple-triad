@@ -2,16 +2,11 @@
 
 extract and parse game data, textures and images from ffxiv files
 
-## todo
-
-- in our UI we can compose the transparent cards over the correct background to create red/blue cards
-
-
 ## run
 
 > **Generate game data json files consumed by triple-triad rust program**
 ```sh
-yarn build
+yarn build:data
 ```
 
 > **Generate spritesheet of all card images**

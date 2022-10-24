@@ -1,16 +1,5 @@
 {
-  "name": "js",
-  "license": "MIT",
+  "name": "data",
   "version": "0.1.0",
-  "type": "module",
-  "main": "src/index.js",
-  "scripts": {
-    "build": "node src/index.js",
-    "build:spritesheet": "node src/card/spritesheet.js",
-    "test:card": "node src/card/test-image.js"
-  },
-  "dependencies": {
-    "csv-parse": "^5.3.1",
-    "jimp": "^0.16.2"
-  }
+  "type": "module"
 }

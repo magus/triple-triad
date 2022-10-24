@@ -23,3 +23,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# data/game used as output folder, ignore everything except single file
+data/game/*
+!data/1-extract-ui-data.bat
+!data/images
