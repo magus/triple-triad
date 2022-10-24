@@ -25,7 +25,7 @@ export default function App() {
   }
 
   return (
-    <div className="container">
+    <div data-tauri-drag-region className="container">
       <h1>Greeting</h1>
 
       <Link href="/SearchNpc">Search NPCs</Link>
