@@ -13,7 +13,7 @@ use crate::time::Stopwatch;
 
 type Board = [Card; BOARD_SIZE];
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, serde::Serialize)]
 pub struct Rules {
     pub roulette: bool,
     pub all_open: bool,
@@ -91,7 +91,7 @@ impl Rules {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize)]
 pub struct Game {
     pub turn: u8,
     pub is_player_first: bool,
