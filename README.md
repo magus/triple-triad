@@ -13,5 +13,5 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 
 > **Run tauri app via src-tauri/src/main.rs**
 ```sh
-yarn tauri dev
+yarn tauri dev --release
 ```

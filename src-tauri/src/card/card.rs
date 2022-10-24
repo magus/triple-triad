@@ -10,7 +10,7 @@ pub const EMPTY: Card = Card {
     is_guaranteed: false,
 };
 
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct Card {
     pub name: &'static str,
     pub sides: (u8, u8, u8, u8),

@@ -1,4 +1,7 @@
 :root {
+  user-select: none;
+  cursor: default;
+
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
@@ -23,8 +26,14 @@
   text-align: center;
 }
 
-h1 {
-  text-align: center;
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
 }
 
 input,
@@ -62,6 +71,10 @@ button {
   :root {
     color: #f6f6f6;
     background-color: #2f2f2f;
+  }
+
+  a:hover {
+    color: #24c8db;
   }
 
   input,

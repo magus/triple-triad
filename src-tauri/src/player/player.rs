@@ -3,7 +3,7 @@ use crate::card::Card;
 
 const PLAYER_HAND_SIZE: usize = 5;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct Player {
     pub cards: [Card; PLAYER_HAND_SIZE],
 }
@@ -74,7 +74,7 @@ const MAX_COMPUTER_HAND_SIZE: usize = 10;
 
 type ComputerCardsArray = [Card; MAX_COMPUTER_HAND_SIZE];
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct Computer {
     pub cards: ComputerCardsArray,
     pub cards_used: usize,
