@@ -67,4 +67,4 @@ impl CardData {
     }
 }
 
-const JSON_PATH: &str = "./js/dist/cards.json";
+const JSON_PATH: &str = "./data/game//cards.json";
