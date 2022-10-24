@@ -8,9 +8,9 @@ use triple_triad::print;
 use triple_triad::time::Stopwatch;
 
 fn main() {
-    // search_data();
-
     // print::drive_game_prompt();
+
+    // search_data();
 
     // TODO: implement chaos et al necessary to simulate "Idle Imperial"
     // Use it as a test to see if the recommendations work

@@ -114,4 +114,4 @@ impl NpcData {
     }
 }
 
-const JSON_PATH: &str = "./js/dist/npcs.json";
+const JSON_PATH: &str = "./data/game//npcs.json";
