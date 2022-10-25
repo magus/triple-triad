@@ -16,9 +16,12 @@ export function Card(props: Props) {
   const id_numeric = parseInt(props.id, 10);
   const x_offset = -1 * style.card.width * (id_numeric - 1);
 
+  const background = getBackground(props);
+
   return (
     <div className="relative" style={{ ...style.card }}>
-      <img src={getBackground(props)} />
+      <Image src={background.src} alt={background.alt} />
+
       <div
         className="absolute top-0 left-0 h-full w-full"
         style={{
@@ -34,11 +37,11 @@ function getBackground(props) {
   switch (true) {
     case props.npc:
     case props.computer:
-      return BackgroundRed.src;
+      return { src: BackgroundRed.src, alt: 'red' };
     case props.player:
-      return BackgroundBlue.src;
+      return { src: BackgroundBlue.src, alt: 'blue' };
     default:
-      return BackgroundGray.src;
+      return { src: BackgroundGray.src, alt: 'gray' };
   }
 }
 
