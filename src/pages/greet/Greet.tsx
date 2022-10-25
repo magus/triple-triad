@@ -4,6 +4,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import * as TauriEvents from '@tauri-apps/api/event';
 
 import { Card } from 'src/components/Card';
+import { Board } from 'src/components/Board';
 
 export function Greet() {
   const [greeting, set_greeting] = React.useState('');
@@ -27,10 +28,11 @@ export function Greet() {
   }
 
   return (
-    <div data-tauri-drag-region className="container">
+    <div className="h-full w-full">
       <h1 className="text-3xl font-bold underline">Greeting</h1>
 
-      <Card id="272" />
+      <Board />
+      <Card id="138" player />
 
       <Link href="/search-npc">Search NPCs</Link>
 
