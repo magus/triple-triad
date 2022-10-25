@@ -20,10 +20,9 @@ export function Card(props: Props) {
     <div className="relative" style={{ ...style.card }}>
       <img src={getBackground(props)} />
       <div
-        className="absolute top-0 left-0"
+        className="absolute top-0 left-0 h-full w-full"
         style={{
-          ...style.card,
-          backgroundImage: `url(${CardSpritesheet.src})`,
+          ...style.spritesheet,
           backgroundPositionX: x_offset,
         }}
       />
@@ -42,9 +41,14 @@ function getBackground(props) {
       return BackgroundGray.src;
   }
 }
+
 const style = {
   card: {
     width: 200,
     height: 252,
+  },
+
+  spritesheet: {
+    backgroundImage: `url(${CardSpritesheet.src})`,
   },
 };
