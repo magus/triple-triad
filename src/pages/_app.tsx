@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 
 // load global styles
-import '../style.css';
+import '../global.css';
 import '../App.css';
 
 // This default export is required in a new `pages/_app.js` file.
