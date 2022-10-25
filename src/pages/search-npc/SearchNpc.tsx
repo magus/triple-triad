@@ -2,7 +2,7 @@ import * as React from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import * as TauriEvents from '@tauri-apps/api/event';
 
-export default function SearchNpc() {
+export function SearchNpc() {
   const [npc, set_npc] = React.useState('');
 
   React.useEffect(() => {

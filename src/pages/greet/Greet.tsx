@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { invoke } from '@tauri-apps/api/tauri';
 import * as TauriEvents from '@tauri-apps/api/event';
 
-export default function App() {
+export function Greet() {
   const [greeting, set_greeting] = React.useState('');
   const [name, set_name] = React.useState('');
 
@@ -26,9 +26,9 @@ export default function App() {
 
   return (
     <div data-tauri-drag-region className="container">
-      <h1>Greeting</h1>
+      <h1 className="text-3xl font-bold underline">Greeting</h1>
 
-      <Link href="/SearchNpc">Search NPCs</Link>
+      <Link href="/search-npc">Search NPCs</Link>
 
       <input className="greet-input" onChange={(e) => set_name(e.currentTarget.value)} placeholder="Enter a name..." />
       <button type="button" onClick={() => greet()}>
