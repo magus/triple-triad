@@ -4,7 +4,10 @@ import { Html, Head, Main, NextScript, type DocumentProps } from 'next/document'
 
 export default function Document(props: DocumentProps) {
   return (
-    <Html lang="en" className="color-black">
+    <Html
+      lang="en"
+      className="select-none cursor-default font-body text-base font-normal text-rendering-legibility antialiased bg-black text-gray-100"
+    >
       <Head />
       <body>
         <Main />
