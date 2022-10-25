@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { invoke } from '@tauri-apps/api/tauri';
 import * as TauriEvents from '@tauri-apps/api/event';
 
+import { Card } from 'src/components/Card';
+
 export function Greet() {
   const [greeting, set_greeting] = React.useState('');
   const [name, set_name] = React.useState('');
@@ -27,6 +29,8 @@ export function Greet() {
   return (
     <div data-tauri-drag-region className="container">
       <h1 className="text-3xl font-bold underline">Greeting</h1>
+
+      <Card id="272" />
 
       <Link href="/search-npc">Search NPCs</Link>
 
