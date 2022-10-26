@@ -20,7 +20,7 @@ export function Card(props: Props) {
 
   return (
     <div className="relative" style={{ ...style.card }}>
-      <Image src={background.src} alt={background.alt} />
+      <Image {...background} alt={background.alt} />
 
       <div
         className="absolute top-0 left-0 h-full w-full"
@@ -37,11 +37,11 @@ function getBackground(props) {
   switch (true) {
     case props.npc:
     case props.computer:
-      return { src: BackgroundRed.src, alt: 'red' };
+      return { ...BackgroundRed, alt: 'red' };
     case props.player:
-      return { src: BackgroundBlue.src, alt: 'blue' };
+      return { ...BackgroundBlue, alt: 'blue' };
     default:
-      return { src: BackgroundGray.src, alt: 'gray' };
+      return { ...BackgroundGray, alt: 'gray' };
   }
 }
 
