@@ -25,7 +25,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
       TauriGlobalShortcut.register('CommandOrControl+M', () => appWindow.minimize());
 
-      const inc_zoom = (inc) => (z) => +Math.max(0.5, Math.min(0.8, z + inc)).toFixed(2);
+      const inc_zoom = (inc) => (z) => +Math.max(0.6, Math.min(0.8, z + inc)).toFixed(2);
       TauriGlobalShortcut.register('CommandOrControl+0', () => set_zoom(0.6));
       TauriGlobalShortcut.register('CommandOrControl+-', () => set_zoom(inc_zoom(-0.05)));
       TauriGlobalShortcut.register('CommandOrControl+=', () => set_zoom(inc_zoom(+0.05)));
