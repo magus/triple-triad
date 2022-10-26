@@ -5,8 +5,9 @@ import BoardSquare from './board-square.png';
 export function Tile() {
   return (
     <Image
-      className="rotate-0 object-contain"
+      className="rotate-0"
       src={BoardSquare.src}
+      layout="fixed"
       alt="tile"
       width={BoardSquare.width}
       height={BoardSquare.height}

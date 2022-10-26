@@ -1,1 +1,1 @@
-export { default } from './greet/index.page';
+export { default } from './game/index.page';
