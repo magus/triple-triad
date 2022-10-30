@@ -18,8 +18,12 @@ export function Card(props: Props) {
 
   const background = getBackground(props);
 
+  function handleClick() {
+    console.debug('[Card]', props.id);
+  }
+
   return (
-    <div className="relative" style={{ ...style.card }}>
+    <div className="relative" style={{ ...style.card }} onClick={handleClick}>
       <Image {...background} alt={background.alt} />
 
       <div
