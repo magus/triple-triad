@@ -9,7 +9,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   // setup global event listeners here
   // such as restart or quit
   // forcefully route to specific page, refresh state, etc.
-  const [zoom, set_zoom] = React.useState(0.6);
+  const default_zoom = 0.6;
+  const [zoom, set_zoom] = React.useState(default_zoom);
+  const inc_zoom = (sign: -1 | 1) => (z: number) => +Math.max(0.4, Math.min(0.8, z + 0.1 * sign)).toFixed(2);
 
   React.useEffect(() => {
     const TauriWindow = require('@tauri-apps/api/window');
@@ -32,10 +34,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
       TauriGlobalShortcut.register('CommandOrControl+M', () => TauriWindow.appWindow.minimize());
 
-      const inc_zoom = (inc) => (z) => +Math.max(0.6, Math.min(0.8, z + inc)).toFixed(2);
-      TauriGlobalShortcut.register('CommandOrControl+0', () => set_zoom(0.6));
-      TauriGlobalShortcut.register('CommandOrControl+-', () => set_zoom(inc_zoom(-0.05)));
-      TauriGlobalShortcut.register('CommandOrControl+=', () => set_zoom(inc_zoom(+0.05)));
+      TauriGlobalShortcut.register('CommandOrControl+0', () => set_zoom(default_zoom));
+      TauriGlobalShortcut.register('CommandOrControl+-', () => set_zoom(inc_zoom(-1)));
+      TauriGlobalShortcut.register('CommandOrControl+=', () => set_zoom(inc_zoom(+1)));
     }
 
     run();
