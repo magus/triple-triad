@@ -21,7 +21,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     // set window size for each zoom level to match scale
     // e.g. large scale, large window ... small scale, small window
     console.debug(TauriWindow);
-    window.TauriWindow = TauriWindow;
+    window['TauriWindow'] = TauriWindow;
     // TauriWindow.appWindow.setSize(new TauriWindow.LogicalSize(800, 600));
 
     async function run() {
