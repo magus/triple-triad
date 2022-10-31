@@ -3,9 +3,12 @@ import * as TauriEvents from '@tauri-apps/api/event';
 
 import { PlayerHand } from 'src/components/PlayerHand';
 import { Board } from 'src/components/Board';
+import { isTauriApp } from 'src/core/isTauriApp';
 
 export function Game() {
   React.useEffect(() => {
+    if (!isTauriApp()) return;
+
     const promise_unlisten = TauriEvents.listen('select', (event) => {
       console.debug('select', { event });
     });
