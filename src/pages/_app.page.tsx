@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { type AppProps } from 'next/app';
 import * as TauriGlobalShortcut from '@tauri-apps/api/globalShortcut';
+import { isTauriApp } from 'src/core/isTauriApp';
 
 // load global styles
 import './global.css';
@@ -14,6 +15,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const inc_zoom = (sign: -1 | 1) => (z: number) => +Math.max(0.4, Math.min(0.8, z + 0.1 * sign)).toFixed(2);
 
   React.useEffect(() => {
+    if (!isTauriApp()) return;
+
     const TauriWindow = require('@tauri-apps/api/window');
 
     // setup zoom level and window size in array
