@@ -12,7 +12,7 @@ export function Tile(props: Props) {
 
   return (
     <div className="relative" style={dimensions}>
-      <Image className="rotate-0" src={BoardSquare.src} layout="fixed" alt="tile" {...dimensions} />
+      <Image className="rotate-0" src={BoardSquare.src} layout="fixed" alt="tile" priority {...dimensions} />
       <MaybeDark {...props} />
     </div>
   );

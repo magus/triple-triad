@@ -7,16 +7,14 @@ import BackgroundRed from './background-red.png';
 
 type Props = {
   id: string;
-  player?: boolean;
-  npc?: boolean;
-  computer?: boolean;
+  owner: 'player' | 'npc' | 'none';
 };
 
 export function Card(props: Props) {
   const id_numeric = parseInt(props.id, 10);
   const x_offset = -1 * style.card.width * (id_numeric - 1);
 
-  const background = getBackground(props);
+  const background = getBackground(props.owner);
 
   function handleClick() {
     console.debug('[Card]', props.id);
@@ -24,7 +22,7 @@ export function Card(props: Props) {
 
   return (
     <div className="relative" style={{ ...style.card }} onClick={handleClick}>
-      <Image {...background} alt={background.alt} />
+      <Image {...background} alt={background.alt} priority />
 
       <div
         className="absolute top-0 left-0 h-full w-full"
@@ -37,16 +35,21 @@ export function Card(props: Props) {
   );
 }
 
-function getBackground(props) {
-  switch (true) {
-    case props.npc:
-    case props.computer:
-      return { ...BackgroundRed, alt: 'red' };
-    case props.player:
-      return { ...BackgroundBlue, alt: 'blue' };
+function getBackground(owner) {
+  switch (owner) {
+    case 'npc':
+      return { ...getBackgroundProps(BackgroundRed), alt: 'red' };
+    case 'player':
+      return { ...getBackgroundProps(BackgroundBlue), alt: 'blue' };
+    case 'none':
     default:
-      return { ...BackgroundGray, alt: 'gray' };
+      return { ...getBackgroundProps(BackgroundGray), alt: 'gray' };
   }
+}
+
+function getBackgroundProps(background) {
+  const { width, height, src } = background;
+  return { width, height, src };
 }
 
 const style = {
