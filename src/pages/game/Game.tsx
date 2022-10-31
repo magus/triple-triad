@@ -23,7 +23,7 @@ export function Game() {
 
   return (
     <div className="ml-[50%] inline-block -translate-x-1/2">
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-start">
         <DisableSSR>
           <PlayerHand cards={['88', '75', '89', '93', '96']} player />
 

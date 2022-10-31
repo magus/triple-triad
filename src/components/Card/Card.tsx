@@ -31,7 +31,7 @@ export function Card(props: Props) {
       dragControls={controls}
       dragMomentum={false}
       whileDrag={{ scale: 1.2, zIndex: 9999 }}
-      className="relative"
+      className="relative z-10"
       style={{ ...style.card }}
       onPointerDown={onPointerDown}
     >
