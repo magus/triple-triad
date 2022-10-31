@@ -249,9 +249,9 @@ impl Game {
                     //     game.turn
                     // );
 
-                    // evaluate board position as cards flipped for player
-                    // for example, `N / game.turn` will return a float in range [0,1]
-                    // this can be summed in the same way as win-loss above
+                    // TODO we can use other metrics here to score unfinished games
+                    // count sides which can be flipped by a remaining card of opponent
+                    // solid sides which cannot be flipped are valuable
 
                     // // debug by returning perfect score so results should all show 100%
                     // return 100.0;
