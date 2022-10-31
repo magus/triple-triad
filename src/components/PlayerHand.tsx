@@ -1,21 +1,42 @@
 import { Card } from 'src/components/Card';
 
-export function PlayerHand() {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="flex flex-row">
-        <Card id="88" player />
-        <div className="ml-8" />
-        <Card id="75" player />
-        <div className="ml-8" />
-        <Card id="89" player />
+type Props = {
+  cards: Array<string>;
+  player?: boolean;
+};
+
+export function PlayerHand(props: Props) {
+  const children = [];
+
+  let row = [];
+
+  const key = () => `${children.length}-${row.length}`;
+
+  function finishRow() {
+    if (children.length) {
+      children.push(<div key={key()} className="mt-8" />);
+    }
+    children.push(
+      <div key={key()} className="flex flex-row">
+        {row}
       </div>
-      <div className="mt-8" />
-      <div className="flex flex-row">
-        <Card id="93" player />
-        <div className="ml-8" />
-        <Card id="96" player />
-      </div>
-    </div>
-  );
+    );
+    row = [];
+  }
+
+  for (let i = 0; i < props.cards.length; i++) {
+    const cardId = props.cards[i];
+
+    row.push(<Card key={key()} id={cardId} owner={props.player ? 'player' : 'npc'} />);
+
+    if (i && i % 3 === 2) {
+      finishRow();
+    } else {
+      row.push(<div key={key()} className="ml-8" />);
+    }
+  }
+
+  finishRow();
+
+  return <div className="flex flex-col items-center">{children}</div>;
 }

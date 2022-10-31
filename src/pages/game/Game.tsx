@@ -23,7 +23,7 @@ export function Game() {
   return (
     <div className="ml-[50%] inline-block -translate-x-1/2">
       <div className="flex flex-row items-center">
-        <PlayerHand />
+        <PlayerHand cards={['88', '75', '89', '93', '96']} player />
 
         <div className="ml-4" />
 
@@ -31,7 +31,7 @@ export function Game() {
 
         <div className="ml-4" />
 
-        <PlayerHand />
+        <PlayerHand cards={['88', '75', '89', '93', '96', '179', '74', '256', '43', '54']} />
       </div>
     </div>
   );
