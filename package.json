@@ -8,7 +8,8 @@
     "tauri": "tauri",
     "build:data": "node data/src/index.js",
     "build:spritesheet": "node data/src/card/spritesheet.js",
-    "test:card": "node data/src/card/test-image.js"
+    "test:card": "node data/src/card/test-image.js",
+    "lint": "next lint"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.1.0",
