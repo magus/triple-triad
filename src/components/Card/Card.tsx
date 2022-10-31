@@ -1,3 +1,4 @@
+import { motion, useDragControls } from 'framer-motion';
 import Image from 'next/image';
 
 import CardSpritesheet from './card-spritesheet.png';
@@ -11,17 +12,29 @@ type Props = {
 };
 
 export function Card(props: Props) {
+  const controls = useDragControls();
+
   const id_numeric = parseInt(props.id, 10);
   const x_offset = -1 * style.card.width * (id_numeric - 1);
 
   const background = getBackground(props.owner);
 
-  function handleClick() {
+  function onPointerDown(event) {
+    controls.start(event, { snapToCursor: true });
+
     console.debug('[Card]', props.id);
   }
 
   return (
-    <div className="relative" style={{ ...style.card }} onClick={handleClick}>
+    <motion.div
+      drag
+      dragControls={controls}
+      dragMomentum={false}
+      whileDrag={{ scale: 1.2, zIndex: 9999 }}
+      className="relative"
+      style={{ ...style.card }}
+      onPointerDown={onPointerDown}
+    >
       <Image {...background} alt={background.alt} priority />
 
       <div
@@ -31,7 +44,7 @@ export function Card(props: Props) {
           backgroundPositionX: x_offset,
         }}
       />
-    </div>
+    </motion.div>
   );
 }
 
