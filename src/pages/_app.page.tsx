@@ -50,7 +50,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div data-tauri-drag-region className="h-full w-full">
       <div
-        className="data-tauri-drag-region flex h-full w-full origin-center content-center items-center"
+        className="data-tauri-drag-region flex h-full w-full origin-center items-center"
         // style={{ transform: `scale(${zoom})` }}
       >
         <Component {...pageProps} />

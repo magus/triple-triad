@@ -1,5 +1,6 @@
-import { motion, useDragControls } from 'framer-motion';
 import Image from 'next/image';
+
+import { Draggable } from 'src/components/Draggable';
 
 import CardSpritesheet from './card-spritesheet.png';
 import BackgroundGray from './background-gray.png';
@@ -7,44 +8,34 @@ import BackgroundBlue from './background-blue.png';
 import BackgroundRed from './background-red.png';
 
 type Props = {
-  id: string;
+  id: null | string;
   owner: 'player' | 'npc' | 'none';
 };
 
 export function Card(props: Props) {
-  const controls = useDragControls();
+  if (props.id === null) {
+    return <div className="relative" style={{ ...card_style }} />;
+  }
 
   const id_numeric = parseInt(props.id, 10);
-  const x_offset = -1 * style.card.width * (id_numeric - 1);
+  const x_offset = -1 * card_style.width * (id_numeric - 1);
 
   const background = getBackground(props.owner);
 
-  function onPointerDown(event) {
-    controls.start(event, { snapToCursor: true });
-
-    console.debug('[Card]', props.id);
-  }
-
   return (
-    <motion.div
-      drag
-      dragControls={controls}
-      dragMomentum={false}
-      whileDrag={{ scale: 1.2, zIndex: 9999 }}
-      className="relative z-10"
-      style={{ ...style.card }}
-      onPointerDown={onPointerDown}
-    >
-      <Image {...background} alt={background.alt} priority />
+    <Draggable id={props.id} data={props} className="z-10">
+      <div className="relative" style={{ ...card_style }}>
+        <Image {...background} alt={background.alt} priority />
 
-      <div
-        className="absolute top-0 left-0 h-full w-full"
-        style={{
-          ...style.spritesheet,
-          backgroundPositionX: x_offset,
-        }}
-      />
-    </motion.div>
+        <div
+          className="absolute top-0 left-0 h-full w-full"
+          style={{
+            ...style.spritesheet,
+            backgroundPositionX: x_offset,
+          }}
+        />
+      </div>
+    </Draggable>
   );
 }
 
@@ -65,12 +56,12 @@ function getBackgroundProps(background) {
   return { width, height, src };
 }
 
-const style = {
-  card: {
-    width: 200,
-    height: 252,
-  },
+export const card_style = {
+  width: 200,
+  height: 252,
+};
 
+const style = {
   spritesheet: {
     backgroundImage: `url(${CardSpritesheet.src})`,
   },
