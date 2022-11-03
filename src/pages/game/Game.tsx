@@ -29,19 +29,23 @@ export function Game() {
   function handleDragEnd(args) {
     console.debug('[DndContext]', 'handleDragEnd', { args });
 
-    const active_data = args.active.data.current;
+    if (args.over) {
+      const over_id = args.over.id;
 
-    if (active_data.owner === 'player') {
-      set_player_hand(createUpdateHand(active_data.id));
-    } else if (active_data.owner === 'npc') {
-      set_npc_hand(createUpdateHand(active_data.id));
+      const active_data = args.active.data.current;
+
+      if (active_data.owner === 'player') {
+        set_player_hand(createUpdateHand(active_data.id));
+      } else if (active_data.owner === 'npc') {
+        set_npc_hand(createUpdateHand(active_data.id));
+      }
+
+      set_board((b) => {
+        const next_board = [...b];
+        next_board[over_id] = { ...active_data };
+        return next_board;
+      });
     }
-
-    set_board((b) => {
-      const next_board = [...b];
-      next_board[args.over.id] = { ...active_data };
-      return next_board;
-    });
   }
 
   console.debug({ board, player_hand, npc_hand });
