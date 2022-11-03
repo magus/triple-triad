@@ -1,5 +1,5 @@
+import * as React from 'react';
 import dynamic from 'next/dynamic';
-import React from 'react';
 
 export const DisableSSR = dynamic(() => Promise.resolve(InternalDisableSSR), {
   ssr: false,

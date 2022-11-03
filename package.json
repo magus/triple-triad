@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.0.5",
     "@tauri-apps/api": "^1.1.0",
     "framer-motion": "^7.6.2",
     "next": "^12.2.5",
