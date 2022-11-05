@@ -5,16 +5,22 @@
 
 use tauri::{App, Manager};
 
+#[allow(unused_imports)]
+use triple_triad::debug;
 use triple_triad::ui;
 use triple_triad::ui::AppState;
 
 fn main() {
+    // debug::idle_imperial();
+    // return;
+
     tauri::Builder::default()
         .manage(AppState::new())
         .setup(app_main)
         .invoke_handler(tauri::generate_handler![
             ui::commands::greet::greet,
-            ui::commands::state::state
+            ui::commands::state::state,
+            ui::commands::set_npc::set_npc,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
