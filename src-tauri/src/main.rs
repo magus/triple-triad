@@ -12,7 +12,10 @@ fn main() {
     tauri::Builder::default()
         .manage(AppState::new())
         .setup(app_main)
-        .invoke_handler(tauri::generate_handler![ui::commands::greet::greet])
+        .invoke_handler(tauri::generate_handler![
+            ui::commands::greet::greet,
+            ui::commands::state::state
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -21,6 +21,8 @@ pub async fn greet(
 
     let payload = Payload {
         message: "Place NPC card on board".into(),
+
+        // state and app_handle_state are identical
         state: state.json(),
         app_handle_state: app_handle_state.json(),
     };
