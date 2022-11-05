@@ -2,6 +2,7 @@ use std::fmt;
 
 pub const EMPTY: Card = Card {
     name: "  ",
+    id: 0,
     sides: (0, 0, 0, 0),
     modifier: 0,
     tribe: 0,
@@ -13,6 +14,7 @@ pub const EMPTY: Card = Card {
 #[derive(Copy, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct Card {
     pub name: &'static str,
+    pub id: u16,
     pub sides: (u8, u8, u8, u8),
     pub modifier: i8,
     pub tribe: u8,
@@ -71,9 +73,18 @@ impl Card {
         };
     }
 
-    pub fn player(name: &'static str, top: u8, right: u8, bottom: u8, left: u8, tribe: u8) -> Card {
+    pub fn player(
+        name: &'static str,
+        id: u16,
+        top: u8,
+        right: u8,
+        bottom: u8,
+        left: u8,
+        tribe: u8,
+    ) -> Card {
         Card {
             name,
+            id,
             sides: (top, right, bottom, left),
             modifier: 0,
             tribe,
@@ -85,6 +96,7 @@ impl Card {
 
     pub fn computer(
         name: &'static str,
+        id: u16,
         top: u8,
         right: u8,
         bottom: u8,
@@ -93,6 +105,7 @@ impl Card {
     ) -> Card {
         Card {
             name,
+            id,
             sides: (top, right, bottom, left),
             modifier: 0,
             tribe,
@@ -104,6 +117,7 @@ impl Card {
 
     pub fn computer_guaranteed(
         name: &'static str,
+        id: u16,
         top: u8,
         right: u8,
         bottom: u8,
@@ -111,6 +125,7 @@ impl Card {
         tribe: u8,
     ) -> Card {
         Card {
+            id,
             name,
             sides: (top, right, bottom, left),
             modifier: 0,

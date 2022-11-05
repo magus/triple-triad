@@ -61,9 +61,11 @@ impl NpcData {
             for card_id in npc_json.guaranteed {
                 if let Some(card_json) = card_data.by_id(&card_id) {
                     let name = Card::computer_name(cards.len());
+                    let id = card_id.parse::<u16>().unwrap();
 
                     cards.push(Card::computer_guaranteed(
                         name,
+                        id,
                         card_json.top,
                         card_json.right,
                         card_json.bottom,
@@ -78,9 +80,11 @@ impl NpcData {
             for card_id in npc_json.variable {
                 if let Some(card_json) = card_data.by_id(&card_id) {
                     let name = Card::computer_name(cards.len());
+                    let id = card_id.parse::<u16>().unwrap();
 
                     cards.push(Card::computer(
                         name,
+                        id,
                         card_json.top,
                         card_json.right,
                         card_json.bottom,

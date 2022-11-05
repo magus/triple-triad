@@ -3,7 +3,7 @@ use std::{collections::HashMap, fs};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CardJson {
-    id: String,
+    pub id: String,
     pub name: String,
     pub top: u8,
     pub right: u8,
