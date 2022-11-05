@@ -21,7 +21,7 @@ export function Draggable(props: Props) {
   };
 
   if (isDragging) {
-    style.zIndex = 10;
+    style.zIndex = 100;
   }
 
   return (
