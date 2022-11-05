@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as TauriEvents from '@tauri-apps/api/event';
 import { DndContext } from '@dnd-kit/core';
+import { invoke } from '@tauri-apps/api/tauri';
 
 import { PlayerHand } from 'src/components/PlayerHand';
 import { Board } from 'src/components/Board';
@@ -8,7 +9,18 @@ import { isTauriApp } from 'src/core/isTauriApp';
 import { DisableSSR } from 'src/components/DisableSSR';
 
 export function Game() {
-  React.useEffect(() => {
+  React.useEffect(function game_state_on_mount() {
+    if (!isTauriApp()) return;
+
+    async function get_game_state() {
+      const response = await invoke('state');
+      console.debug({ response });
+    }
+
+    get_game_state();
+  }, []);
+
+  React.useEffect(function listen_select_event() {
     if (!isTauriApp()) return;
 
     const promise_unlisten = TauriEvents.listen('select', (event) => {
