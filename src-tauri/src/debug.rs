@@ -49,21 +49,21 @@ pub fn guaranteed_card_left() {
     // game.rules.plus = true;
 
     game.player.cards = [
-        Card::player("P0", 8, 8, 2, 3, Card::TRIBE_NONE),
-        Card::player("P1", 8, 2, 3, 8, Card::TRIBE_NONE),
-        Card::player("P2", 1, 8, 3, 8, Card::TRIBE_NONE),
-        Card::player("P3", 1, 5, 9, 9, Card::TRIBE_NONE),
-        Card::player("P4", 6, 10, 10, 1, Card::TRIBE_NONE),
+        Card::player("P0", 0, 8, 8, 2, 3, Card::TRIBE_NONE),
+        Card::player("P1", 0, 8, 2, 3, 8, Card::TRIBE_NONE),
+        Card::player("P2", 0, 1, 8, 3, 8, Card::TRIBE_NONE),
+        Card::player("P3", 0, 1, 5, 9, 9, Card::TRIBE_NONE),
+        Card::player("P4", 0, 6, 10, 10, 1, Card::TRIBE_NONE),
     ];
 
     game.computer.cards_from(vec![
-        Card::computer_guaranteed("C0", 6, 3, 7, 3, Card::TRIBE_NONE),
-        Card::computer_guaranteed("C1", 9, 7, 8, 1, Card::TRIBE_NONE),
-        Card::computer("C2", 4, 1, 8, 7, Card::TRIBE_NONE),
-        Card::computer("C3", 7, 1, 6, 7, Card::TRIBE_NONE),
-        Card::computer("C4", 1, 4, 8, 8, Card::TRIBE_NONE),
-        Card::computer("C5", 7, 1, 3, 7, Card::TRIBE_NONE),
-        Card::computer("C6", 8, 3, 8, 1, Card::TRIBE_NONE),
+        Card::computer_guaranteed("C0", 0, 6, 3, 7, 3, Card::TRIBE_NONE),
+        Card::computer_guaranteed("C1", 0, 9, 7, 8, 1, Card::TRIBE_NONE),
+        Card::computer("C2", 0, 4, 1, 8, 7, Card::TRIBE_NONE),
+        Card::computer("C3", 0, 7, 1, 6, 7, Card::TRIBE_NONE),
+        Card::computer("C4", 0, 1, 4, 8, 8, Card::TRIBE_NONE),
+        Card::computer("C5", 0, 7, 1, 3, 7, Card::TRIBE_NONE),
+        Card::computer("C6", 0, 8, 3, 8, 1, Card::TRIBE_NONE),
     ]);
 
     // computer
@@ -104,11 +104,11 @@ pub fn idle_imperial() {
     // game.rules.plus = true;
 
     game.player.cards = [
-        Card::player("P0", 8, 8, 2, 3, Card::TRIBE_NONE),
-        Card::player("P1", 8, 2, 3, 8, Card::TRIBE_NONE),
-        Card::player("P2", 1, 8, 3, 8, Card::TRIBE_NONE),
-        Card::player("P3", 1, 5, 9, 9, Card::TRIBE_NONE),
-        Card::player("P4", 6, 10, 10, 1, Card::TRIBE_NONE),
+        Card::player("P0", 0, 8, 8, 2, 3, Card::TRIBE_NONE),
+        Card::player("P1", 0, 8, 2, 3, 8, Card::TRIBE_NONE),
+        Card::player("P2", 0, 1, 8, 3, 8, Card::TRIBE_NONE),
+        Card::player("P3", 0, 1, 5, 9, 9, Card::TRIBE_NONE),
+        Card::player("P4", 0, 6, 10, 10, 1, Card::TRIBE_NONE),
     ];
 
     game.computer.cards_from(idle_imperial.cards.clone());
@@ -172,21 +172,21 @@ pub fn custom_simulation() {
     game.rules.plus = true;
 
     game.player.cards = [
-        Card::player("P0", 1, 1, 1, 1, Card::TRIBE_NONE),
-        Card::player("P1", 1, 1, 1, 1, Card::TRIBE_NONE),
-        Card::player("P2", 1, 2, 1, 1, Card::TRIBE_NONE),
-        Card::player("P3", 1, 1, 1, 1, Card::TRIBE_NONE),
-        Card::player("P4", 1, 2, 3, 2, Card::TRIBE_NONE),
+        Card::player("P0", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::player("P1", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::player("P2", 0, 1, 2, 1, 1, Card::TRIBE_NONE),
+        Card::player("P3", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::player("P4", 0, 1, 2, 3, 2, Card::TRIBE_NONE),
     ];
 
     game.computer.cards_from(vec![
-        Card::computer_guaranteed("C0", 1, 1, 2, 1, Card::TRIBE_NONE),
-        Card::computer_guaranteed("C1", 1, 1, 1, 3, Card::TRIBE_NONE),
-        Card::computer("C2", 2, 1, 1, 1, Card::TRIBE_NONE),
-        Card::computer("C3", 4, 1, 4, 1, Card::TRIBE_NONE),
-        Card::computer("C4", 1, 1, 1, 1, Card::TRIBE_NONE),
-        Card::computer("C5", 1, 1, 1, 1, Card::TRIBE_NONE),
-        Card::computer("C6", 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer_guaranteed("C0", 0, 1, 1, 2, 1, Card::TRIBE_NONE),
+        Card::computer_guaranteed("C1", 0, 1, 1, 1, 3, Card::TRIBE_NONE),
+        Card::computer("C2", 0, 2, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer("C3", 0, 4, 1, 4, 1, Card::TRIBE_NONE),
+        Card::computer("C4", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer("C5", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
+        Card::computer("C6", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
     ]);
 
     game = game.execute_turn(0, 0);

@@ -641,9 +641,11 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
             1 => {
                 // exact match, proceed with card
                 let card = results.first().unwrap().clone();
+                let id = card.id.parse::<u16>().unwrap();
 
                 cards.push(Card::player(
                     Card::player_name(cards.len()),
+                    id,
                     card.top,
                     card.right,
                     card.bottom,
@@ -674,8 +676,11 @@ fn select_player_cards(game: &Game, card_data: &CardData) -> Game {
                 }
 
                 let card = results[i];
+                let id = card.id.parse::<u16>().unwrap();
+
                 cards.push(Card::player(
                     Card::player_name(cards.len()),
+                    id,
                     card.top,
                     card.right,
                     card.bottom,
