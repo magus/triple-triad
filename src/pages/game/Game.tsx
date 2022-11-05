@@ -55,7 +55,7 @@ export function Game() {
       <div className="ml-[50%] inline-block -translate-x-1/2">
         <div className="flex flex-row items-start">
           <DisableSSR>
-            <PlayerHand cards={player_hand} player />
+            <PlayerHand active cards={player_hand} player />
 
             <div className="ml-4" />
 
@@ -63,7 +63,7 @@ export function Game() {
 
             <div className="ml-4" />
 
-            <PlayerHand cards={npc_hand} />
+            <PlayerHand active cards={npc_hand} />
           </DisableSSR>
         </div>
       </div>

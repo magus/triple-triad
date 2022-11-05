@@ -3,6 +3,7 @@ import { Card } from 'src/components/Card';
 type Props = {
   cards: Array<string>;
   player?: boolean;
+  active: boolean;
 };
 
 export function PlayerHand(props: Props) {
@@ -27,7 +28,7 @@ export function PlayerHand(props: Props) {
   for (let i = 0; i < props.cards.length; i++) {
     const cardId = props.cards[i];
 
-    row.push(<Card key={key()} id={cardId} owner={props.player ? 'player' : 'npc'} />);
+    row.push(<Card draggable={props.active} key={key()} id={cardId} owner={props.player ? 'player' : 'npc'} />);
 
     if (i && i % 3 === 2) {
       finishRow();
