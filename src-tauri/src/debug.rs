@@ -4,14 +4,17 @@ use crate::game::Game;
 use crate::print;
 use crate::time::Stopwatch;
 
-// use triple_triad::debug;
-// debug::cli_driven();
-// debug::search_data();
-// debug::guaranteed_card_left();
-// debug::idle_imperial();
-// debug::deep_explore();
-// debug::simple_simulation();
-// debug::custom_simulation();
+// USAGE
+//
+//   use triple_triad::debug;
+//
+//   debug::cli_driven();
+//   debug::search_data();
+//   debug::guaranteed_card_left();
+//   debug::idle_imperial();
+//   debug::deep_explore();
+//   debug::simple_simulation();
+//   debug::custom_simulation();
 
 pub fn cli_driven() {
     print::drive_game_prompt();
