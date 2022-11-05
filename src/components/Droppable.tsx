@@ -16,7 +16,6 @@ export function Droppable(props: Props) {
     <div ref={setNodeRef} className="relative">
       {props.children}
       {!isOver ? null : <props.OverElement />}
-      {/* {props.isOverElement} */}
     </div>
   );
 }

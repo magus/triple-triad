@@ -5,7 +5,7 @@ import { useDraggable } from '@dnd-kit/core';
 type Props = {
   id: string;
   children: React.ReactNode;
-  className: string;
+  className?: string;
   data?: any;
 };
 
@@ -21,7 +21,7 @@ export function Draggable(props: Props) {
   };
 
   if (isDragging) {
-    style.zIndex = 9999;
+    style.zIndex = 10;
   }
 
   return (
