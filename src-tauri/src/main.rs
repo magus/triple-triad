@@ -18,7 +18,6 @@ fn main() {
         .manage(AppState::new())
         .setup(app_main)
         .invoke_handler(tauri::generate_handler![
-            ui::commands::greet::greet,
             ui::commands::state::state,
             ui::commands::set_deck::set_deck,
             ui::commands::set_npc::set_npc,
