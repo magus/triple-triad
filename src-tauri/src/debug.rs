@@ -23,11 +23,11 @@ pub fn cli_driven() {
 pub fn search_data() {
     let mut stopwatch = Stopwatch::start();
 
-    let rule_data = data::RuleData::read();
+    let rule_data = data::RuleData::read(None);
     stopwatch.record("rule data loaded");
-    let card_data = data::CardData::read();
+    let card_data = data::CardData::read(None);
     stopwatch.record("card data loaded");
-    let npc_data = data::NpcData::read(&card_data, &rule_data);
+    let npc_data = data::NpcData::read(None, &card_data, &rule_data);
     stopwatch.record("npc data loaded");
 
     // use npc data to allow selecting npc in prompt
@@ -91,9 +91,9 @@ pub fn guaranteed_card_left() {
 }
 
 pub fn idle_imperial() {
-    let rule_data = data::RuleData::read();
-    let card_data = data::CardData::read();
-    let npc_data = data::NpcData::read(&card_data, &rule_data);
+    let rule_data = data::RuleData::read(None);
+    let card_data = data::CardData::read(None);
+    let npc_data = data::NpcData::read(None, &card_data, &rule_data);
 
     let idle_imperial = npc_data.search("idle").first().unwrap().clone();
 

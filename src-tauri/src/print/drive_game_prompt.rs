@@ -14,9 +14,9 @@ use crate::time::Stopwatch;
 pub fn drive_game_prompt() {
     let mut stopwatch = Stopwatch::start();
 
-    let rule_data = data::RuleData::read();
-    let card_data = data::CardData::read();
-    let npc_data = data::NpcData::read(&card_data, &rule_data);
+    let rule_data = data::RuleData::read(None);
+    let card_data = data::CardData::read(None);
+    let npc_data = data::NpcData::read(None, &card_data, &rule_data);
 
     stopwatch.record("drive_game_prompt load game data");
 
