@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as TauriEvents from '@tauri-apps/api/event';
 import { DndContext } from '@dnd-kit/core';
 import { invoke } from '@tauri-apps/api/tauri';
 
@@ -11,8 +10,11 @@ import * as MockAppState from 'src/mocks/AppState';
 import { AppStateProvider } from 'src/core/AppStateContext';
 
 export function GameInternal() {
+  const key = React.useRef(0);
   const [state, set_state] = React.useState<AppState>(null);
-  console.debug({ state });
+
+  key.current += 1;
+  console.debug(key.current, { state });
   // console.debug(JSON.stringify(state));
 
   async function game_command(name, args?) {
@@ -37,17 +39,20 @@ export function GameInternal() {
   async function handleDragEnd(args) {
     // console.debug('[DndContext]', 'handleDragEnd', { args });
 
-    if (args.over) {
-      const square = +args.over.id;
-      const active_data = args.active.data.current;
-      const card_name = args.active.data.current.id;
-      const [card_id] = card_name.match(/\d+/);
-      const card = +card_id;
-
-      // console.debug({ active_data, card, square });
-      // wait for execute to finish before updating
-      await game_command('execute_turn', { card, square });
+    if (!args.over) {
+      // not over valid droppable, abort drag
+      return await game_command('state');
     }
+
+    const square = +args.over.id;
+    const active_data = args.active.data.current;
+    const card_name = args.active.data.current.id;
+    const [card_id] = card_name.match(/\d+/);
+    const card = +card_id;
+
+    // console.debug({ active_data, card, square });
+    // wait for execute to finish before updating
+    await game_command('execute_turn', { card, square });
   }
 
   if (!state) {
@@ -55,7 +60,7 @@ export function GameInternal() {
   }
 
   return (
-    <AppStateProvider state={state}>
+    <AppStateProvider state={state} key={key.current}>
       <DndContext onDragEnd={handleDragEnd}>
         <div className="ml-[50%] inline-block -translate-x-1/2">
           <div className="flex w-full flex-row justify-center">
