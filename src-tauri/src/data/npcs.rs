@@ -42,8 +42,18 @@ impl NpcData {
         return npc_list;
     }
 
-    pub fn read(card_data: &CardData, rule_data: &RuleData) -> NpcData {
-        let file = fs::File::open(JSON_PATH).expect("file should open read only");
+    pub fn read(
+        maybe_file: Option<fs::File>,
+        card_data: &CardData,
+        rule_data: &RuleData,
+    ) -> NpcData {
+        // use provided file or fallback to local fs path
+        let file = if let Some(file_arg) = maybe_file {
+            file_arg
+        } else {
+            fs::File::open(JSON_PATH).expect("file should open read only")
+        };
+
         let json: serde_json::Value =
             serde_json::from_reader(file).expect("file should be proper JSON");
 
