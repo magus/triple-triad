@@ -31,6 +31,8 @@ fn app_main(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(debug_assertions)]
     {}
 
+    app.state::<AppState>().init_data(app);
+
     // always open devtools when app is setup
     let window = app.get_window("main").unwrap();
     window.open_devtools();

@@ -11,7 +11,10 @@ pub async fn set_npc(search: &str, app_handle: tauri::AppHandle) -> Result<AppSt
     // grab game via mutex and clone for mutating and reassigning back to mutex
     let mut game = state.game.lock().unwrap().clone();
 
-    let npc = state.npc_data.search(search).first().unwrap().clone();
+    let npc_data_ref = state.npc_data.lock();
+    let npc_data = npc_data_ref.as_ref().unwrap().as_ref().unwrap();
+
+    let npc = npc_data.search(search).first().unwrap().clone();
     game.computer.cards_from(npc.cards.clone());
     game.rules.from(&npc.rules);
 
