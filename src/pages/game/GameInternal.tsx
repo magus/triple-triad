@@ -16,9 +16,12 @@ export function GameInternal() {
   // console.debug(JSON.stringify(state));
 
   async function game_command(name, args?) {
-    console.debug('[game_command]', { name, args });
-    if (!isTauriApp()) return;
+    if (!isTauriApp()) return console.debug('[game_command]', { name, args });
+
+    const start = performance.now();
     invoke(name, args).then(set_state);
+    const duration = performance.now() - start;
+    console.debug('[game_command]', { duration, name, args });
   }
 
   // sync state with rust app
@@ -45,7 +48,7 @@ export function GameInternal() {
     };
   }, []);
 
-  function handleDragEnd(args) {
+  async function handleDragEnd(args) {
     // console.debug('[DndContext]', 'handleDragEnd', { args });
 
     if (args.over) {
@@ -56,35 +59,8 @@ export function GameInternal() {
       const card = +card_id;
 
       // console.debug({ active_data, card, square });
-
-      // optimistic update local state before command returns
-      set_state((_state) => {
-        const next_state = clone(_state);
-
-        let hand;
-
-        if (next_state.turn_is_player) {
-          hand = next_state.game.player.cards;
-        } else {
-          hand = next_state.game.computer.cards;
-        }
-
-        const hand_card = hand[card];
-        const board_square = next_state.game.board[square];
-
-        if (board_square.is_empty && !hand_card.is_empty) {
-          // valid move
-          console.debug('✅ valid move', { hand_card, board_square });
-          hand[card] = null;
-          next_state.game.board[square] = hand_card;
-        } else {
-          console.debug('❌ invalid move');
-        }
-
-        return next_state;
-      });
-
-      setTimeout(() => game_command('execute_turn', { card, square }), 200);
+      // wait for execute to finish before updating
+      await game_command('execute_turn', { card, square });
     }
   }
 
