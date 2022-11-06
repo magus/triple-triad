@@ -8,6 +8,7 @@ import { Board } from 'src/components/Board';
 import { isTauriApp } from 'src/core/isTauriApp';
 import { AppState } from 'src/core/AppState';
 import * as MockAppState from 'src/mocks/AppState';
+import { AppStateProvider } from 'src/core/AppStateContext';
 
 export function GameInternal() {
   // const [state, set_state] = React.useState<AppState>(null);
@@ -38,33 +39,17 @@ export function GameInternal() {
     };
   }, []);
 
-  const [player_hand, set_player_hand] = React.useState(['88', '75', '89', '93', '96']);
-  const [npc_hand, set_npc_hand] = React.useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
-  const [board, set_board] = React.useState(new Array(9).fill(null));
-
   function handleDragEnd(args) {
     console.debug('[DndContext]', 'handleDragEnd', { args });
 
     if (args.over) {
       const over_id = args.over.id;
-
       const active_data = args.active.data.current;
 
-      if (active_data.owner === 'player') {
-        set_player_hand(createUpdateHand(active_data.id));
-      } else if (active_data.owner === 'npc') {
-        set_npc_hand(createUpdateHand(active_data.id));
-      }
-
-      set_board((b) => {
-        const next_board = [...b];
-        next_board[over_id] = { ...active_data };
-        return next_board;
-      });
+      console.debug({ over_id, active_data });
     }
   }
 
-  // console.debug({ board, player_hand, npc_hand });
   console.debug({ state });
   // console.debug(JSON.stringify(state));
 
@@ -73,21 +58,23 @@ export function GameInternal() {
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <div className="ml-[50%] inline-block -translate-x-1/2">
-        <div className="flex flex-row items-start">
-          <PlayerHand active cards={player_hand} player />
+    <AppStateProvider state={state}>
+      <DndContext onDragEnd={handleDragEnd}>
+        <div className="ml-[50%] inline-block -translate-x-1/2">
+          <div className="flex flex-row items-start">
+            <PlayerHand.Player />
 
-          <div className="ml-4" />
+            <div className="ml-4" />
 
-          <Board board={board} />
+            <Board />
 
-          <div className="ml-4" />
+            <div className="ml-4" />
 
-          <PlayerHand active cards={npc_hand} />
+            <PlayerHand.Computer />
+          </div>
         </div>
-      </div>
-    </DndContext>
+      </DndContext>
+    </AppStateProvider>
   );
 }
 

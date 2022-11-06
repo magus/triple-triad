@@ -1,10 +1,27 @@
 import { Card } from 'src/components/Card';
+import { useAppState } from 'src/core/AppStateContext';
+
+PlayerHand.Player = function PlayerHand_Player() {
+  const state = useAppState();
+
+  const cards = state.game.player.cards;
+
+  return <PlayerHand {...{ cards }} />;
+};
+
+PlayerHand.Computer = function PlayerHand_Computer() {
+  const state = useAppState();
+
+  const cards = state.game.computer.cards;
+
+  return <PlayerHand {...{ cards }} />;
+};
 
 type Props = {
-  cards: Array<string>;
-  player?: boolean;
-  active: boolean;
+  cards: Array<CardProps>;
 };
+
+type CardProps = React.ComponentProps<typeof Card>;
 
 export function PlayerHand(props: Props) {
   const children = [];
@@ -26,9 +43,9 @@ export function PlayerHand(props: Props) {
   }
 
   for (let i = 0; i < props.cards.length; i++) {
-    const cardId = props.cards[i];
+    const card = props.cards[i];
 
-    row.push(<Card draggable={props.active} key={key()} id={cardId} owner={props.player ? 'player' : 'npc'} />);
+    row.push(<Card key={key()} {...card} />);
 
     if (i && i % 3 === 2) {
       finishRow();

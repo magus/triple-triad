@@ -1,13 +1,19 @@
 import { Tile } from 'src/components/Tile';
 import { Card } from 'src/components/Card';
 
-type CardProps = React.ComponentProps<typeof Card>;
+export function Board() {
+  const board = new Array(9).fill(null);
+
+  return <BoardInternal {...{ board }} />;
+}
 
 type Props = {
   board: Array<CardProps>;
 };
 
-export function Board(props: Props) {
+type CardProps = React.ComponentProps<typeof Card>;
+
+function BoardInternal(props: Props) {
   return (
     <div className="inline-block">
       <div className="flex flex-row">
