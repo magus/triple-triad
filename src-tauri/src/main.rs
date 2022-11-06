@@ -20,7 +20,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             ui::commands::greet::greet,
             ui::commands::state::state,
+            ui::commands::set_deck::set_deck,
             ui::commands::set_npc::set_npc,
+            ui::commands::execute_turn::execute_turn,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
