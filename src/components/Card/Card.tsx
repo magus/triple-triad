@@ -7,14 +7,28 @@ import BackgroundGray from './background-gray.png';
 import BackgroundBlue from './background-blue.png';
 import BackgroundRed from './background-red.png';
 
-type Props = {
+import { Card as TCard } from 'src/core/AppState';
+
+type Props = TCard;
+
+export function Card(props: Props) {
+  const id = String(props.id);
+  const owner = props.is_player ? 'player' : 'npc';
+  const draggable = false;
+
+  return <DraggableCard {...{ id, owner, draggable }} />;
+}
+
+type InternalProps = {
   id: null | string;
   owner: 'player' | 'npc' | 'none';
   draggable?: boolean;
 };
 
-export function Card(props: Props) {
-  if (props.id === null) {
+function DraggableCard(props: InternalProps) {
+  const id_numeric = parseInt(props.id, 10);
+
+  if (!id_numeric || isNaN(id_numeric)) {
     return <EmptyCard />;
   }
 
@@ -31,7 +45,7 @@ export function Card(props: Props) {
   return <CardInternal {...props} />;
 }
 
-function CardInternal(props: Props) {
+function CardInternal(props: InternalProps) {
   const id_numeric = parseInt(props.id, 10);
   const x_offset = -1 * card_style.width * (id_numeric - 1);
 

@@ -16,7 +16,7 @@ type Game = {
   turn: number;
 };
 
-type Card = {
+export type Card = {
   id: number;
   is_empty: boolean;
   is_guaranteed: boolean;
