@@ -34,20 +34,6 @@ export function GameInternal() {
     }
   }, []);
 
-  React.useEffect(function listen_select_event() {
-    if (!isTauriApp()) return;
-
-    const promise_unlisten = TauriEvents.listen('select', (event) => {
-      console.debug('select', { event });
-    });
-
-    return () => {
-      promise_unlisten.then((unlisten) => {
-        unlisten();
-      });
-    };
-  }, []);
-
   async function handleDragEnd(args) {
     // console.debug('[DndContext]', 'handleDragEnd', { args });
 
