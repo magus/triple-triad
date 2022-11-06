@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.magus.tripletriad.tauri",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -38,7 +38,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "../data/game"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
