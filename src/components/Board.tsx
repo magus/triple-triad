@@ -3,7 +3,7 @@ import { Card } from 'src/components/Card';
 import { useAppState } from 'src/core/AppStateContext';
 
 export function Board() {
-  const state = useAppState();
+  const [state] = useAppState();
   const board = state.game.board;
 
   return <BoardInternal {...{ board }} />;

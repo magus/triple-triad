@@ -2,7 +2,7 @@ import { Card } from 'src/components/Card';
 import { useAppState } from 'src/core/AppStateContext';
 
 Hand.Player = function Hand_Player() {
-  const state = useAppState();
+  const [state] = useAppState();
 
   const cards = state.game.player.cards;
 
@@ -10,7 +10,7 @@ Hand.Player = function Hand_Player() {
 };
 
 Hand.Computer = function Hand_Computer() {
-  const state = useAppState();
+  const [state] = useAppState();
 
   const cards = state.game.computer.cards;
 

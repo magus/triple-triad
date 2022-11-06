@@ -14,7 +14,7 @@ type Props = TCard & {
 };
 
 export function Card(props: Props) {
-  const state = useAppState();
+  const [state] = useAppState();
 
   const id = props.name;
   const image_id = props.id;
