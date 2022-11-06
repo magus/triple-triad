@@ -3,7 +3,7 @@ import * as TauriEvents from '@tauri-apps/api/event';
 import { DndContext } from '@dnd-kit/core';
 import { invoke } from '@tauri-apps/api/tauri';
 
-import { PlayerHand } from 'src/components/PlayerHand';
+import { Hand } from 'src/components/Hand';
 import { Board } from 'src/components/Board';
 import { isTauriApp } from 'src/core/isTauriApp';
 import { AppState } from 'src/core/AppState';
@@ -97,7 +97,7 @@ export function GameInternal() {
       <DndContext onDragEnd={handleDragEnd}>
         <div className="ml-[50%] inline-block -translate-x-1/2">
           <div className="flex flex-row items-start">
-            <PlayerHand.Player />
+            <Hand.Player />
 
             <div className="ml-4" />
 
@@ -105,7 +105,7 @@ export function GameInternal() {
 
             <div className="ml-4" />
 
-            <PlayerHand.Computer />
+            <Hand.Computer />
           </div>
         </div>
       </DndContext>

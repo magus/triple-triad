@@ -1,20 +1,20 @@
 import { Card } from 'src/components/Card';
 import { useAppState } from 'src/core/AppStateContext';
 
-PlayerHand.Player = function PlayerHand_Player() {
+Hand.Player = function Hand_Player() {
   const state = useAppState();
 
   const cards = state.game.player.cards;
 
-  return <PlayerHand {...{ cards }} />;
+  return <Hand {...{ cards }} />;
 };
 
-PlayerHand.Computer = function PlayerHand_Computer() {
+Hand.Computer = function Hand_Computer() {
   const state = useAppState();
 
   const cards = state.game.computer.cards;
 
-  return <PlayerHand {...{ cards }} />;
+  return <Hand {...{ cards }} />;
 };
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 
 type CardProps = React.ComponentProps<typeof Card>;
 
-export function PlayerHand(props: Props) {
+export function Hand(props: Props) {
   const children = [];
 
   let row = [];
