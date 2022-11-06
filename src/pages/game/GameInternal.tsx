@@ -11,8 +11,7 @@ import * as MockAppState from 'src/mocks/AppState';
 import { AppStateProvider } from 'src/core/AppStateContext';
 
 export function GameInternal() {
-  // const [state, set_state] = React.useState<AppState>(null);
-  const [state, set_state] = React.useState<AppState>(MockAppState.IdleImperial);
+  const [state, set_state] = React.useState<AppState>(null);
   console.debug({ state });
   // console.debug(JSON.stringify(state));
 
@@ -22,13 +21,14 @@ export function GameInternal() {
     invoke(name, args).then(set_state);
   }
 
+  // sync state with rust app
   React.useEffect(function on_mount() {
-    async function run() {
-      await game_command('set_deck');
-      await game_command('set_npc', { search: 'idle' });
+    if (isTauriApp()) {
+      game_command('state');
+    } else {
+      // fallback to mock
+      set_state(MockAppState.IdleImperial);
     }
-
-    run();
   }, []);
 
   React.useEffect(function listen_select_event() {
@@ -92,10 +92,19 @@ export function GameInternal() {
     return <div>Loading...</div>;
   }
 
+  const handle_set_deck = () => game_command('set_deck');
+  const handle_set_npc = () => game_command('set_npc', { search: 'idle' });
+
   return (
     <AppStateProvider state={state}>
       <DndContext onDragEnd={handleDragEnd}>
         <div className="ml-[50%] inline-block -translate-x-1/2">
+          <div className="flex w-full flex-row justify-center">
+            <button onClick={handle_set_deck}>set_deck</button>
+            <div className="w-2" />
+            <button onClick={handle_set_npc}>set_npc</button>
+          </div>
+
           <div className="flex flex-row items-start">
             <Hand.Player />
 
