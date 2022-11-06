@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { AppState } from 'src/core/AppState';
+
+export type ClientState = {
+  scale: number;
+};
 
 // hook tuple because we return React.useState
-type ContextValue = [AppState, React.Dispatch<React.SetStateAction<AppState>>];
+type ContextValue = [ClientState, React.Dispatch<React.SetStateAction<ClientState>>];
 
 const Context = React.createContext<ContextValue>(null);
 
@@ -10,17 +13,17 @@ type Props = {
   children: React.ReactNode;
 };
 
-export function AppStateProvider(props: Props) {
-  const state = React.useState<AppState | null>(null);
+export function ClientStateProvider(props: Props) {
+  const state = React.useState<ClientState>({ scale: 1 });
 
   return <Context.Provider value={state}>{props.children}</Context.Provider>;
 }
 
-export function useAppState() {
+export function useClientState() {
   const value = React.useContext(Context);
 
   if (!value) {
-    throw new Error('Must wrap tree with <AppStateProvider>');
+    throw new Error('Must wrap tree with <ClientStateProvider>');
   }
 
   return value;

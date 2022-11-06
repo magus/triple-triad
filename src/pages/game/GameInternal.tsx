@@ -5,13 +5,13 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { Hand } from 'src/components/Hand';
 import { Board } from 'src/components/Board';
 import { isTauriApp } from 'src/core/isTauriApp';
-import { AppState } from 'src/core/AppState';
 import * as MockAppState from 'src/mocks/AppState';
-import { AppStateProvider } from 'src/core/AppStateContext';
+import { useAppState } from 'src/core/AppStateContext';
+import { useClientState } from 'src/core/ClientStateContext';
 
 export function GameInternal() {
   const key = React.useRef(0);
-  const [state, set_state] = React.useState<AppState>(null);
+  const [state, set_state] = useAppState();
 
   key.current += 1;
   console.debug(key.current, { state });
@@ -34,6 +34,7 @@ export function GameInternal() {
       // fallback to mock
       set_state(MockAppState.IdleImperial);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleDragEnd(args) {
@@ -60,64 +61,73 @@ export function GameInternal() {
   }
 
   return (
-    <AppStateProvider state={state} key={key.current}>
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="ml-[50%] inline-block -translate-x-1/2">
-          <div className="flex w-full flex-row justify-center">
-            <button onClick={() => game_command('set_deck')}>set_deck</button>
-            <div className="w-2" />
-            <button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</button>
-            <div className="w-2" />
-            <button onClick={() => game_command('start')}>start</button>
-            <div className="w-2" />
-            <button onClick={() => game_command('reset')}>reset</button>
-          </div>
-
-          <div className="flex flex-row items-start">
-            <Hand.Player />
-
-            <div className="ml-4" />
-
-            <Board />
-
-            <div className="ml-4" />
-
-            <Hand.Computer />
-          </div>
+    <DndContext onDragEnd={handleDragEnd}>
+      <div key={key.current} className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
+        <div className="flex w-full flex-row justify-center">
+          <button onClick={() => game_command('set_deck')}>set_deck</button>
+          <div className="w-2" />
+          <button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</button>
+          <div className="w-2" />
+          <button onClick={() => game_command('start')}>start</button>
+          <div className="w-2" />
+          <button onClick={() => game_command('reset')}>reset</button>
         </div>
-      </DndContext>
-    </AppStateProvider>
+
+        <GameBoard />
+      </div>
+    </DndContext>
   );
 }
 
-function createUpdateHand(id) {
-  return function updateHand(current_hand) {
-    const next_hand = [...current_hand];
-    next_hand[next_hand.indexOf(id)] = null;
-    return next_hand;
-  };
+function GameBoard() {
+  const [client_state, set_client_state] = useClientState();
+
+  const board_container_ref = React.useRef(null);
+
+  // determine window and screen size?
+  React.useEffect(function on_mount() {
+    const screen = {
+      width: window.screen.width,
+      height: window.screen.height,
+    };
+
+    const body = {
+      width: window.document.body.clientWidth,
+      height: window.document.body.clientHeight,
+    };
+
+    const board = {
+      width: 0,
+      height: 0,
+    };
+
+    if (board_container_ref.current) {
+      board.width = board_container_ref.current.offsetWidth;
+      board.height = board_container_ref.current.offsetHeight;
+    }
+
+    const scale = body.width / board.width;
+
+    console.debug('[dimensions]', { scale, screen, body, board });
+  }, []);
+
+  return (
+    <div className="flex flex-row items-start px-16" id="board-container" ref={board_container_ref}>
+      <Hand.Player />
+
+      <div className="ml-4" />
+
+      <Board />
+
+      <div className="ml-4" />
+
+      <Hand.Computer />
+    </div>
+  );
 }
 
 // import Link from 'next/link';
-// import { invoke } from '@tauri-apps/api/tauri';
-
-// const [greeting, set_greeting] = React.useState('');
-// const [name, set_name] = React.useState('');
-
-// async function greet() {
-//   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-//   set_greeting(await invoke('greet', { name }));
-// }
-
-/*
-<Link href="/search-npc">Search NPCs</Link>
-
-<input className="greet-input" onChange={(e) => set_name(e.currentTarget.value)} placeholder="Enter a name..." />
-<button type="button" onClick={() => greet()}>
-  Greet
-</button>
-<p>{greeting}</p>
-*/
+// <Link href="/search-npc">Search NPCs</Link>
 
 function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
