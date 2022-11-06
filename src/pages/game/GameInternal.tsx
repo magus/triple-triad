@@ -68,17 +68,18 @@ export function GameInternal() {
     return <div>Loading...</div>;
   }
 
-  const handle_set_deck = () => game_command('set_deck');
-  const handle_set_npc = () => game_command('set_npc', { search: 'idle' });
-
   return (
     <AppStateProvider state={state}>
       <DndContext onDragEnd={handleDragEnd}>
         <div className="ml-[50%] inline-block -translate-x-1/2">
           <div className="flex w-full flex-row justify-center">
-            <button onClick={handle_set_deck}>set_deck</button>
+            <button onClick={() => game_command('set_deck')}>set_deck</button>
             <div className="w-2" />
-            <button onClick={handle_set_npc}>set_npc</button>
+            <button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</button>
+            <div className="w-2" />
+            <button onClick={() => game_command('start')}>start</button>
+            <div className="w-2" />
+            <button onClick={() => game_command('reset')}>reset</button>
           </div>
 
           <div className="flex flex-row items-start">

@@ -22,7 +22,9 @@ fn main() {
             ui::commands::state::state,
             ui::commands::set_deck::set_deck,
             ui::commands::set_npc::set_npc,
+            ui::commands::start::start,
             ui::commands::execute_turn::execute_turn,
+            ui::commands::reset::reset,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

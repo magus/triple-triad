@@ -12,6 +12,7 @@ pub struct AppState {
     // accessible via commands (invoke) and also rust app handles
     pub status: Mutex<String>,
     pub game: Mutex<Game>,
+    pub setup_game: Mutex<Game>,
 
     // shared instances, created once and reused
     pub rule_data: Mutex<Option<data::RuleData>>,
@@ -51,6 +52,11 @@ impl AppState {
         *game_mutex = game;
     }
 
+    pub fn set_setup_game(&self, game: Game) {
+        let mut setup_game_mutex = self.setup_game.lock().unwrap();
+        *setup_game_mutex = game;
+    }
+
     pub fn init_data(&self, app: &App) {
         let rule_data = data::RuleData::read(load_resource(app, "../data/game/rules.json"));
         let card_data = data::CardData::read(load_resource(app, "../data/game/cards.json"));
@@ -74,6 +80,7 @@ impl AppState {
         AppState {
             status: Mutex::new("setup".into()),
             game: Mutex::new(Game::new()),
+            setup_game: Mutex::new(Game::new()),
 
             rule_data: Mutex::new(None),
             card_data: Mutex::new(None),
