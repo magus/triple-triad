@@ -1,7 +1,6 @@
 import { AppState } from 'src/core/AppState';
 
 export const IdleImperial: AppState = {
-  status: 'setup',
   game: {
     board: [
       {
@@ -207,53 +206,53 @@ export const IdleImperial: AppState = {
     player: {
       cards: [
         {
-          id: 0,
+          id: 88,
           is_empty: false,
           is_guaranteed: false,
           is_player: true,
           modifier: 0,
           name: 'P0',
-          sides: [2, 2, 2, 2],
+          sides: [8, 8, 2, 3],
           tribe: 0,
         },
         {
-          id: 0,
+          id: 75,
           is_empty: false,
           is_guaranteed: false,
           is_player: true,
           modifier: 0,
           name: 'P1',
-          sides: [2, 2, 2, 2],
+          sides: [6, 10, 10, 1],
           tribe: 0,
         },
         {
-          id: 0,
+          id: 89,
           is_empty: false,
           is_guaranteed: false,
           is_player: true,
           modifier: 0,
           name: 'P2',
-          sides: [2, 2, 2, 2],
+          sides: [8, 2, 3, 8],
           tribe: 0,
         },
         {
-          id: 0,
+          id: 93,
           is_empty: false,
           is_guaranteed: false,
           is_player: true,
           modifier: 0,
           name: 'P3',
-          sides: [2, 2, 2, 2],
+          sides: [1, 8, 3, 8],
           tribe: 0,
         },
         {
-          id: 0,
+          id: 96,
           is_empty: false,
           is_guaranteed: false,
           is_player: true,
           modifier: 0,
           name: 'P4',
-          sides: [2, 2, 2, 2],
+          sides: [1, 5, 9, 9],
           tribe: 0,
         },
       ],
@@ -278,4 +277,6 @@ export const IdleImperial: AppState = {
     score: 0,
     turn: 0,
   },
+  status: 'setup',
+  turn_is_player: true,
 };

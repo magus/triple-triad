@@ -1,5 +1,6 @@
 export type AppState = {
   status: string;
+  turn_is_player: boolean;
   game: Game;
 };
 
