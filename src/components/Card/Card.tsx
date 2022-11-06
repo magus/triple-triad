@@ -9,7 +9,9 @@ import { Draggable } from 'src/components/Draggable';
 import { useAppState } from 'src/core/AppStateContext';
 import { Card as TCard } from 'src/core/AppState';
 
-type Props = TCard;
+type Props = TCard & {
+  board?: boolean;
+};
 
 export function Card(props: Props) {
   const state = useAppState();
@@ -22,10 +24,10 @@ export function Card(props: Props) {
 
   if (props.is_player) {
     owner = 'player';
-    draggable = state.turn_is_player === true;
+    draggable = !props.board && state.turn_is_player === true;
   } else {
     owner = 'npc';
-    draggable = state.turn_is_player === false;
+    draggable = !props.board && state.turn_is_player === false;
   }
 
   return <DraggableCard {...{ id, image_id, owner, draggable }} />;
