@@ -1,34 +1,45 @@
 import Image from 'next/image';
 
-import { Draggable } from 'src/components/Draggable';
-
 import CardSpritesheet from './card-spritesheet.png';
 import BackgroundGray from './background-gray.png';
 import BackgroundBlue from './background-blue.png';
 import BackgroundRed from './background-red.png';
 
+import { Draggable } from 'src/components/Draggable';
+import { useAppState } from 'src/core/AppStateContext';
 import { Card as TCard } from 'src/core/AppState';
 
 type Props = TCard;
 
 export function Card(props: Props) {
-  const id = String(props.id);
-  const owner = props.is_player ? 'player' : 'npc';
-  const draggable = false;
+  const state = useAppState();
 
-  return <DraggableCard {...{ id, owner, draggable }} />;
+  const id = props.name;
+  const image_id = props.id;
+
+  let owner;
+  let draggable;
+
+  if (props.is_player) {
+    owner = 'player';
+    draggable = state.turn_is_player === true;
+  } else {
+    owner = 'npc';
+    draggable = state.turn_is_player === false;
+  }
+
+  return <DraggableCard {...{ id, image_id, owner, draggable }} />;
 }
 
 type InternalProps = {
-  id: null | string;
+  id: string;
+  image_id: number;
   owner: 'player' | 'npc' | 'none';
   draggable?: boolean;
 };
 
 function DraggableCard(props: InternalProps) {
-  const id_numeric = parseInt(props.id, 10);
-
-  if (!id_numeric || isNaN(id_numeric)) {
+  if (!props.image_id) {
     return <EmptyCard />;
   }
 
@@ -46,8 +57,7 @@ function DraggableCard(props: InternalProps) {
 }
 
 function CardInternal(props: InternalProps) {
-  const id_numeric = parseInt(props.id, 10);
-  const x_offset = -1 * card_style.width * (id_numeric - 1);
+  const x_offset = -1 * card_style.width * (props.image_id - 1);
 
   const background = getBackground(props.owner);
 

@@ -13,13 +13,20 @@ import { AppStateProvider } from 'src/core/AppStateContext';
 export function GameInternal() {
   // const [state, set_state] = React.useState<AppState>(null);
   const [state, set_state] = React.useState<AppState>(MockAppState.IdleImperial);
+  console.debug({ state });
+  // console.debug(JSON.stringify(state));
+
+  async function game_command(name, args?) {
+    console.debug('[game_command]', { name, args });
+    if (!isTauriApp()) return;
+    const next_state: AppState = await invoke(name, args);
+    set_state(next_state);
+  }
 
   React.useEffect(function on_mount() {
-    if (!isTauriApp()) return;
-
     async function run() {
-      const next_state: AppState = await invoke('set_npc', { search: 'idle' });
-      set_state(next_state);
+      await game_command('set_deck');
+      await game_command('set_npc', { search: 'idle' });
     }
 
     run();
@@ -40,18 +47,37 @@ export function GameInternal() {
   }, []);
 
   function handleDragEnd(args) {
-    console.debug('[DndContext]', 'handleDragEnd', { args });
+    // console.debug('[DndContext]', 'handleDragEnd', { args });
 
     if (args.over) {
-      const over_id = args.over.id;
+      const square = +args.over.id;
       const active_data = args.active.data.current;
+      const card_name = args.active.data.current.id;
+      const [card_id] = card_name.match(/\d+/);
+      const card = +card_id;
 
-      console.debug({ over_id, active_data });
+      // console.debug({ active_data, card, square });
+
+      // optimistic update local state before command returns
+      set_state((state) => {
+        if (state.turn_is_player) {
+          const hand_card = state.game.player.cards[card];
+          const board_square = state.game.board[square];
+
+          if (board_square.is_empty && !hand_card.is_empty) {
+            // valid move
+            console.debug('✅ valid move', { hand_card, board_square });
+          } else {
+            console.debug('❌ invalid move');
+          }
+
+          return state;
+        }
+      });
+
+      game_command('execute_turn', { card, square });
     }
   }
-
-  console.debug({ state });
-  // console.debug(JSON.stringify(state));
 
   if (!state) {
     return <div>Loading...</div>;

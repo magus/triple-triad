@@ -1,8 +1,10 @@
 import { Tile } from 'src/components/Tile';
 import { Card } from 'src/components/Card';
+import { useAppState } from 'src/core/AppStateContext';
 
 export function Board() {
-  const board = new Array(9).fill(null);
+  const state = useAppState();
+  const board = state.game.board;
 
   return <BoardInternal {...{ board }} />;
 }
@@ -38,5 +40,5 @@ function BoardInternal(props: Props) {
 type BoardTileProps = Props & { id: string };
 
 function BoardTile(props: BoardTileProps) {
-  return <Tile id={String(props.id)} card={props.board[props.id]} />;
+  return <Tile id={props.id} card={props.board[props.id]} />;
 }
