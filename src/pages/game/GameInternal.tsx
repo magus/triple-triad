@@ -19,8 +19,7 @@ export function GameInternal() {
   async function game_command(name, args?) {
     console.debug('[game_command]', { name, args });
     if (!isTauriApp()) return;
-    const next_state: AppState = await invoke(name, args);
-    set_state(next_state);
+    invoke(name, args).then(set_state);
   }
 
   React.useEffect(function on_mount() {
@@ -59,23 +58,33 @@ export function GameInternal() {
       // console.debug({ active_data, card, square });
 
       // optimistic update local state before command returns
-      set_state((state) => {
-        if (state.turn_is_player) {
-          const hand_card = state.game.player.cards[card];
-          const board_square = state.game.board[square];
+      set_state((_state) => {
+        const next_state = clone(_state);
 
-          if (board_square.is_empty && !hand_card.is_empty) {
-            // valid move
-            console.debug('✅ valid move', { hand_card, board_square });
-          } else {
-            console.debug('❌ invalid move');
-          }
+        let hand;
 
-          return state;
+        if (next_state.turn_is_player) {
+          hand = next_state.game.player.cards;
+        } else {
+          hand = next_state.game.computer.cards;
         }
+
+        const hand_card = hand[card];
+        const board_square = next_state.game.board[square];
+
+        if (board_square.is_empty && !hand_card.is_empty) {
+          // valid move
+          console.debug('✅ valid move', { hand_card, board_square });
+          hand[card] = null;
+          next_state.game.board[square] = hand_card;
+        } else {
+          console.debug('❌ invalid move');
+        }
+
+        return next_state;
       });
 
-      game_command('execute_turn', { card, square });
+      setTimeout(() => game_command('execute_turn', { card, square }), 200);
     }
   }
 
@@ -132,3 +141,7 @@ function createUpdateHand(id) {
 </button>
 <p>{greeting}</p>
 */
+
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
