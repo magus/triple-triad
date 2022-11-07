@@ -14,19 +14,35 @@ const { width, height } = BoardSquare;
 const dimensions = { width, height };
 
 export function Tile(props: Props) {
+  if (!props.card.is_empty) {
+    return (
+      <TileContainer {...props}>
+        <div className="absolute top-0 left-0 z-10 ml-[50%] mt-[50%] -translate-x-1/2 -translate-y-1/2">
+          <Card {...props.card} board />
+        </div>
+      </TileContainer>
+    );
+  }
+
   return (
     <Droppable id={props.id} OverElement={OverElement}>
-      <div className="relative" style={dimensions}>
-        <Image className="rotate-0" src={BoardSquare.src} layout="fixed" alt="tile" priority {...dimensions} />
-        <MaybeDark {...props} />
-
-        {!props.card ? null : (
-          <div className="absolute top-0 left-0 z-10 ml-[50%] mt-[50%] -translate-x-1/2 -translate-y-1/2">
-            <Card {...props.card} board />
-          </div>
-        )}
-      </div>
+      <TileContainer {...props} />
     </Droppable>
+  );
+}
+
+type TileContainerProps = Props & {
+  children?: React.ReactNode;
+};
+
+function TileContainer(props: TileContainerProps) {
+  return (
+    <div className="relative" style={dimensions}>
+      <Image className="rotate-0" src={BoardSquare.src} layout="fixed" alt="tile" priority {...dimensions} />
+      <MaybeDark {...props} />
+
+      {props.children}
+    </div>
   );
 }
 
