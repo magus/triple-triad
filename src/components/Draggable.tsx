@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { CSS } from '@dnd-kit/utilities';
 import { useDraggable } from '@dnd-kit/core';
 
+import { useAppState } from 'src/core/AppStateContext';
+
 type Props = {
   id: string;
   children: React.ReactNode;
@@ -12,6 +14,14 @@ type Props = {
 
 export function Draggable(props: Props) {
   const persist_style = React.useRef(undefined);
+
+  const [state] = useAppState();
+  const state_now = React.useRef(state.now);
+  if (state_now.current !== state.now) {
+    // console.debug('[Draggable]', 'reset', state.now);
+    state_now.current = state.now;
+    persist_style.current = undefined;
+  }
 
   const { isDragging, attributes, listeners, setNodeRef, transform } = useDraggable({
     id: props.id,
