@@ -19,17 +19,21 @@ export function Card(props: Props) {
 
   const id = props.name;
   const image_id = props.id;
-  const is_first_turn = state.game.turn === 0;
 
   let owner;
   let draggable;
 
   if (props.is_player) {
     owner = 'player';
-    draggable = is_first_turn || state.turn_is_player === true;
+    draggable = state.turn_is_player === true;
   } else {
     owner = 'npc';
-    draggable = is_first_turn || state.turn_is_player === false;
+    draggable = state.turn_is_player === false;
+  }
+
+  // allow either player to act first for convenience
+  if (state.game.turn === 0) {
+    draggable = true;
   }
 
   // ensure cards on board cannot be dragged
