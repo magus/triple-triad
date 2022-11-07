@@ -143,13 +143,28 @@ impl Game {
             };
         }
 
-        if self.turn == BOARD_SIZE as u8 - 1 {
+        let turn_is_player = self.turn_is_player();
+        if self.turn == BOARD_SIZE as u8 - 1 && turn_is_player {
             println!("❌ There is only one possible move.");
+
+            let square_choices = self.squares_empty();
+            let card_choices = self.player.cards_left(None, self.rules.order);
+
+            if card_choices.len() > 1 || square_choices.len() > 1 {
+                panic!("🚨 Invariant state, unexpected more than one possible move");
+            }
+
+            let game = self.clone();
+            let card_index = *card_choices.first().unwrap();
+            let square_index = *square_choices.first().unwrap();
+            let game = game.execute_turn(card_index, square_index);
+            let score = if game.is_win() { 100.0 } else { 0.0 };
+
             return ExploreResult {
-                total_depth_moves: 0,
-                actual_moves_evaluated: 0,
+                total_depth_moves: 1,
+                actual_moves_evaluated: 1,
                 is_estimate: false,
-                results: vec![],
+                results: vec![ExploreResultItem { score, game }],
             };
         }
 
