@@ -39,21 +39,34 @@ function TileContainer(props: TileContainerProps) {
   return (
     <div className="relative" style={dimensions}>
       <Image className="rotate-0" src={BoardSquare.src} layout="fixed" alt="tile" priority {...dimensions} />
-      <MaybeDark {...props} />
+      <ColorOverlay {...props} />
 
       {props.children}
     </div>
   );
 }
 
-function MaybeDark(props: Props) {
-  const is_even = +props.id % 2 === 0;
+function ColorOverlay(props: Props) {
+  const classNames = 'absolute top-0 left-0 h-full w-full';
 
+  let even_overlay;
+  const is_even = +props.id % 2 === 0;
   if (is_even) {
-    return null;
+    even_overlay = <div className={`${classNames} bg-stone-700 opacity-20`} />;
   }
 
-  return <div className="absolute top-0 left-0 h-full w-full bg-stone-700 opacity-20" />;
+  let owner_overlay;
+  if (!props.card.is_empty) {
+    const bg = props.card.is_player ? 'bg-blue-500' : 'bg-red-500';
+    owner_overlay = <div className={`${classNames} ${bg} opacity-40`} />;
+  }
+
+  return (
+    <div className={`${classNames}`}>
+      {even_overlay}
+      {owner_overlay}
+    </div>
+  );
 }
 
 function OverElement() {
