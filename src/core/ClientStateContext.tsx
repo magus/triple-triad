@@ -5,9 +5,11 @@ export type ClientState = {
 };
 
 // hook tuple because we return React.useState
-type ContextValue = [ClientState, React.Dispatch<React.SetStateAction<ClientState>>];
+type ContextValue = NullContextValue | ValidContextValue;
+type ValidContextValue = [ClientState, React.Dispatch<React.SetStateAction<ClientState>>];
+type NullContextValue = [null, React.Dispatch<React.SetStateAction<ClientState>>];
 
-const Context = React.createContext<ContextValue>(null);
+const Context = React.createContext<null | ContextValue>(null);
 
 type Props = {
   children: React.ReactNode;
@@ -24,6 +26,12 @@ export function useClientState() {
 
   if (!value) {
     throw new Error('Must wrap tree with <ClientStateProvider>');
+  }
+
+  const [state] = value;
+
+  if (!state) {
+    throw new Error('ClientState cannot be accessed before initialized');
   }
 
   return value;
