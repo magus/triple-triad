@@ -47,13 +47,14 @@ export function GameInternal() {
 
     const square = +args.over.id;
     const active_data = args.active.data.current;
-    const card_name = args.active.data.current.id;
+    const card_name = active_data.id;
+    const isPlayer = active_data.owner === 'player';
     const [card_id] = card_name.match(/\d+/);
     const card = +card_id;
 
-    // console.debug({ active_data, card, square });
+    console.debug({ card, square, isPlayer });
     // wait for execute to finish before updating
-    await game_command('execute_turn', { card, square });
+    await game_command('execute_turn', { card, square, isPlayer });
   }
 
   if (!state) {
