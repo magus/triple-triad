@@ -1,12 +1,15 @@
 import { Card } from 'src/components/Card';
 import { useAppState } from 'src/core/AppStateContext';
+import { useExploreResult } from 'src/hooks/useExploreResult';
 
 Hand.Player = function Hand_Player() {
   const [state] = useAppState();
+  const explore_result = useExploreResult();
 
+  const highlight = explore_result?.card;
   const cards = state.game.player.cards;
 
-  return <Hand {...{ cards }} />;
+  return <Hand {...{ cards, highlight }} />;
 };
 
 Hand.Computer = function Hand_Computer() {
@@ -18,6 +21,7 @@ Hand.Computer = function Hand_Computer() {
 };
 
 type Props = {
+  highlight?: number;
   cards: Array<CardProps>;
 };
 
@@ -45,7 +49,8 @@ export function Hand(props: Props) {
   for (let i = 0; i < props.cards.length; i++) {
     const card = props.cards[i];
 
-    row.push(<Card key={key()} {...card} />);
+    const highlight = props.highlight === i;
+    row.push(<Card key={key()} {...card} highlight={highlight} />);
 
     if (i && i % 3 === 2) {
       finishRow();
