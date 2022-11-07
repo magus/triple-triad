@@ -30,8 +30,8 @@ export function useGameCommand() {
     if (!isTauriApp()) return console.debug('[game_command]', { name, args });
 
     const start = performance.now();
-    invoke(name, args).then(set_state);
-    const duration = performance.now() - start;
+    await invoke(name, args).then(set_state);
+    const duration = Math.round(performance.now() - start);
     console.debug('[game_command]', { duration, name, args });
   }
 
