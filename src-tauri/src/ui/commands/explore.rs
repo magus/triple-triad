@@ -13,7 +13,7 @@ pub async fn explore(app_handle: tauri::AppHandle) -> Result<AppStateJson, Strin
 
     if game.turn_is_player() {
         let explore_result = game.evaluate_explore_result();
-        state.set_explore(explore_result);
+        state.set_explore_result(Some(explore_result));
     }
 
     // send back the updated game state
