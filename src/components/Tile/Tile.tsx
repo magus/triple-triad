@@ -34,7 +34,7 @@ type TileContainerProps = Props & {
 };
 
 function TileContainer(props: TileContainerProps) {
-  const dimensions = useDimensions();
+  const dimensions = Tile.useDimensions();
 
   return (
     <div className="relative" style={dimensions}>
@@ -70,7 +70,7 @@ function ColorOverlay(props: Props) {
 }
 
 function OverElement() {
-  const dimensions = useDimensions();
+  const dimensions = Tile.useDimensions();
   const card_size = Card.useCardSize();
   const boxShadow = '0px 0px 64px 8px rgba(253, 224, 71, 0.9)';
 
@@ -83,11 +83,11 @@ function OverElement() {
   );
 }
 
-function useDimensions() {
+Tile.useDimensions = function useDimensions() {
   const [client_state] = useClientState();
 
   return {
     width: BoardSquare.width * client_state.scale,
     height: BoardSquare.height * client_state.scale,
   };
-}
+};
