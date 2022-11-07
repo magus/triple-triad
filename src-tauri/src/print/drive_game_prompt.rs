@@ -116,21 +116,7 @@ fn drive_game(input_game: Game) -> Game {
                     }
                 }
 
-                let moves = game.start_explore();
-
-                match input.as_str() {
-                    "a" | "auto" => {
-                        if let Some((_, move_game)) = moves.first() {
-                            if let Some((card_index, square_index)) = move_game.last_move {
-                                game = game.execute_turn(card_index, square_index);
-                            }
-                        }
-                    }
-                    // "s" | "search" => {}
-                    _ => {
-                        // do nothing just explore
-                    }
-                }
+                game.print_explore();
 
                 game.reset_evaluation_max();
             }

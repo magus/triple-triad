@@ -108,12 +108,26 @@ pub struct Game {
 
 const DEFAULT_EVALUATION_MAX: u64 = 500_000_000;
 
+#[derive(Clone, serde::Serialize)]
+pub struct ExploreResult {
+    pub total_depth_moves: u64,
+    pub actual_moves_evaluated: u64,
+    pub is_estimate: bool,
+    pub results: Vec<ExploreResultItem>,
+}
+
+#[derive(Clone, serde::Serialize)]
+pub struct ExploreResultItem {
+    pub score: f64,
+    pub game: Game,
+}
+
 impl Game {
     pub fn reset_evaluation_max(&mut self) {
         self.evaluation_max = DEFAULT_EVALUATION_MAX;
     }
 
-    pub fn start_explore(&self) -> Vec<(f64, Game)> {
+    pub fn evaluate_explore_result(&self) -> ExploreResult {
         let mut stopwatch = Stopwatch::start();
 
         let start_turn = self.turn;
@@ -121,12 +135,22 @@ impl Game {
 
         if self.is_ended() {
             println!("❌ Game is ended.");
-            return vec![];
+            return ExploreResult {
+                total_depth_moves: 0,
+                actual_moves_evaluated: 0,
+                is_estimate: false,
+                results: vec![],
+            };
         }
 
         if self.turn == BOARD_SIZE as u8 - 1 {
             println!("❌ There is only one possible move.");
-            return vec![];
+            return ExploreResult {
+                total_depth_moves: 0,
+                actual_moves_evaluated: 0,
+                is_estimate: false,
+                results: vec![],
+            };
         }
 
         let total_depth_moves = self.max_depth_moves(self.turn, -1);
@@ -157,63 +181,85 @@ impl Game {
         println!("🤖 ... thinking ...");
         println!();
 
-        // let max_depth = if start_turn > 0 { -1 } else { 6 };
-
         // collect results across threads into shard vector
         let results: Arc<Mutex<Vec<(f64, Game)>>> = Arc::new(Mutex::new(Vec::new()));
 
         self.explore(start_turn, max_depth, depth, &results);
 
-        println!("┌─────────────────────────────────────────┐");
-        println!("│  🤖 AI RECOMMENDATIONS (worst to best)  │");
-        println!("└─────────────────────────────────────────┘");
-        println!();
-
         // sort results by comparing score values
-        let mut safe_results = results.lock().unwrap().deref().clone();
-        safe_results.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
-
-        // show up to top 3 moves
-        let show_count = std::cmp::min(3, safe_results.len());
+        let mut explore_result_list = results.lock().unwrap().deref().clone();
+        explore_result_list.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
 
         let max_depth_moves = self.max_depth_moves(self.turn + 1, max_depth);
 
-        for i in 0..show_count {
-            let index = safe_results.len() - 1 - i;
-            let (total_score, game) = &safe_results[index];
+        let mut results = vec![];
+
+        for explore_result in explore_result_list {
+            let (total_score, game) = explore_result;
             let score = total_score / max_depth_moves as f64;
 
-            println!("#{}", index + 1);
-            println!("{:.2}% chance to win", score);
-            println!();
-            println!("{:?}", game);
-        }
-
-        println!("...\n\n");
-
-        for i in (0..show_count).rev() {
-            let (total_score, game) = &safe_results[i];
-            let score = total_score / max_depth_moves as f64;
-
-            println!("#{}", i + 1);
-            println!("{:.2}% chance to win", score);
-            println!();
-            println!("{:?}", game);
+            results.push(ExploreResultItem { game, score })
         }
 
         let total_depth_moves = self.max_depth_moves(self.turn, -1);
         let actual_moves_evaluated = self.max_depth_moves(self.turn, max_depth);
         let is_estimate = total_depth_moves > actual_moves_evaluated;
 
-        if is_estimate {
+        stopwatch.record("evaluate_explore_result");
+
+        return ExploreResult {
+            total_depth_moves,
+            actual_moves_evaluated,
+            is_estimate,
+            results,
+        };
+    }
+
+    pub fn print_explore(&self) {
+        let mut stopwatch = Stopwatch::start();
+
+        let explore_result = self.evaluate_explore_result();
+        let results = explore_result.results;
+
+        println!("┌─────────────────────────────────────────┐");
+        println!("│  🤖 AI RECOMMENDATIONS (worst to best)  │");
+        println!("└─────────────────────────────────────────┘");
+        println!();
+
+        // show up to top 3 moves
+        let show_count = std::cmp::min(3, results.len());
+
+        for i in 0..show_count {
+            let index = results.len() - 1 - i;
+            let result = &results[index];
+
+            println!("#{}", index + 1);
+            println!("{:.2}% chance to win", result.score);
+            println!();
+            println!("{:?}", result.game);
+        }
+
+        println!("...\n\n");
+
+        for i in (0..show_count).rev() {
+            let result = &results[i];
+
+            println!("#{}", i + 1);
+            println!("{:.2}% chance to win", result.score);
+            println!();
+            println!("{:?}", result.game);
+        }
+
+        let total_depth_moves = explore_result.total_depth_moves;
+        let actual_moves_evaluated = explore_result.actual_moves_evaluated;
+
+        if explore_result.is_estimate {
             println!("✅ done [📊 {actual_moves_evaluated} / {total_depth_moves} moves evaluated]");
         } else {
             println!("✅ done [📊 {actual_moves_evaluated} moves evaluated]");
         }
 
         stopwatch.record("start_explore");
-
-        return safe_results;
     }
 
     fn explore(

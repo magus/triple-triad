@@ -149,7 +149,7 @@ pub fn idle_imperial() {
     // game = game.execute_turn(4, 5);
     // println!("{:?}", game);
 
-    game.start_explore();
+    game.print_explore();
 }
 
 pub fn deep_explore() {
@@ -162,7 +162,7 @@ pub fn deep_explore() {
         game = game.simulate_simple_turn();
     }
 
-    game.start_explore();
+    game.print_explore();
 }
 
 pub fn custom_simulation() {
