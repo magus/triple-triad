@@ -3,6 +3,7 @@ import { DndContext } from '@dnd-kit/core';
 
 import { Hand } from 'src/components/Hand';
 import { Board } from 'src/components/Board';
+import { Button } from 'src/components/Button';
 import { isTauriApp } from 'src/core/isTauriApp';
 import * as MockAppState from 'src/mocks/AppState';
 import * as AppState from 'src/core/AppStateContext';
@@ -61,16 +62,22 @@ export function GameInternal() {
     <DndContext onDragEnd={handleDragEnd}>
       <div key={key.current} className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
         <div className="flex w-full flex-row justify-center">
-          <button onClick={() => game_command('set_deck')}>set_deck</button>
+          <Button onClick={() => game_command('set_deck')}>set_deck</Button>
           <div className="w-2" />
-          <button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</button>
+          <Button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</Button>
           <div className="w-2" />
-          <button onClick={() => game_command('start')}>start</button>
+          <Button onClick={() => game_command('start')}>start</Button>
           <div className="w-2" />
-          <button onClick={() => game_command('explore')}>explore</button>
+          <Button color="green" onClick={() => game_command('explore')}>
+            explore
+          </Button>
           <div className="w-2" />
-          <button onClick={() => game_command('reset')}>reset</button>
+          <Button color="red" onClick={() => game_command('reset')}>
+            reset
+          </Button>
         </div>
+
+        <div className="h-4" />
 
         <GameBoard />
 
