@@ -1,5 +1,6 @@
 import * as AppState from 'src/core/AppStateContext';
 import { Tile } from 'src/components/Tile';
+import { Button } from 'src/components/Button';
 
 export function MaybeEndOverlay() {
   const tile_dimensions = Tile.useDimensions();
@@ -18,7 +19,7 @@ export function MaybeEndOverlay() {
         style={{ height: board_height }}
       >
         <button className="rounded-md bg-neutral-900 p-16" onClick={() => game_command('reset')}>
-          <span className="text-4xl font-bold text-white">Reset</span>
+          <Button color="red">reset</Button>
         </button>
       </div>
     </div>
