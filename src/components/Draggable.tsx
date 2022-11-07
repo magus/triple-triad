@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { motion } from 'framer-motion';
 import { CSS } from '@dnd-kit/utilities';
 import { useDraggable } from '@dnd-kit/core';
 
@@ -17,6 +18,10 @@ export function Draggable(props: Props) {
     data: props.data,
   });
 
+  const animate = {
+    scale: 1,
+  };
+
   const style = {
     zIndex: undefined,
     transform: CSS.Translate.toString(transform),
@@ -26,6 +31,8 @@ export function Draggable(props: Props) {
     // elevate active drag element above other elements
     // normal z-index is 10, multiple by 10 to get 100
     style.zIndex = 100;
+
+    animate.scale = 1.2;
 
     // capture ongoing drag so we can persist it when it ends
     persist_style.current = style;
@@ -37,7 +44,7 @@ export function Draggable(props: Props) {
 
   return (
     <button ref={setNodeRef} style={style} className={props.className} {...listeners} {...attributes}>
-      {props.children}
+      <motion.div animate={animate}>{props.children}</motion.div>
     </button>
   );
 }
