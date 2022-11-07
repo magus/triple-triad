@@ -6,7 +6,7 @@ export default function Document(props: DocumentProps) {
   return (
     <Html
       lang="en"
-      className="text-rendering-legibility cursor-default select-none bg-black font-body text-base font-normal text-gray-100 antialiased"
+      className="text-rendering-legibility cursor-default select-none overflow-hidden bg-black font-body text-base font-normal text-gray-100 antialiased"
     >
       <Head />
       <body>

@@ -7,6 +7,7 @@ import BackgroundRed from './background-red.png';
 
 import { Draggable } from 'src/components/Draggable';
 import { useAppState } from 'src/core/AppStateContext';
+import { useClientState } from 'src/core/ClientStateContext';
 import { Card as TCard } from 'src/core/AppState';
 
 type Props = TCard & {
@@ -60,18 +61,23 @@ function DraggableCard(props: InternalProps) {
 
 function CardInternal(props: InternalProps) {
   const x_offset = -1 * card_style.width * (props.image_id - 1);
-
   const background = getBackground(props.owner);
 
+  const card_size = Card.useCardSize();
+  const [client_state] = useClientState();
+
   return (
-    <div className="relative" style={{ ...card_style }}>
-      <Image {...background} alt={background.alt} priority />
+    <div className="relative" style={{ ...card_size }}>
+      <Image {...background} alt={background.alt} layout="fill" priority />
 
       <div
-        className="absolute top-0 left-0 h-full w-full"
+        className="absolute top-0 left-0"
         style={{
           ...style.spritesheet,
+          ...card_style,
           backgroundPositionX: x_offset,
+          transform: `scale(${client_state.scale})`,
+          transformOrigin: 'top left',
         }}
       />
     </div>
@@ -79,7 +85,8 @@ function CardInternal(props: InternalProps) {
 }
 
 function EmptyCard() {
-  return <div className="relative" style={{ ...card_style }} />;
+  const card_size = Card.useCardSize();
+  return <div className="relative" style={{ ...card_size }} />;
 }
 
 function getBackground(owner) {
@@ -95,9 +102,18 @@ function getBackground(owner) {
 }
 
 function getBackgroundProps(background) {
-  const { width, height, src } = background;
-  return { width, height, src };
+  const { src } = background;
+  return { src };
 }
+
+Card.useCardSize = function useCardSize() {
+  const [client_state] = useClientState();
+
+  return {
+    width: card_style.width * client_state.scale,
+    height: card_style.height * client_state.scale,
+  };
+};
 
 export const card_style = {
   width: 200,
