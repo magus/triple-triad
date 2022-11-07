@@ -3,6 +3,8 @@ export type AppState = {
   game: Game;
   explore_result: null | ExploreResult;
 
+  now: number;
+
   turn_is_player: boolean;
   is_ended: boolean;
 };
