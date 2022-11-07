@@ -24,9 +24,9 @@ type Props = {
 type CardProps = React.ComponentProps<typeof Card>;
 
 export function Hand(props: Props) {
-  const children = [];
+  const children: Array<React.ReactNode> = [];
 
-  let row = [];
+  let row: Array<React.ReactNode> = [];
 
   const key = () => `${children.length}-${row.length}`;
 

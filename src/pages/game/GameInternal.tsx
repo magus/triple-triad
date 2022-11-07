@@ -11,7 +11,7 @@ import { MaybeEndOverlay } from 'src/components/MaybeEndOverlay';
 
 export function GameInternal() {
   const key = React.useRef(0);
-  const [state, set_state] = AppState.useAppState();
+  const [state, set_state] = AppState.useMaybeAppState();
   const game_command = AppState.useGameCommand();
 
   key.current += 1;
@@ -66,6 +66,8 @@ export function GameInternal() {
           <button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</button>
           <div className="w-2" />
           <button onClick={() => game_command('start')}>start</button>
+          <div className="w-2" />
+          <button onClick={() => game_command('explore')}>explore</button>
           <div className="w-2" />
           <button onClick={() => game_command('reset')}>reset</button>
         </div>

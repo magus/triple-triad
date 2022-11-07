@@ -12,11 +12,12 @@ type Props = {
 };
 
 export function Tile(props: Props) {
-  if (!props.card.is_empty) {
+  const card = props.card;
+  if (card && !card.is_empty) {
     return (
       <TileContainer {...props}>
         <div className="absolute top-0 left-0 z-10 ml-[50%] mt-[50%] -translate-x-1/2 -translate-y-1/2">
-          <Card {...props.card} board />
+          <Card {...card} board />
         </div>
       </TileContainer>
     );
@@ -55,9 +56,10 @@ function ColorOverlay(props: Props) {
     even_overlay = <div className={`${classNames} bg-stone-700 opacity-20`} />;
   }
 
+  const card = props.card;
   let owner_overlay;
-  if (!props.card.is_empty) {
-    const bg = props.card.is_player ? 'bg-blue-500' : 'bg-red-500';
+  if (card && !card.is_empty) {
+    const bg = card.is_player ? 'bg-blue-500' : 'bg-red-500';
     owner_overlay = <div className={`${classNames} ${bg} opacity-40`} />;
   }
 

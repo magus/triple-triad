@@ -22,7 +22,7 @@ export function Draggable(props: Props) {
     scale: 1,
   };
 
-  const style = {
+  const style: any = {
     zIndex: undefined,
     transform: CSS.Translate.toString(transform),
   };
