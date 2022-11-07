@@ -81,38 +81,36 @@ export function GameInternal() {
 
 function GameBoard() {
   const [client_state, set_client_state] = useClientState();
+  // console.debug({ client_state });
 
-  const board_container_ref = React.useRef(null);
-
-  // determine window and screen size?
+  // determine window size and scale
   React.useEffect(function on_mount() {
-    const screen = {
-      width: window.screen.width,
-      height: window.screen.height,
-    };
+    const body_width = window.document.body.clientWidth;
+    const original_width = 2304;
 
-    const body = {
-      width: window.document.body.clientWidth,
-      height: window.document.body.clientHeight,
-    };
+    const scale = body_width / original_width;
+    const final_scale = +scale.toFixed(2);
 
-    const board = {
-      width: 0,
-      height: 0,
-    };
+    console.debug('[dimensions]', { scale, final_scale, body_width });
 
-    if (board_container_ref.current) {
-      board.width = board_container_ref.current.offsetWidth;
-      board.height = board_container_ref.current.offsetHeight;
-    }
-
-    const scale = body.width / board.width;
-
-    console.debug('[dimensions]', { scale, screen, body, board });
+    set_client_state((s) => {
+      const next_state = { ...s };
+      next_state.scale = final_scale;
+      return next_state;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // adjust font size to scale rem which is used
+  // for spacing in tailwind e.g. `px-16`, `mt-2` etc.
+  const style = `
+    html {
+      font-size: ${Math.round(16 * client_state.scale)}px !important;
+    }
+  `;
+
   return (
-    <div className="flex flex-row items-start px-16" id="board-container" ref={board_container_ref}>
+    <div className="flex flex-row items-start px-16" id="board-container">
       <Hand.Player />
 
       <div className="ml-4" />
@@ -122,6 +120,8 @@ function GameBoard() {
       <div className="ml-4" />
 
       <Hand.Computer />
+
+      <style>{style}</style>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import { Droppable } from 'src/components/Droppable';
 import { Card, card_style } from 'src/components/Card';
+import { useClientState } from 'src/core/ClientStateContext';
 
 import BoardSquare from './board-square.png';
 
@@ -9,9 +10,6 @@ type Props = {
   id: string;
   card?: React.ComponentProps<typeof Card>;
 };
-
-const { width, height } = BoardSquare;
-const dimensions = { width, height };
 
 export function Tile(props: Props) {
   if (!props.card.is_empty) {
@@ -36,6 +34,8 @@ type TileContainerProps = Props & {
 };
 
 function TileContainer(props: TileContainerProps) {
+  const dimensions = useDimensions();
+
   return (
     <div className="relative" style={dimensions}>
       <Image className="rotate-0" src={BoardSquare.src} layout="fixed" alt="tile" priority {...dimensions} />
@@ -57,16 +57,24 @@ function MaybeDark(props: Props) {
 }
 
 function OverElement() {
+  const dimensions = useDimensions();
+  const card_size = Card.useCardSize();
   const boxShadow = '0px 0px 64px 8px rgba(253, 224, 71, 0.9)';
 
   return (
     <div className="absolute top-0 left-0 h-full w-full" style={{ ...dimensions }}>
       <div className="flex h-full w-full items-center justify-center">
-        <div
-          className="border-2 border-yellow-300"
-          style={{ boxShadow, width: card_style.width, height: card_style.height }}
-        />
+        <div className="border-2 border-yellow-300" style={{ boxShadow, ...card_size }} />
       </div>
     </div>
   );
+}
+
+function useDimensions() {
+  const [client_state] = useClientState();
+
+  return {
+    width: BoardSquare.width * client_state.scale,
+    height: BoardSquare.height * client_state.scale,
+  };
 }
