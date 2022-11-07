@@ -29,6 +29,7 @@ pub async fn execute_turn(
 
     // assign the game back to mutex
     state.set_game(game);
+    state.set_explore_result(None);
 
     // send back the updated game state
     Ok(state.json())
