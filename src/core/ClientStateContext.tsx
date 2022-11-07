@@ -2,6 +2,7 @@ import * as React from 'react';
 
 export type ClientState = {
   scale: number;
+  explore_result_index: number;
 };
 
 // hook tuple because we return React.useState
@@ -16,7 +17,10 @@ type Props = {
 };
 
 export function ClientStateProvider(props: Props) {
-  const state = React.useState<ClientState>({ scale: 1 });
+  const state = React.useState<ClientState>({
+    scale: 1,
+    explore_result_index: 0,
+  });
 
   return <Context.Provider value={state}>{props.children}</Context.Provider>;
 }
