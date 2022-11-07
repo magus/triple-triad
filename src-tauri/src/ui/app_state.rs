@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use tauri::App;
 
 use crate::data;
-use crate::game::Game;
+use crate::game::{ExploreResult, Game};
 
 pub struct AppState {
     // use interior mutability since the instance of AppState cannot change
@@ -13,6 +13,7 @@ pub struct AppState {
     pub status: Mutex<String>,
     pub game: Mutex<Game>,
     pub setup_game: Mutex<Game>,
+    pub explore_result: Mutex<Option<ExploreResult>>,
 
     // shared instances, created once and reused
     pub rule_data: Mutex<Option<data::RuleData>>,
@@ -23,16 +24,21 @@ pub struct AppState {
 // serialized json, subset of AppState
 #[derive(Clone, serde::Serialize)]
 pub struct AppStateJson {
+    // from app state
+    game: Game,
     status: String,
+    explore_result: Option<ExploreResult>,
+
+    // via game internal methods
     turn_is_player: bool,
     is_ended: bool,
-    game: Game,
 }
 
 impl AppState {
     pub fn json(&self) -> AppStateJson {
         let game = self.game.lock().unwrap().clone();
         let status = self.status.lock().unwrap().clone();
+        let explore_result = self.explore_result.lock().unwrap().clone();
 
         let turn_is_player = game.turn_is_player();
         let is_ended = game.is_ended();
@@ -42,6 +48,7 @@ impl AppState {
             turn_is_player,
             is_ended,
             game,
+            explore_result,
         };
     }
 
@@ -58,6 +65,11 @@ impl AppState {
     pub fn set_setup_game(&self, game: Game) {
         let mut setup_game_mutex = self.setup_game.lock().unwrap();
         *setup_game_mutex = game;
+    }
+
+    pub fn set_explore(&self, explore_result: ExploreResult) {
+        let mut explore_result_mutex = self.explore_result.lock().unwrap();
+        *explore_result_mutex = Some(explore_result);
     }
 
     pub fn init_data(&self, app: &App) {
@@ -84,6 +96,7 @@ impl AppState {
             status: Mutex::new("setup".into()),
             game: Mutex::new(Game::new()),
             setup_game: Mutex::new(Game::new()),
+            explore_result: Mutex::new(None),
 
             rule_data: Mutex::new(None),
             card_data: Mutex::new(None),

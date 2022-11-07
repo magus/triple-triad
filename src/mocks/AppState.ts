@@ -1,6 +1,11 @@
 import { AppState } from 'src/core/AppState';
 
 export const IdleImperial: AppState = {
+  status: 'setup',
+  explore_result: null,
+  turn_is_player: true,
+  is_ended: false,
+
   game: {
     board: [
       {
@@ -277,7 +282,4 @@ export const IdleImperial: AppState = {
     score: 0,
     turn: 0,
   },
-  status: 'setup',
-  turn_is_player: true,
-  is_ended: false,
 };

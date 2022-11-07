@@ -1,8 +1,22 @@
 export type AppState = {
   status: string;
+  game: Game;
+  explore_result: null | ExploreResult;
+
   turn_is_player: boolean;
   is_ended: boolean;
+};
+
+type ExploreResult = {
+  total_depth_moves: number;
+  actual_moves_evaluated: number;
+  is_estimate: boolean;
+  results: Array<ExploreResultItem>;
+};
+
+type ExploreResultItem = {
   game: Game;
+  score: number;
 };
 
 type Game = {
