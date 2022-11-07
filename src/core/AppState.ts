@@ -25,7 +25,7 @@ type Game = {
   computer: Computer;
   evaluation_max: number;
   is_player_first: boolean;
-  last_move: null;
+  last_move: null | [number, number];
   player: Player;
   rules: Rules;
   score: number;
