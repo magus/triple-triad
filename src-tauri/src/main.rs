@@ -41,19 +41,11 @@ fn app_main(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     window.open_devtools();
 
     // TODO
-    // - use json of AppState.game to display board
-    // - store CardIdLookup in AppState
-    //      - map from card.name (e.g. C2,P0, etc) to card id for displaying card images
-    //
     // - display game rules
     //      - display disabled rules dimmed / opacity
     //      - images in data/game/data/ui/icon/121000/en/121611_hr1.png - 121624_hr1.png
     //
-    // - use invoke to retrieve game state and keep in sync
-    // - invoke to mutate game state and execute turns, etc.
-    //
     // - setup pages for various tasks (e.g. select npc, input cards, etc.)
-    //
     //
     // - game simulation flow
     //      - setup game
