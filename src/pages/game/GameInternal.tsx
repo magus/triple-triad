@@ -1,30 +1,22 @@
 import * as React from 'react';
 import { DndContext } from '@dnd-kit/core';
-import { invoke } from '@tauri-apps/api/tauri';
 
 import { Hand } from 'src/components/Hand';
 import { Board } from 'src/components/Board';
 import { isTauriApp } from 'src/core/isTauriApp';
 import * as MockAppState from 'src/mocks/AppState';
-import { useAppState } from 'src/core/AppStateContext';
+import * as AppState from 'src/core/AppStateContext';
 import { useClientState } from 'src/core/ClientStateContext';
+import { MaybeEndOverlay } from 'src/components/MaybeEndOverlay';
 
 export function GameInternal() {
   const key = React.useRef(0);
-  const [state, set_state] = useAppState();
+  const [state, set_state] = AppState.useAppState();
+  const game_command = AppState.useGameCommand();
 
   key.current += 1;
   console.debug(key.current, { state });
   // console.debug(JSON.stringify(state));
-
-  async function game_command(name, args?) {
-    if (!isTauriApp()) return console.debug('[game_command]', { name, args });
-
-    const start = performance.now();
-    invoke(name, args).then(set_state);
-    const duration = performance.now() - start;
-    console.debug('[game_command]', { duration, name, args });
-  }
 
   // sync state with rust app
   React.useEffect(function on_mount() {
