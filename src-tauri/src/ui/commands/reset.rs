@@ -13,6 +13,7 @@ pub async fn reset(app_handle: tauri::AppHandle) -> Result<AppStateJson, String>
 
     // assign the game back to mutex
     state.set_game(setup_game);
+    state.set_explore_result(None);
 
     // send back the updated game state
     Ok(state.json())

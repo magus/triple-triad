@@ -67,9 +67,9 @@ impl AppState {
         *setup_game_mutex = game;
     }
 
-    pub fn set_explore(&self, explore_result: ExploreResult) {
+    pub fn set_explore_result(&self, explore_result: Option<ExploreResult>) {
         let mut explore_result_mutex = self.explore_result.lock().unwrap();
-        *explore_result_mutex = Some(explore_result);
+        *explore_result_mutex = explore_result;
     }
 
     pub fn init_data(&self, app: &App) {
