@@ -11,13 +11,47 @@ import { useClientState } from 'src/core/ClientStateContext';
 import { MaybeEndOverlay } from 'src/components/MaybeEndOverlay';
 
 export function GameInternal() {
-  const key = React.useRef(0);
-  const [state, set_state] = AppState.useMaybeAppState();
-  const game_command = AppState.useGameCommand();
+  console.debug('[GameInternal]', 'render');
 
-  key.current += 1;
-  console.debug(key.current, { state });
+  return (
+    <React.Fragment>
+      <Behaviors />
+      <MaybeGame />
+    </React.Fragment>
+  );
+}
+
+function MaybeGame() {
+  const [state, set_state] = AppState.useMaybeAppState();
+  console.debug({ state });
   // console.debug(JSON.stringify(state));
+
+  if (!state) {
+    return (
+      <div className="flex w-full flex-row justify-center">
+        <div className="text-6xl font-bold">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <DragZone>
+      <div className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
+        <Actions />
+
+        <div className="h-4" />
+
+        <GameBoard />
+
+        <MaybeEndOverlay />
+      </div>
+    </DragZone>
+  );
+}
+
+function Behaviors() {
+  const [, set_state] = AppState.useMaybeAppState();
+  const game_command = AppState.useGameCommand();
 
   // sync state with rust app
   React.useEffect(function on_mount() {
@@ -29,6 +63,16 @@ export function GameInternal() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  return null;
+}
+
+type DragZoneProps = {
+  children: React.ReactNode;
+};
+
+function DragZone(props: DragZoneProps) {
+  const game_command = AppState.useGameCommand();
 
   async function handleDragEnd(args) {
     // console.debug('[DndContext]', 'handleDragEnd', { args });
@@ -50,40 +94,28 @@ export function GameInternal() {
     await game_command('execute_turn', { card, square, isPlayer });
   }
 
-  if (!state) {
-    return (
-      <div className="flex w-full flex-row justify-center">
-        <div className="text-6xl font-bold">Loading...</div>
-      </div>
-    );
-  }
+  return <DndContext onDragEnd={handleDragEnd}>{props.children}</DndContext>;
+}
+
+function Actions() {
+  const game_command = AppState.useGameCommand();
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <div key={key.current} className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
-        <div className="flex w-full flex-row justify-center">
-          <Button onClick={() => game_command('set_deck')}>set_deck</Button>
-          <div className="w-2" />
-          <Button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</Button>
-          <div className="w-2" />
-          <Button onClick={() => game_command('start')}>start</Button>
-          <div className="w-2" />
-          <Button color="green" onClick={() => game_command('explore')}>
-            explore
-          </Button>
-          <div className="w-2" />
-          <Button color="red" onClick={() => game_command('reset')}>
-            reset
-          </Button>
-        </div>
-
-        <div className="h-4" />
-
-        <GameBoard />
-
-        <MaybeEndOverlay />
-      </div>
-    </DndContext>
+    <div className="flex w-full flex-row justify-center">
+      <Button onClick={() => game_command('set_deck')}>set_deck</Button>
+      <div className="w-2" />
+      <Button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</Button>
+      <div className="w-2" />
+      <Button onClick={() => game_command('start')}>start</Button>
+      <div className="w-2" />
+      <Button color="green" onClick={() => game_command('explore')}>
+        explore
+      </Button>
+      <div className="w-2" />
+      <Button color="red" onClick={() => game_command('reset')}>
+        reset
+      </Button>
+    </div>
   );
 }
 
