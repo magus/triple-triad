@@ -12,6 +12,7 @@ import { Card as TCard } from 'src/core/AppState';
 
 type Props = TCard & {
   board?: boolean;
+  highlight?: boolean;
 };
 
 export function Card(props: Props) {
@@ -19,6 +20,7 @@ export function Card(props: Props) {
 
   const id = props.name;
   const image_id = props.id;
+  const highlight = props.highlight;
 
   let owner;
   let draggable;
@@ -41,7 +43,7 @@ export function Card(props: Props) {
     draggable = false;
   }
 
-  return <DraggableCard {...{ id, image_id, owner, draggable }} />;
+  return <DraggableCard {...{ id, image_id, owner, draggable, highlight }} />;
 }
 
 type InternalProps = {
@@ -49,6 +51,7 @@ type InternalProps = {
   image_id: number;
   owner: 'player' | 'npc' | 'none';
   draggable?: boolean;
+  highlight?: boolean;
 };
 
 function DraggableCard(props: InternalProps) {
@@ -60,14 +63,40 @@ function DraggableCard(props: InternalProps) {
     const { id, owner } = props;
 
     return (
-      <Draggable id={props.id} data={{ id, owner }} className="z-10">
+      <Draggable id={props.id} data={{ id, owner }} className="relative z-10">
         <CardInternal {...props} />
+        <Card.Highlight show={Boolean(props.highlight)} />
       </Draggable>
     );
   }
 
   return <CardInternal {...props} />;
 }
+
+type HightlightProps = {
+  show: boolean;
+};
+
+Card.Highlight = function Highlight(props: HightlightProps) {
+  const card_size = Card.useCardSize();
+
+  if (!props.show) {
+    return null;
+  }
+
+  const boxShadow = '0px 0px 16px 8px rgba(34, 197, 94, 0.9)';
+
+  const width = card_size.width;
+  const height = card_size.height;
+
+  return (
+    <div className="absolute top-0 left-0 h-full w-full">
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="border-1 rounded-3xl border-green-500" style={{ boxShadow, width, height }} />
+      </div>
+    </div>
+  );
+};
 
 function CardInternal(props: InternalProps) {
   const x_offset = -1 * card_style.width * (props.image_id - 1);

@@ -8,11 +8,13 @@ import BoardSquare from './board-square.png';
 
 type Props = {
   id: string;
+  highlight?: boolean;
   card?: React.ComponentProps<typeof Card>;
 };
 
 export function Tile(props: Props) {
   const card = props.card;
+
   if (card && !card.is_empty) {
     return (
       <TileContainer {...props}>
@@ -26,6 +28,7 @@ export function Tile(props: Props) {
   return (
     <Droppable id={props.id} OverElement={OverElement}>
       <TileContainer {...props} />
+      <Card.Highlight show={Boolean(props.highlight)} />
     </Droppable>
   );
 }
@@ -74,12 +77,12 @@ function ColorOverlay(props: Props) {
 function OverElement() {
   const dimensions = Tile.useDimensions();
   const card_size = Card.useCardSize();
-  const boxShadow = '0px 0px 64px 8px rgba(253, 224, 71, 0.9)';
+  const boxShadow = '0px 0px 32px 8px rgba(253, 224, 71, 0.9)';
 
   return (
     <div className="absolute top-0 left-0 h-full w-full" style={{ ...dimensions }}>
       <div className="flex h-full w-full items-center justify-center">
-        <div className="border-2 border-yellow-300" style={{ boxShadow, ...card_size }} />
+        <div className="rounded-3xl border-2 border-yellow-300" style={{ boxShadow, ...card_size }} />
       </div>
     </div>
   );
