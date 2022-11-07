@@ -28,6 +28,8 @@ export function Draggable(props: Props) {
     data: props.data,
   });
 
+  const class_list = [props.className];
+
   const animate = {
     scale: 1,
   };
@@ -46,14 +48,19 @@ export function Draggable(props: Props) {
 
     // capture ongoing drag so we can persist it when it ends
     persist_style.current = style;
+  } else {
+    // transition back to position
+    class_list.push('transition-transform');
   }
 
   if (persist_style.current) {
     Object.assign(style, persist_style.current);
   }
 
+  const className = class_list.join(' ');
+
   return (
-    <button ref={setNodeRef} style={style} className={props.className} {...listeners} {...attributes}>
+    <button ref={setNodeRef} style={style} className={className} {...listeners} {...attributes}>
       <motion.div animate={animate}>{props.children}</motion.div>
     </button>
   );
