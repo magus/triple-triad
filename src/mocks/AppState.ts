@@ -279,4 +279,5 @@ export const IdleImperial: AppState = {
   },
   status: 'setup',
   turn_is_player: true,
+  is_ended: false,
 };

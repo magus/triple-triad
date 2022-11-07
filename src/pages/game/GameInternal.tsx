@@ -67,6 +67,8 @@ export function GameInternal() {
         </div>
 
         <GameBoard />
+
+        <MaybeEndOverlay />
       </div>
     </DndContext>
   );

@@ -25,6 +25,7 @@ pub struct AppState {
 pub struct AppStateJson {
     status: String,
     turn_is_player: bool,
+    is_ended: bool,
     game: Game,
 }
 
@@ -34,10 +35,12 @@ impl AppState {
         let status = self.status.lock().unwrap().clone();
 
         let turn_is_player = game.turn_is_player();
+        let is_ended = game.is_ended();
 
         return AppStateJson {
             status,
             turn_is_player,
+            is_ended,
             game,
         };
     }
