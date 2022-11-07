@@ -50,7 +50,11 @@ export function GameInternal() {
   }
 
   if (!state) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex w-full flex-row justify-center">
+        <div className="text-6xl font-bold">Loading...</div>
+      </div>
+    );
   }
 
   return (
