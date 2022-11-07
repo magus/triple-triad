@@ -86,6 +86,9 @@ function GameBoard() {
   // determine window size and scale
   React.useEffect(function on_mount() {
     const body_width = window.document.body.clientWidth;
+    // this is the width of the board before scaling
+    // if we significantly change ui we should recapture this value
+    // hardcoded to avoid measuring loops which will cycle
     const original_width = 2304;
 
     const scale = body_width / original_width;
