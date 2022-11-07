@@ -1,5 +1,6 @@
 use std::fs;
 use std::sync::Mutex;
+use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::App;
 
 use crate::data;
@@ -29,6 +30,9 @@ pub struct AppStateJson {
     status: String,
     explore_result: Option<ExploreResult>,
 
+    // for client state
+    now: u32,
+
     // via game internal methods
     turn_is_player: bool,
     is_ended: bool,
@@ -40,15 +44,24 @@ impl AppState {
         let status = self.status.lock().unwrap().clone();
         let explore_result = self.explore_result.lock().unwrap().clone();
 
+        let now = (SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_millis()
+            % u32::MAX as u128) as u32;
+
         let turn_is_player = game.turn_is_player();
         let is_ended = game.is_ended();
 
         return AppStateJson {
+            game,
             status,
+            explore_result,
+
+            now,
+
             turn_is_player,
             is_ended,
-            game,
-            explore_result,
         };
     }
 
