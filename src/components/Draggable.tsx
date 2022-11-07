@@ -18,7 +18,6 @@ export function Draggable(props: Props) {
   const [state] = useAppState();
   const state_now = React.useRef(state.now);
   if (state_now.current !== state.now) {
-    // console.debug('[Draggable]', 'reset', state.now);
     state_now.current = state.now;
     persist_style.current = undefined;
   }
