@@ -6,17 +6,19 @@ import BackgroundBlue from './background-blue.png';
 import BackgroundRed from './background-red.png';
 
 import { Draggable } from 'src/components/Draggable';
-import { useAppState } from 'src/core/AppStateContext';
+import * as AppState from 'src/core/AppStateContext';
 import { useClientState } from 'src/core/ClientStateContext';
 import { Card as TCard } from 'src/core/AppState';
 
 type Props = TCard & {
+  index?: number;
   board?: boolean;
   highlight?: boolean;
 };
 
 export function Card(props: Props) {
-  const [state] = useAppState();
+  const [state] = AppState.useAppState();
+  const game_command = AppState.useGameCommand();
 
   const id = props.name;
   const image_id = props.id;
@@ -43,7 +45,20 @@ export function Card(props: Props) {
     draggable = false;
   }
 
-  return <DraggableCard {...{ id, image_id, owner, draggable, highlight }} />;
+  let onClick;
+  if (state.status === AppState.Status.chaos_select) {
+    draggable = false;
+
+    onClick = async function handleClick() {
+      // console.debug('[Card]', props.id, 'handleClick');
+
+      const card = props.index;
+      await game_command('chaos_select', { card });
+      await game_command('explore');
+    };
+  }
+
+  return <DraggableCard {...{ id, image_id, owner, draggable, highlight, onClick }} />;
 }
 
 type InternalProps = {
@@ -52,6 +67,7 @@ type InternalProps = {
   owner: 'player' | 'npc' | 'none';
   draggable?: boolean;
   highlight?: boolean;
+  onClick?(): void;
 };
 
 function DraggableCard(props: InternalProps) {
@@ -71,6 +87,31 @@ function DraggableCard(props: InternalProps) {
   }
 
   return <CardInternal {...props} />;
+}
+
+function CardInternal(props: InternalProps) {
+  const x_offset = -1 * card_style.width * (props.image_id - 1);
+  const background = getBackground(props.owner);
+
+  const card_size = Card.useCardSize();
+  const [client_state] = useClientState();
+
+  return (
+    <button className="relative" style={{ ...card_size }} onClick={props.onClick}>
+      <Image {...background} alt={background.alt} layout="fill" priority />
+
+      <div
+        className="absolute top-0 left-0"
+        style={{
+          ...style.spritesheet,
+          ...card_style,
+          backgroundPositionX: x_offset,
+          transform: `scale(${client_state.scale})`,
+          transformOrigin: 'top left',
+        }}
+      />
+    </button>
+  );
 }
 
 type HightlightProps = {
@@ -97,31 +138,6 @@ Card.Highlight = function Highlight(props: HightlightProps) {
     </div>
   );
 };
-
-function CardInternal(props: InternalProps) {
-  const x_offset = -1 * card_style.width * (props.image_id - 1);
-  const background = getBackground(props.owner);
-
-  const card_size = Card.useCardSize();
-  const [client_state] = useClientState();
-
-  return (
-    <div className="relative" style={{ ...card_size }}>
-      <Image {...background} alt={background.alt} layout="fill" priority />
-
-      <div
-        className="absolute top-0 left-0"
-        style={{
-          ...style.spritesheet,
-          ...card_style,
-          backgroundPositionX: x_offset,
-          transform: `scale(${client_state.scale})`,
-          transformOrigin: 'top left',
-        }}
-      />
-    </div>
-  );
-}
 
 function EmptyCard() {
   const card_size = Card.useCardSize();

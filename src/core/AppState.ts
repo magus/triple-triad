@@ -1,5 +1,5 @@
 export type AppState = {
-  status: string;
+  status: null | keyof typeof Status;
   game: Game;
   explore_result: null | ExploreResult;
 
@@ -8,6 +8,11 @@ export type AppState = {
   turn_is_player: boolean;
   is_ended: boolean;
 };
+
+export enum Status {
+  none = 'none',
+  chaos_select = 'chaos_select',
+}
 
 type ExploreResult = {
   total_depth_moves: number;

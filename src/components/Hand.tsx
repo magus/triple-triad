@@ -50,7 +50,8 @@ export function Hand(props: Props) {
     const card = props.cards[i];
 
     const highlight = props.highlight === i;
-    row.push(<Card key={key()} {...card} highlight={highlight} />);
+
+    row.push(<Card key={key()} {...card} highlight={highlight} index={i} />);
 
     if (i && i % 3 === 2) {
       finishRow();

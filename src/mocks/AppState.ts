@@ -1,7 +1,7 @@
 import { AppState } from 'src/core/AppState';
 
 export const IdleImperial: AppState = {
-  status: 'setup',
+  status: null,
   explore_result: null,
   now: 1364386715,
   turn_is_player: true,
