@@ -6,12 +6,12 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 
 | Rule         | Game | UI   |
 | :---         | ---: | ---: |
-| roulette     | ✅   | ❌   |
+| roulette     | -    | ❌   |
 | all_open     | ✅   | ❌   |
 | three_open   | ✅   | ❌   |
-| same         | ✅   | ❌   |
+| same         | ✅   | ✅   |
 | sudden_death | ✅   | ❌   |
-| plus         | ✅   | ❌   |
+| plus         | ✅   | ✅   |
 | random       | ✅   | ❌   |
 | order        | ✅   | ❌   |
 | chaos        | ✅   | ✅   |
