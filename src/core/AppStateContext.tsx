@@ -2,9 +2,11 @@ import * as React from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 
 import { isTauriApp } from 'src/core/isTauriApp';
-import { AppState } from 'src/core/AppState';
+import { AppState, Status as AppStateStatus } from 'src/core/AppState';
 
 // hook tuple because we return React.useState
+
+export { AppStateStatus as Status };
 
 type ContextValue = NullContextValue | ValidContextValue;
 type ValidContextValue = [AppState, React.Dispatch<React.SetStateAction<AppState>>];

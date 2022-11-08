@@ -37,6 +37,7 @@ function MaybeGame() {
   return (
     <DragZone>
       <div className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
+        <Status />
         <Actions />
 
         <div className="h-4" />
@@ -97,7 +98,30 @@ function DragZone(props: DragZoneProps) {
   return <DndContext onDragEnd={handleDragEnd}>{props.children}</DndContext>;
 }
 
+function Status() {
+  const [state] = AppState.useAppState();
+
+  return (
+    // border-4 border-white
+    <div className="flex h-32 items-center justify-center text-4xl">
+      {(function () {
+        switch (state.status) {
+          case AppState.Status.chaos_select:
+            return (
+              <span>
+                Select the card randomly selected by <span className="font-bold">Chaos</span>
+              </span>
+            );
+          default:
+            return null;
+        }
+      })()}
+    </div>
+  );
+}
+
 function Actions() {
+  const [state] = AppState.useAppState();
   const game_command = AppState.useGameCommand();
 
   return (
@@ -108,7 +132,19 @@ function Actions() {
       <div className="w-2" />
       <Button onClick={() => game_command('start')}>start</Button>
       <div className="w-2" />
-      <Button color="green" onClick={() => game_command('explore')}>
+      <Button
+        color="green"
+        onClick={async () => {
+          if (state.turn_is_player && state.game.rules.chaos && !state.game.chaos_card) {
+            // set status to chaos to select chaos card for better search
+            console.debug('🎲 select chaos card');
+            const status = AppState.Status.chaos_select;
+            game_command('status', { status });
+          } else {
+            game_command('explore');
+          }
+        }}
+      >
         explore
       </Button>
       <div className="w-2" />

@@ -11,7 +11,7 @@ pub struct AppState {
     // that means we Mutex fields so we can change their values
     // this gives us a way to edit shared game state
     // accessible via commands (invoke) and also rust app handles
-    pub status: Mutex<String>,
+    pub status: Mutex<Option<String>>,
     pub game: Mutex<Game>,
     pub setup_game: Mutex<Game>,
     pub explore_result: Mutex<Option<ExploreResult>>,
@@ -27,7 +27,7 @@ pub struct AppState {
 pub struct AppStateJson {
     // from app state
     game: Game,
-    status: String,
+    status: Option<String>,
     explore_result: Option<ExploreResult>,
 
     // for client state
@@ -65,9 +65,9 @@ impl AppState {
         };
     }
 
-    pub fn set_status(&self, value: &str) {
-        let mut status = self.status.lock().unwrap();
-        *status = value.to_string();
+    pub fn set_status(&self, value: Option<String>) {
+        let mut status_mutex = self.status.lock().unwrap();
+        *status_mutex = value;
     }
 
     pub fn set_game(&self, game: Game) {
@@ -106,7 +106,7 @@ impl AppState {
 
     pub fn new() -> AppState {
         AppState {
-            status: Mutex::new("setup".into()),
+            status: Mutex::new(None),
             game: Mutex::new(Game::new()),
             setup_game: Mutex::new(Game::new()),
             explore_result: Mutex::new(None),

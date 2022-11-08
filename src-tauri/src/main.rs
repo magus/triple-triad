@@ -18,12 +18,14 @@ fn main() {
         .manage(AppState::new())
         .setup(app_main)
         .invoke_handler(tauri::generate_handler![
+            ui::commands::status::status,
             ui::commands::state::state,
             ui::commands::set_deck::set_deck,
             ui::commands::set_npc::set_npc,
             ui::commands::start::start,
             ui::commands::explore::explore,
             ui::commands::execute_turn::execute_turn,
+            ui::commands::chaos_select::chaos_select,
             ui::commands::reset::reset,
         ])
         .run(tauri::generate_context!())

@@ -14,13 +14,15 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | plus         | ✅   | ❌   |
 | random       | ✅   | ❌   |
 | orer         | ✅   | ❌   |
-| chaos        | ✅   | ❌   |
+| chaos        | ✅   | ✅   |
 | reverse      | ❌   | ❌   |
 | fallen_ace   | ❌   | ❌   |
 | ascension    | ❌   | ❌   |
 | descension   | ❌   | ❌   |
 | swap         | ✅   | ❌   |
 | draft        | -    | ❌   |
+
+> **[Find NPCs for testing different rules](https://arrtripletriad.com/en/npcs)**
 
 - [setup isolation pattern for IPC between tauri backend and next frontend](https://tauri.app/v1/references/architecture/inter-process-communication/isolation)
 
