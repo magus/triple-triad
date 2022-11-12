@@ -4,7 +4,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::App;
 
 use crate::data;
-use crate::data::npcs::Npc;
+use crate::data::Npc;
 use crate::game::{ExploreResult, Game};
 
 pub struct AppState {
@@ -90,7 +90,7 @@ impl AppState {
         *explore_result_mutex = explore_result;
     }
 
-    pub fn set_npc(&self, npc: Option<data::npcs::Npc>) {
+    pub fn set_npc(&self, npc: Option<Npc>) {
         let mut npc_mutex = self.npc.lock().unwrap();
         *npc_mutex = npc;
     }
