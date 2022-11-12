@@ -3,6 +3,7 @@ import { AppState } from 'src/core/AppState';
 export const IdleImperial: AppState = {
   status: null,
   explore_result: null,
+  npc: null,
   now: 1364386715,
   turn_is_player: true,
   is_ended: false,
