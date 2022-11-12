@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { DndContext } from '@dnd-kit/core';
 
-import { Hand } from 'src/components/Hand';
+import * as Hand from 'src/components/Hand';
 import { Board } from 'src/components/Board';
+import * as Status from 'src/components/Status';
 import { Button } from 'src/components/Button';
 import { isTauriApp } from 'src/core/isTauriApp';
 import * as MockAppState from 'src/mocks/AppState';
@@ -37,7 +38,7 @@ function MaybeGame() {
   return (
     <DragZone>
       <div className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
-        <Status />
+        <Status.Game />
         <Actions />
 
         <div className="h-4" />
@@ -96,28 +97,6 @@ function DragZone(props: DragZoneProps) {
   }
 
   return <DndContext onDragEnd={handleDragEnd}>{props.children}</DndContext>;
-}
-
-function Status() {
-  const [state] = AppState.useAppState();
-
-  return (
-    // border-4 border-white
-    <div className="flex h-32 items-center justify-center text-4xl">
-      {(function () {
-        switch (state.status) {
-          case AppState.Status.chaos_select:
-            return (
-              <span>
-                Select the card randomly selected by <span className="font-bold">Chaos</span>
-              </span>
-            );
-          default:
-            return null;
-        }
-      })()}
-    </div>
-  );
 }
 
 function Actions() {
@@ -190,7 +169,10 @@ function GameBoard() {
 
   return (
     <div className="flex flex-row items-start px-16" id="board-container">
-      <Hand.Player />
+      <div>
+        <Status.Player />
+        <Hand.Player />
+      </div>
 
       <div className="ml-4" />
 
@@ -198,7 +180,10 @@ function GameBoard() {
 
       <div className="ml-4" />
 
-      <Hand.Computer />
+      <div>
+        <Status.Computer />
+        <Hand.Computer />
+      </div>
 
       <style>{style}</style>
     </div>
