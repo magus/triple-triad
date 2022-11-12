@@ -2,6 +2,7 @@ export type AppState = {
   status: null | keyof typeof Status;
   game: Game;
   explore_result: null | ExploreResult;
+  npc: null | Npc;
 
   now: number;
 
@@ -12,7 +13,15 @@ export type AppState = {
 export enum Status {
   none = 'none',
   chaos_select = 'chaos_select',
+  all_open = 'all_open',
 }
+
+type Npc = {
+  id: string;
+  name: string;
+  //  cards: Vec<Card>;
+  //  rules: Vec<RuleJson>;
+};
 
 type ExploreResult = {
   total_depth_moves: number;

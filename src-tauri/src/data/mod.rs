@@ -1,5 +1,5 @@
 mod cards;
-mod npcs;
+pub mod npcs;
 mod rules;
 
 pub use self::cards::CardData;
