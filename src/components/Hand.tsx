@@ -1,24 +1,26 @@
+import React from 'react';
 import { Card } from 'src/components/Card';
-import { useAppState } from 'src/core/AppStateContext';
+import * as AppState from 'src/core/AppStateContext';
+import { Button } from 'src/components/Button';
 import { useExploreResult } from 'src/hooks/useExploreResult';
 
-Hand.Player = function Hand_Player() {
-  const [state] = useAppState();
+export function Player() {
+  const [state] = AppState.useAppState();
   const explore_result = useExploreResult();
 
   const highlight = explore_result?.card;
   const cards = state.game.player.cards;
 
   return <Hand {...{ cards, highlight }} />;
-};
+}
 
-Hand.Computer = function Hand_Computer() {
-  const [state] = useAppState();
+export function Computer() {
+  const [state] = AppState.useAppState();
 
   const cards = state.game.computer.cards;
 
   return <Hand {...{ cards }} />;
-};
+}
 
 type Props = {
   highlight?: number;
@@ -27,7 +29,7 @@ type Props = {
 
 type CardProps = React.ComponentProps<typeof Card>;
 
-export function Hand(props: Props) {
+function Hand(props: Props) {
   const children: Array<React.ReactNode> = [];
 
   let row: Array<React.ReactNode> = [];
