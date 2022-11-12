@@ -19,7 +19,7 @@ export enum Status {
 type Npc = {
   id: string;
   name: string;
-  //  cards: Vec<Card>;
+  cards: Array<Card>;
   //  rules: Vec<RuleJson>;
 };
 

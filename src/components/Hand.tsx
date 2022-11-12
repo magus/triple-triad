@@ -17,7 +17,9 @@ export function Player() {
 export function Computer() {
   const [state] = AppState.useAppState();
 
-  const cards = state.game.computer.cards;
+  const game_cards = state.game.computer.cards;
+  const card_count = state.npc?.cards.length;
+  const cards = game_cards.slice(0, card_count);
 
   return <Hand {...{ cards }} />;
 }
