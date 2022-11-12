@@ -4,6 +4,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::App;
 
 use crate::data;
+use crate::data::npcs::Npc;
 use crate::game::{ExploreResult, Game};
 
 pub struct AppState {
@@ -15,6 +16,7 @@ pub struct AppState {
     pub game: Mutex<Game>,
     pub setup_game: Mutex<Game>,
     pub explore_result: Mutex<Option<ExploreResult>>,
+    pub npc: Mutex<Option<Npc>>,
 
     // shared instances, created once and reused
     pub rule_data: Mutex<Option<data::RuleData>>,
@@ -29,6 +31,7 @@ pub struct AppStateJson {
     game: Game,
     status: Option<String>,
     explore_result: Option<ExploreResult>,
+    npc: Option<Npc>,
 
     // for client state
     now: u32,
@@ -43,6 +46,7 @@ impl AppState {
         let game = self.game.lock().unwrap().clone();
         let status = self.status.lock().unwrap().clone();
         let explore_result = self.explore_result.lock().unwrap().clone();
+        let npc = self.npc.lock().unwrap().clone();
 
         let now = (SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -57,6 +61,7 @@ impl AppState {
             game,
             status,
             explore_result,
+            npc,
 
             now,
 
@@ -85,6 +90,11 @@ impl AppState {
         *explore_result_mutex = explore_result;
     }
 
+    pub fn set_npc(&self, npc: Option<data::npcs::Npc>) {
+        let mut npc_mutex = self.npc.lock().unwrap();
+        *npc_mutex = npc;
+    }
+
     pub fn init_data(&self, app: &App) {
         let rule_data = data::RuleData::read(load_resource(app, "../data/game/rules.json"));
         let card_data = data::CardData::read(load_resource(app, "../data/game/cards.json"));
@@ -110,6 +120,7 @@ impl AppState {
             game: Mutex::new(Game::new()),
             setup_game: Mutex::new(Game::new()),
             explore_result: Mutex::new(None),
+            npc: Mutex::new(None),
 
             rule_data: Mutex::new(None),
             card_data: Mutex::new(None),

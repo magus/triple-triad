@@ -15,6 +15,10 @@ pub async fn set_npc(search: &str, app_handle: tauri::AppHandle) -> Result<AppSt
     let npc_data = npc_data_ref.as_ref().unwrap().as_ref().unwrap();
 
     let npc = npc_data.search(search).first().unwrap().clone();
+
+    // capture selected npc
+    state.set_npc(Some(npc.clone()));
+
     game.computer.cards_from(npc.cards.clone());
     game.rules.from(&npc.rules);
 

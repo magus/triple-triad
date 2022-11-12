@@ -13,10 +13,9 @@ pub struct NpcJson {
     rules: Vec<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Npc {
-    #[allow(dead_code)]
-    id: String,
+    pub id: String,
     pub name: String,
     pub cards: Vec<Card>,
     pub rules: Vec<RuleJson>,
