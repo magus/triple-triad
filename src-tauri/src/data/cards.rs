@@ -66,6 +66,10 @@ impl CardData {
             cards_map.insert(card_json.id.clone(), card_json.clone());
         }
 
+        cards_list.sort_by(|a, b| {
+            return a.name.to_lowercase().cmp(&b.name.to_lowercase());
+        });
+
         return CardData {
             cards_list,
             cards_map,
