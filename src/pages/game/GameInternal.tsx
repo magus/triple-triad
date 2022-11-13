@@ -112,7 +112,8 @@ function Actions() {
         onClick={() => {
           // game_command('set_npc', { search: 'idle' })
           // game_command('set_npc', { search: 'master' })
-          game_command('set_npc', { search: 'memeroon' });
+          // game_command('set_npc', { search: 'memeroon' });
+          game_command('set_npc', { search: 'mother' });
         }}
       >
         set_npc

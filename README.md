@@ -24,7 +24,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | :---         | ---: | ---: |
 | roulette     | -    | ❌   |
 | all_open     | ✅   | ✅   |
-| three_open   | ✅   | ❌   |
+| three_open   | ✅   | ✅   |
 | same         | ✅   | ✅   |
 | sudden_death | ✅   | ❌   |
 | plus         | ✅   | ✅   |

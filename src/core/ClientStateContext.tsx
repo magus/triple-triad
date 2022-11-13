@@ -5,6 +5,7 @@ export type ClientState = {
   scale: number;
   explore_result_index: number;
   all_open_select: Set<number>;
+  three_open_select: Set<number>;
 };
 
 // hook tuple because we return React.useState
@@ -23,6 +24,7 @@ function DefaultClientState() {
     scale: 1,
     explore_result_index: 0,
     all_open_select: new Set([]),
+    three_open_select: new Set([]),
   };
 }
 
@@ -54,7 +56,10 @@ export function useReset() {
   function reset() {
     set_state((current_state) => {
       const next_state = { ...current_state };
+
       next_state.all_open_select = new Set([]);
+      next_state.three_open_select = new Set([]);
+
       return next_state;
     });
   }
@@ -94,6 +99,35 @@ export function useAllOpen() {
       }
 
       next_state.all_open_select = set;
+
+      return next_state;
+    });
+  }
+
+  return { done, selected, toggle };
+}
+
+export function useThreeOpen() {
+  const [state, set_state] = useClientState();
+  const [app_state] = AppState.useAppState();
+
+  const selected = state.three_open_select;
+  const done = selected.size === 3;
+
+  function toggle(index) {
+    set_state((current_state) => {
+      const next_state = { ...current_state };
+      const set = new Set(Array.from(next_state.three_open_select));
+
+      if (set.has(index)) {
+        set.delete(index);
+      } else {
+        if (!done) {
+          set.add(index);
+        }
+      }
+
+      next_state.three_open_select = set;
 
       return next_state;
     });

@@ -9,3 +9,4 @@ pub mod set_npc;
 pub mod start;
 pub mod state;
 pub mod status;
+pub mod three_open;

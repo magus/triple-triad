@@ -39,7 +39,8 @@ export function Player() {
 
 export function Computer() {
   const [state] = AppState.useAppState();
-  const allOpen = ClientState.useAllOpen();
+  const all_open = ClientState.useAllOpen();
+  const three_open = ClientState.useThreeOpen();
   const game_command = AppState.useGameCommand();
 
   const name = state?.npc?.name;
@@ -53,10 +54,27 @@ export function Computer() {
               Select the cards revealed by <span className="font-bold">All Open</span>
             </span>
             <Button
-              disabled={!allOpen.done}
+              disabled={!all_open.done}
               onClick={async () => {
-                const cards = Array.from(allOpen.selected);
+                const cards = Array.from(all_open.selected);
                 await game_command('all_open', { cards });
+              }}
+            >
+              Confirm
+            </Button>
+          </div>
+        );
+      case AppState.Status.three_open:
+        return (
+          <div className="flex flex-row">
+            <span>
+              Select the cards revealed by <span className="font-bold">Three Open</span>
+            </span>
+            <Button
+              disabled={!three_open.done}
+              onClick={async () => {
+                const cards = Array.from(three_open.selected);
+                await game_command('three_open', { cards });
               }}
             >
               Confirm

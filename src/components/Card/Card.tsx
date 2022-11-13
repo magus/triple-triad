@@ -20,7 +20,8 @@ type Props = TCard & {
 export function Card(props: Props) {
   const [state] = AppState.useAppState();
   const game_command = AppState.useGameCommand();
-  const allOpen = ClientState.useAllOpen();
+  const all_open = ClientState.useAllOpen();
+  const three_open = ClientState.useThreeOpen();
 
   const id = props.name;
   const image_id = props.id;
@@ -69,13 +70,20 @@ export function Card(props: Props) {
     const card = props.index;
 
     if (typeof card === 'number') {
-      selected = props.is_guaranteed || allOpen.selected.has(card);
+      selected = props.is_guaranteed || all_open.selected.has(card);
 
       onClick = () => {
         if (!props.is_guaranteed) {
-          allOpen.toggle(card);
+          all_open.toggle(card);
         }
       };
+    }
+  } else if (!props.is_player && state.status === AppState.Status.three_open) {
+    const card = props.index;
+
+    if (typeof card === 'number') {
+      selected = three_open.selected.has(card);
+      onClick = () => three_open.toggle(card);
     }
   }
 
