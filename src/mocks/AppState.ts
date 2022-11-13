@@ -7,6 +7,9 @@ export const IdleImperial: AppState = {
   now: 1364386715,
   turn_is_player: true,
   is_ended: false,
+  persist_data: {
+    deck_list: [],
+  },
 
   game: {
     board: [

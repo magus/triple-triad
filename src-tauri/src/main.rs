@@ -20,6 +20,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             ui::commands::status::status,
             ui::commands::state::state,
+            ui::commands::search_card::search_card,
+            ui::commands::search_npc::search_npc,
+            ui::commands::save_deck::save_deck,
             ui::commands::set_deck::set_deck,
             ui::commands::set_npc::set_npc,
             ui::commands::start::start,

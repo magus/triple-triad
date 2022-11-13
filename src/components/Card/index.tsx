@@ -1,1 +1,1 @@
-export { card_style, Card } from './Card';
+export { card_style, Card, CardInternal } from './Card';

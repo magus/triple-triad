@@ -40,9 +40,6 @@ function MaybeGame() {
     <DragZone>
       <div className="ml-[50%] inline-block -translate-x-1/2" id="game-container">
         <Status.Game />
-        <Actions />
-
-        <div className="h-4" />
 
         <GameBoard />
 
@@ -97,73 +94,6 @@ function DragZone(props: DragZoneProps) {
   }
 
   return <DndContext onDragEnd={handleDragEnd}>{props.children}</DndContext>;
-}
-
-function Actions() {
-  const [state] = AppState.useAppState();
-  const game_command = AppState.useGameCommand();
-  const client_reset = ClientState.useReset();
-
-  return (
-    <div className="flex w-full flex-row justify-center">
-      <Button onClick={() => game_command('set_deck')}>set_deck</Button>
-      <div className="w-2" />
-      <Button
-        onClick={() => {
-          // game_command('set_npc', { search: 'idle' })
-
-          // all open
-          // game_command('set_npc', { search: 'master' })
-          // game_command('set_npc', { search: 'memeroon' });
-
-          // three open
-          // game_command('set_npc', { search: 'mother' });
-
-          // sudden death
-          // game_command('set_npc', { search: 'ruhtwyda' });
-
-          // swap
-          // game_command('set_npc', { search: 'voracious' });
-
-          // roulette
-          // game_command('set_npc', { search: 'tsuzura' });
-
-          // order
-          game_command('set_npc', { search: 'dominiac' });
-        }}
-      >
-        set_npc
-      </Button>
-      <div className="w-2" />
-      <Button onClick={() => game_command('start')}>start</Button>
-      <div className="w-2" />
-      <Button
-        color="green"
-        onClick={async () => {
-          if (state.turn_is_player && state.game.rules.chaos && !state.game.chaos_card) {
-            // set status to chaos to select chaos card for better search
-            console.debug('🎲 select chaos card');
-            const status = AppState.Status.chaos_select;
-            game_command('status', { status });
-          } else {
-            game_command('explore');
-          }
-        }}
-      >
-        explore
-      </Button>
-      <div className="w-2" />
-      <Button
-        color="red"
-        onClick={() => {
-          client_reset();
-          game_command('reset');
-        }}
-      >
-        reset
-      </Button>
-    </div>
-  );
 }
 
 function GameBoard() {
