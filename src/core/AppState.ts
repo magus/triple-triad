@@ -13,6 +13,7 @@ export type AppState = {
 export enum Status {
   setup = 'setup',
   chaos_select = 'chaos_select',
+  roulette = 'roulette',
   all_open = 'all_open',
   three_open = 'three_open',
   swap = 'swap',

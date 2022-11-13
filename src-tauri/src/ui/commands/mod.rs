@@ -5,6 +5,7 @@ pub mod explore;
 pub mod post_game;
 pub mod pre_game;
 pub mod reset;
+pub mod roulette;
 pub mod set_deck;
 pub mod set_npc;
 pub mod start;

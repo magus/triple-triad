@@ -24,6 +24,7 @@ fn main() {
             ui::commands::set_npc::set_npc,
             ui::commands::start::start,
             ui::commands::pre_game::pre_game,
+            ui::commands::roulette::roulette,
             ui::commands::all_open::all_open,
             ui::commands::three_open::three_open,
             ui::commands::swap::swap,
