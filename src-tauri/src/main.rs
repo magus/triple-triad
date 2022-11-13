@@ -49,26 +49,5 @@ fn app_main(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let window = app.get_window("main").unwrap();
     window.open_devtools();
 
-    // TODO
-    // - display game rules
-    //      - display disabled rules dimmed / opacity
-    //      - images in data/game/data/ui/icon/121000/en/121611_hr1.png - 121624_hr1.png
-    //
-    // - setup pages for various tasks (e.g. select npc, input cards, etc.)
-    //
-    // - game simulation flow
-    //      - setup game
-    //          - select card deck (allow creating new decks here)
-    //              - input card deck
-    //          - select npc opponent
-    //      - pre game
-    //          - select first player
-    //          - swap, open, etc.
-    //      - alternate game turns
-    //      - post game
-    //          - suddent death, etc.
-    //      - rematch?
-    //
-
     Ok(())
 }
