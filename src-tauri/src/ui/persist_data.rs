@@ -29,7 +29,8 @@ impl PersistData {
 
     pub fn read(app: &App) -> PersistData {
         let app_dir = path::app_dir(&app.config()).unwrap();
-        let persist_json_path = Path::new(&app_dir).join("data").join("persist.json");
+        let data_dir = Path::new(&app_dir).join("data");
+        let persist_json_path = Path::new(&data_dir).join("persist.json");
 
         println!("[app_dir={}]", app_dir.display());
         println!("[persist_json_path={}]", persist_json_path.display());
@@ -51,6 +52,7 @@ impl PersistData {
             let json = serde_json::to_string(&data).unwrap();
 
             println!("[json={json}]");
+            fs::create_dir_all(&data_dir).unwrap();
             fs::write(persist_json_path, json).unwrap();
 
             return data;
