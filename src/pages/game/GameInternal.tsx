@@ -24,7 +24,8 @@ export function GameInternal() {
 
 function MaybeGame() {
   const [state, set_state] = AppState.useMaybeAppState();
-  console.debug({ state });
+  const status = state?.status;
+  console.debug({ status, state });
   // console.debug(JSON.stringify(state));
 
   if (!state) {
@@ -122,7 +123,10 @@ function Actions() {
           // game_command('set_npc', { search: 'ruhtwyda' });
 
           // swap
-          game_command('set_npc', { search: 'voracious' });
+          // game_command('set_npc', { search: 'voracious' });
+
+          // roulette
+          game_command('set_npc', { search: 'tsuzura' });
         }}
       >
         set_npc
@@ -213,11 +217,4 @@ function GameBoard() {
       <style>{style}</style>
     </div>
   );
-}
-
-// import Link from 'next/link';
-// <Link href="/search-npc">Search NPCs</Link>
-
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
 }

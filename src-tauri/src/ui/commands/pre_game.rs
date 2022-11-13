@@ -45,7 +45,9 @@ pub fn pre_game_internal(app_handle: &tauri::AppHandle) -> Result<AppStateJson, 
 
     // check pre_game and compare against game.rules
     // ensure each rule is setup by setting it as status to handle in client
-    if game.rules.all_open && !pre_game.all_open {
+    if game.rules.roulette && !pre_game.roulette {
+        state.set_status(Some("roulette".into()));
+    } else if game.rules.all_open && !pre_game.all_open {
         state.set_status(Some("all_open".into()));
     } else if game.rules.three_open && !pre_game.three_open {
         state.set_status(Some("three_open".into()));

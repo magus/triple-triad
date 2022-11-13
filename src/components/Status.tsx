@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Button } from 'src/components/Button';
+import { Roulette } from 'src/components/Roulette';
 import * as AppState from 'src/core/AppStateContext';
 import * as ClientState from 'src/core/ClientStateContext';
 
@@ -9,6 +10,9 @@ export function Game() {
 
   const message = (function () {
     switch (state.status) {
+      case AppState.Status.roulette:
+        return <Roulette />;
+
       default:
         return null;
     }
