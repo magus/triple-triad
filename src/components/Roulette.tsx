@@ -28,6 +28,7 @@ export function Roulette() {
             {Object.keys(rules).map((rule) => {
               if (rule === 'roulette') return null;
               if (rule === 'draft') return null;
+              if (rule === 'random') return null;
 
               const color = rules[rule] ? 'green' : 'gray';
 
