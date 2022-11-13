@@ -3,14 +3,24 @@ type Props = {
   className?: string;
   onClick?(): void;
   color?: keyof typeof Color;
+  disabled?: boolean;
 };
 
 export function Button(props: Props) {
   const color_className = get_color_className(props);
-  const className = `text-4xl rounded border-b-4  py-4 px-8 font-bold ${color_className} ${props.className}`;
+
+  const classes = [`text-4xl rounded border-b-4 py-4 px-8 font-bold ${color_className} ${props.className}`];
+
+  let onClick;
+
+  if (props.disabled) {
+    classes.push('opacity-40');
+  } else {
+    onClick = props.onClick;
+  }
 
   return (
-    <button className={className} onClick={props.onClick}>
+    <button className={classes.join(' ')} onClick={onClick}>
       {props.children}
     </button>
   );
