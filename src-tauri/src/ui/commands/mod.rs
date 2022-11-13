@@ -2,6 +2,7 @@ pub mod all_open;
 pub mod chaos_select;
 pub mod execute_turn;
 pub mod explore;
+pub mod post_game;
 pub mod pre_game;
 pub mod reset;
 pub mod set_deck;

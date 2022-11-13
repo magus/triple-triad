@@ -91,7 +91,6 @@ function DragZone(props: DragZoneProps) {
     const [card_id] = card_name.match(/\d+/);
     const card = +card_id;
 
-    console.debug({ card, square, isPlayer });
     // wait for execute to finish before updating
     await game_command('execute_turn', { card, square, isPlayer });
   }
@@ -111,9 +110,16 @@ function Actions() {
       <Button
         onClick={() => {
           // game_command('set_npc', { search: 'idle' })
+
+          // all open
           // game_command('set_npc', { search: 'master' })
           // game_command('set_npc', { search: 'memeroon' });
-          game_command('set_npc', { search: 'mother' });
+
+          // three open
+          // game_command('set_npc', { search: 'mother' });
+
+          // sudden death
+          game_command('set_npc', { search: 'ruhtwyda' });
         }}
       >
         set_npc

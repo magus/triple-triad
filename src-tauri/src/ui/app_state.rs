@@ -122,7 +122,7 @@ impl AppState {
 
     pub fn new() -> AppState {
         AppState {
-            status: Mutex::new(None),
+            status: Mutex::new(Some("setup".into())),
             game: Mutex::new(Game::new()),
             setup_game: Mutex::new(Game::new()),
             explore_result: Mutex::new(None),

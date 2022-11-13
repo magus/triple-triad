@@ -11,7 +11,7 @@ export type AppState = {
 };
 
 export enum Status {
-  none = 'none',
+  setup = 'setup',
   chaos_select = 'chaos_select',
   all_open = 'all_open',
   three_open = 'three_open',

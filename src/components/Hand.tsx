@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'src/components/Card';
+import { Tile } from 'src/components/Tile';
 import * as AppState from 'src/core/AppStateContext';
-import { Button } from 'src/components/Button';
 import { useExploreResult } from 'src/hooks/useExploreResult';
 
 export function Player() {
@@ -39,8 +39,6 @@ export function Computer() {
 
   const cards = game_cards.slice(0, card_count);
 
-  console.debug({ guaranteed_card_count, card_count, cards });
-
   return <Hand {...{ cards }} />;
 }
 
@@ -53,6 +51,8 @@ type CardProps = React.ComponentProps<typeof Card>;
 
 function Hand(props: Props) {
   const children: Array<React.ReactNode> = [];
+  const tile_dimensions = Tile.useDimensions();
+  const height = tile_dimensions.height * 3;
 
   let row: Array<React.ReactNode> = [];
 
@@ -86,5 +86,9 @@ function Hand(props: Props) {
 
   finishRow();
 
-  return <div className="flex flex-col items-center">{children}</div>;
+  return (
+    <div className="flex flex-col items-center" style={{ height }}>
+      {children}
+    </div>
+  );
 }
