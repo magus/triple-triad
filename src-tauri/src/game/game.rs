@@ -462,11 +462,20 @@ impl Game {
     pub fn is_flip(&self, placed: u8, impacted: u8) -> bool {
         // TODO take into consideration rules
 
+        let fallen_ace;
+        let normal;
+
+        // fallen ace
+        // 1 flips A; reverse A flips 1
         if self.rules.reverse {
-            return placed < impacted;
+            fallen_ace = placed == 10 && impacted == 1;
+            normal = placed < impacted;
+        } else {
+            fallen_ace = placed == 1 && impacted == 10;
+            normal = placed > impacted;
         }
 
-        return placed > impacted;
+        return fallen_ace || normal;
     }
 
     pub fn check_sides(&mut self, sides: [Option<ImpactPair>; 4], is_combo: bool) {

@@ -21,7 +21,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | order        | ✅   | ✅   |
 | chaos        | ✅   | ✅   |
 | reverse      | ✅   | ✅   |
-| fallen_ace   | ❌   | ❌   |
+| fallen_ace   | ✅   | ✅   |
 | ascension    | ❌   | ❌   |
 | descension   | ❌   | ❌   |
 | swap         | ✅   | ✅   |
