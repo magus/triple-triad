@@ -20,7 +20,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | random       | ✅   | ❌   |
 | order        | ✅   | ✅   |
 | chaos        | ✅   | ✅   |
-| reverse      | ❌   | ❌   |
+| reverse      | ✅   | ✅   |
 | fallen_ace   | ❌   | ❌   |
 | ascension    | ❌   | ❌   |
 | descension   | ❌   | ❌   |
