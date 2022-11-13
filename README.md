@@ -2,8 +2,7 @@
 can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com/lodestone/playguide/contentsguide/goldsaucer/tripletriad/)**?
 
 
-## todo
-
+## progress
 
 | Rule         | Game | UI   |
 | :---         | ---: | ---: |
