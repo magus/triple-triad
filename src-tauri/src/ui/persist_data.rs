@@ -42,7 +42,7 @@ impl PersistData {
             let data: PersistData =
                 serde_json::from_reader(file).expect("file should be proper JSON");
 
-            println!("[persist_data={:#?}]", data);
+            // println!("[persist_data={:#?}]", data);
 
             return data;
         } else {
@@ -51,7 +51,7 @@ impl PersistData {
             let data = PersistData { deck_list };
             let json = serde_json::to_string(&data).unwrap();
 
-            println!("[json={json}]");
+            // println!("[json={json}]");
             fs::create_dir_all(&data_dir).unwrap();
             fs::write(persist_json_path, json).unwrap();
 
