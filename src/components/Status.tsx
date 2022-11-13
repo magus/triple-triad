@@ -364,6 +364,17 @@ function SelectDeck(props: SelectDeckProps) {
     return (
       <div className="relative z-20 w-full">
         <div className="absolute rounded-md bg-neutral-900 p-16" style={{ width: 360 }}>
+          <div className="flex justify-end">
+            <button
+              className=""
+              onClick={() => {
+                set_creating(false);
+                set_card_results([]);
+              }}
+            >
+              ❌
+            </button>
+          </div>
           <div className="flex w-full flex-col items-start">
             <div className="mb-4 flex flex-row flex-wrap items-center justify-center">
               {create_deck.map((id) => {
