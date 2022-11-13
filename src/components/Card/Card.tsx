@@ -7,37 +7,46 @@ import BackgroundRed from './background-red.png';
 
 import { Draggable } from 'src/components/Draggable';
 import * as AppState from 'src/core/AppStateContext';
-import { useClientState } from 'src/core/ClientStateContext';
+import * as ClientState from 'src/core/ClientStateContext';
 import { Card as TCard } from 'src/core/AppState';
 
 type Props = TCard & {
   index?: number;
   board?: boolean;
   highlight?: boolean;
+  selected?: boolean;
 };
 
 export function Card(props: Props) {
   const [state] = AppState.useAppState();
   const game_command = AppState.useGameCommand();
+  const allOpen = ClientState.useAllOpen();
 
   const id = props.name;
   const image_id = props.id;
   const highlight = props.highlight;
 
   let owner;
-  let draggable;
+  let draggable = false;
 
   if (props.is_player) {
     owner = 'player';
-    draggable = state.turn_is_player === true;
   } else {
     owner = 'npc';
-    draggable = state.turn_is_player === false;
   }
 
-  // allow either player to act first for convenience
-  if (state.game.turn === 0) {
-    draggable = true;
+  // only setup draggable when status is turns
+  if (state.status === AppState.Status.turns) {
+    if (props.is_player) {
+      draggable = state.turn_is_player === true;
+    } else {
+      draggable = state.turn_is_player === false;
+    }
+
+    // allow either player to act first for convenience
+    if (state.game.turn === 0) {
+      draggable = true;
+    }
   }
 
   // ensure cards on board cannot be dragged
@@ -46,9 +55,9 @@ export function Card(props: Props) {
   }
 
   let onClick;
-  if (state.status === AppState.Status.chaos_select) {
-    draggable = false;
+  let selected;
 
+  if (state.status === AppState.Status.chaos_select) {
     onClick = async function handleClick() {
       // console.debug('[Card]', props.id, 'handleClick');
 
@@ -56,9 +65,21 @@ export function Card(props: Props) {
       await game_command('chaos_select', { card });
       await game_command('explore');
     };
+  } else if (!props.is_player && state.status === AppState.Status.all_open) {
+    const card = props.index;
+
+    if (typeof card === 'number') {
+      selected = props.is_guaranteed || allOpen.selected.has(card);
+
+      onClick = () => {
+        if (!props.is_guaranteed) {
+          allOpen.toggle(card);
+        }
+      };
+    }
   }
 
-  return <DraggableCard {...{ id, image_id, owner, draggable, highlight, onClick }} />;
+  return <DraggableCard {...{ id, image_id, owner, draggable, highlight, selected, onClick }} />;
 }
 
 type InternalProps = {
@@ -67,6 +88,7 @@ type InternalProps = {
   owner: 'player' | 'npc' | 'none';
   draggable?: boolean;
   highlight?: boolean;
+  selected?: boolean;
   onClick?(): void;
 };
 
@@ -94,10 +116,18 @@ function CardInternal(props: InternalProps) {
   const background = getBackground(props.owner);
 
   const card_size = Card.useCardSize();
-  const [client_state] = useClientState();
+  const [client_state] = ClientState.useClientState();
+
+  const container_classNames = ['relative'];
+
+  if (typeof props.selected === 'boolean') {
+    if (!props.selected) {
+      container_classNames.push('opacity-30');
+    }
+  }
 
   return (
-    <button className="relative" style={{ ...card_size }} onClick={props.onClick}>
+    <button className={container_classNames.join(' ')} style={{ ...card_size }} onClick={props.onClick}>
       <Image {...background} alt={background.alt} layout="fill" priority />
 
       <div
@@ -162,7 +192,7 @@ function getBackgroundProps(background) {
 }
 
 Card.useCardSize = function useCardSize() {
-  const [client_state] = useClientState();
+  const [client_state] = ClientState.useClientState();
 
   return {
     width: card_style.width * client_state.scale,

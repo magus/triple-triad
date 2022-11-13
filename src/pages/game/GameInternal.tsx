@@ -8,7 +8,7 @@ import { Button } from 'src/components/Button';
 import { isTauriApp } from 'src/core/isTauriApp';
 import * as MockAppState from 'src/mocks/AppState';
 import * as AppState from 'src/core/AppStateContext';
-import { useClientState } from 'src/core/ClientStateContext';
+import * as ClientState from 'src/core/ClientStateContext';
 import { MaybeEndOverlay } from 'src/components/MaybeEndOverlay';
 
 export function GameInternal() {
@@ -102,12 +102,21 @@ function DragZone(props: DragZoneProps) {
 function Actions() {
   const [state] = AppState.useAppState();
   const game_command = AppState.useGameCommand();
+  const client_reset = ClientState.useReset();
 
   return (
     <div className="flex w-full flex-row justify-center">
       <Button onClick={() => game_command('set_deck')}>set_deck</Button>
       <div className="w-2" />
-      <Button onClick={() => game_command('set_npc', { search: 'idle' })}>set_npc</Button>
+      <Button
+        onClick={() => {
+          // game_command('set_npc', { search: 'idle' })
+          // game_command('set_npc', { search: 'master' })
+          game_command('set_npc', { search: 'memeroon' });
+        }}
+      >
+        set_npc
+      </Button>
       <div className="w-2" />
       <Button onClick={() => game_command('start')}>start</Button>
       <div className="w-2" />
@@ -127,7 +136,13 @@ function Actions() {
         explore
       </Button>
       <div className="w-2" />
-      <Button color="red" onClick={() => game_command('reset')}>
+      <Button
+        color="red"
+        onClick={() => {
+          client_reset();
+          game_command('reset');
+        }}
+      >
         reset
       </Button>
     </div>
@@ -135,7 +150,7 @@ function Actions() {
 }
 
 function GameBoard() {
-  const [client_state, set_client_state] = useClientState();
+  const [client_state, set_client_state] = ClientState.useClientState();
   // console.debug({ client_state });
 
   // determine window size and scale
