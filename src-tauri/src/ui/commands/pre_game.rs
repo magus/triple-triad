@@ -50,6 +50,8 @@ pub fn pre_game_internal(app_handle: &tauri::AppHandle) -> Result<AppStateJson, 
     } else if game.rules.three_open && !pre_game.three_open {
         state.set_status(Some("three_open".into()));
     } else {
+        // unblocks the main game flow when status is None (null)
+        // allows dragging cards for executing turns
         state.set_status(None);
     }
 
