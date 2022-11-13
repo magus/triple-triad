@@ -804,24 +804,24 @@ impl Game {
 
         let player = Player {
             cards: [
-                Card::player("P0", 0, 2, 2, 2, 2, Card::TRIBE_NONE),
-                Card::player("P1", 0, 2, 2, 2, 2, Card::TRIBE_NONE),
-                Card::player("P2", 0, 2, 2, 2, 2, Card::TRIBE_NONE),
-                Card::player("P3", 0, 2, 2, 2, 2, Card::TRIBE_NONE),
-                Card::player("P4", 0, 2, 2, 2, 2, Card::TRIBE_NONE),
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
             ],
         };
 
         let computer = Computer {
             cards_used: 0,
             cards: [
-                Card::computer_guaranteed("C0", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
-                Card::computer_guaranteed("C1", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
-                Card::computer("C2", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
-                Card::computer("C3", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
-                Card::computer("C4", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
-                Card::computer("C5", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
-                Card::computer("C6", 0, 1, 1, 1, 1, Card::TRIBE_NONE),
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
+                card::EMPTY,
                 card::EMPTY,
                 card::EMPTY,
                 card::EMPTY,
