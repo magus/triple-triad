@@ -15,6 +15,7 @@ type Props = TCard & {
   board?: boolean;
   highlight?: boolean;
   selected?: boolean;
+  order?: boolean;
 };
 
 export function Card(props: Props) {
@@ -55,6 +56,11 @@ export function Card(props: Props) {
   // ensure cards on board cannot be dragged
   if (props.board) {
     draggable = false;
+  }
+
+  // if order specified only allow it as draggable
+  if (props.is_player && typeof props.order === 'boolean' && draggable) {
+    draggable = props.order;
   }
 
   let onClick;

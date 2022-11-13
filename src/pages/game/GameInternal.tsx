@@ -126,7 +126,10 @@ function Actions() {
           // game_command('set_npc', { search: 'voracious' });
 
           // roulette
-          game_command('set_npc', { search: 'tsuzura' });
+          // game_command('set_npc', { search: 'tsuzura' });
+
+          // order
+          game_command('set_npc', { search: 'dominiac' });
         }}
       >
         set_npc

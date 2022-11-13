@@ -11,7 +11,20 @@ export function Player() {
   const highlight = explore_result?.card;
   const cards = state.game.player.cards;
 
-  return <Hand {...{ cards, highlight }} />;
+  let order = (function find_order() {
+    if (state.game.rules.order) {
+      // only allow first non-empty card as draggable
+      for (let i = 0; i < state.game.player.cards.length; i++) {
+        const card = state.game.player.cards[i];
+
+        if (!card.is_empty) {
+          return i;
+        }
+      }
+    }
+  })();
+
+  return <Hand {...{ cards, highlight, order }} />;
 }
 
 export function Computer() {
@@ -43,6 +56,7 @@ export function Computer() {
 }
 
 type Props = {
+  order?: number;
   highlight?: number;
   cards: Array<CardProps>;
 };
@@ -74,8 +88,9 @@ function Hand(props: Props) {
     const card = props.cards[i];
 
     const highlight = props.highlight === i;
+    const order = props.order === i;
 
-    row.push(<Card key={key()} {...card} highlight={highlight} index={i} />);
+    row.push(<Card key={key()} {...card} highlight={highlight} order={order} index={i} />);
 
     if (i && i % 3 === 2) {
       finishRow();
