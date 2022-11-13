@@ -4,9 +4,6 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 
 ## todo
 
-- consider moving the Status prompts above the player hands
-  - since most actions are related to the cards in a players hand
-
 - all_open plan
   - `start` command should capture `setup_game` AND kickoff `pre_game` command
   - `pre_game` command should handle checking a new `app_state.setup.rules` field
