@@ -14,6 +14,7 @@ export enum Status {
   none = 'none',
   chaos_select = 'chaos_select',
   all_open = 'all_open',
+  turns = 'turns',
 }
 
 type Npc = {

@@ -1,6 +1,8 @@
+pub mod all_open;
 pub mod chaos_select;
 pub mod execute_turn;
 pub mod explore;
+pub mod pre_game;
 pub mod reset;
 pub mod set_deck;
 pub mod set_npc;

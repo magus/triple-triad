@@ -5,7 +5,7 @@ use tauri::App;
 
 use crate::data;
 use crate::data::Npc;
-use crate::game::{ExploreResult, Game};
+use crate::game::{ExploreResult, Game, Rules};
 
 pub struct AppState {
     // use interior mutability since the instance of AppState cannot change
@@ -17,6 +17,7 @@ pub struct AppState {
     pub setup_game: Mutex<Game>,
     pub explore_result: Mutex<Option<ExploreResult>>,
     pub npc: Mutex<Option<Npc>>,
+    pub pre_game: Mutex<Option<Rules>>,
 
     // shared instances, created once and reused
     pub rule_data: Mutex<Option<data::RuleData>>,
@@ -95,6 +96,11 @@ impl AppState {
         *npc_mutex = npc;
     }
 
+    pub fn set_pre_game(&self, pre_game: Option<Rules>) {
+        let mut pre_game_mutex = self.pre_game.lock().unwrap();
+        *pre_game_mutex = pre_game;
+    }
+
     pub fn init_data(&self, app: &App) {
         let rule_data = data::RuleData::read(load_resource(app, "../data/game/rules.json"));
         let card_data = data::CardData::read(load_resource(app, "../data/game/cards.json"));
@@ -121,6 +127,7 @@ impl AppState {
             setup_game: Mutex::new(Game::new()),
             explore_result: Mutex::new(None),
             npc: Mutex::new(None),
+            pre_game: Mutex::new(None),
 
             rule_data: Mutex::new(None),
             card_data: Mutex::new(None),

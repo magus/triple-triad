@@ -18,8 +18,28 @@ export function Computer() {
   const [state] = AppState.useAppState();
 
   const game_cards = state.game.computer.cards;
-  const card_count = state.npc?.cards.length;
+
+  let guaranteed_card_count = 0;
+
+  if (state.npc?.cards) {
+    for (const card of state.game.computer.cards) {
+      if (card.is_guaranteed) {
+        guaranteed_card_count++;
+      }
+    }
+  }
+
+  let card_count;
+
+  if (guaranteed_card_count === 5) {
+    card_count = 5;
+  } else {
+    card_count = state.npc?.cards.length;
+  }
+
   const cards = game_cards.slice(0, card_count);
+
+  console.debug({ guaranteed_card_count, card_count, cards });
 
   return <Hand {...{ cards }} />;
 }

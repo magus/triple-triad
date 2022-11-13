@@ -23,7 +23,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | Rule         | Game | UI   |
 | :---         | ---: | ---: |
 | roulette     | -    | ❌   |
-| all_open     | ✅   | ❌   |
+| all_open     | ✅   | ✅   |
 | three_open   | ✅   | ❌   |
 | same         | ✅   | ✅   |
 | sudden_death | ✅   | ❌   |
@@ -36,7 +36,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | ascension    | ❌   | ❌   |
 | descension   | ❌   | ❌   |
 | swap         | ✅   | ❌   |
-| draft        | -    | ❌   |
+| draft        | -    | -    |
 
 > **[Find NPCs for testing different rules](https://arrtripletriad.com/en/npcs)**
 

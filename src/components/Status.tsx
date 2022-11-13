@@ -2,31 +2,13 @@ import * as React from 'react';
 
 import { Button } from 'src/components/Button';
 import * as AppState from 'src/core/AppStateContext';
+import * as ClientState from 'src/core/ClientStateContext';
 
 export function Game() {
   const [state] = AppState.useAppState();
 
   const message = (function () {
     switch (state.status) {
-      case AppState.Status.chaos_select:
-        return (
-          <span>
-            Select the card randomly selected by <span className="font-bold">Chaos</span>
-          </span>
-        );
-      case AppState.Status.all_open:
-        return (
-          <span>
-            Select the cards revealed by <span className="font-bold">All Open</span>
-            <Button
-              onClick={() => {
-                console.debug('finalize all_open selection');
-              }}
-            >
-              Confirm
-            </Button>
-          </span>
-        );
       default:
         return null;
     }
@@ -46,19 +28,7 @@ export function Player() {
             Select the card randomly selected by <span className="font-bold">Chaos</span>
           </span>
         );
-      case AppState.Status.all_open:
-        return (
-          <span>
-            Select the cards revealed by <span className="font-bold">All Open</span>
-            <Button
-              onClick={() => {
-                console.debug('finalize all_open selection');
-              }}
-            >
-              Confirm
-            </Button>
-          </span>
-        );
+
       default:
         return null;
     }
@@ -69,17 +39,13 @@ export function Player() {
 
 export function Computer() {
   const [state] = AppState.useAppState();
+  const allOpen = ClientState.useAllOpen();
+  const game_command = AppState.useGameCommand();
 
   const name = state?.npc?.name;
 
   const message = (function () {
     switch (state.status) {
-      case AppState.Status.chaos_select:
-        return (
-          <span>
-            Select the card randomly selected by <span className="font-bold">Chaos</span>
-          </span>
-        );
       case AppState.Status.all_open:
         return (
           <div className="flex flex-row">
@@ -87,8 +53,10 @@ export function Computer() {
               Select the cards revealed by <span className="font-bold">All Open</span>
             </span>
             <Button
-              onClick={() => {
-                console.debug('finalize all_open selection');
+              disabled={!allOpen.done}
+              onClick={async () => {
+                const cards = Array.from(allOpen.selected);
+                await game_command('all_open', { cards });
               }}
             >
               Confirm
@@ -115,12 +83,13 @@ type Props = {
 };
 
 function Status(props: Props) {
-  const classNames = ['flex h-32 flex-col justify-start text-4xl'];
+  const status_classes = ['flex h-32 flex-col justify-start text-4xl'];
+  const name_classes = ['text-4xl font-bold uppercase'];
 
   if (props.debug) {
-    classNames.push('border-4 border-yellow-200 border-opacity-50');
+    status_classes.push('border-4 border-yellow-200 border-opacity-50');
   } else {
-    classNames.push('border-4 border-transparent');
+    status_classes.push('border-4 border-transparent');
   }
 
   let name;
@@ -129,13 +98,16 @@ function Status(props: Props) {
     switch (props.kind) {
       case 'computer':
         name = props.name;
-        return classNames.push('items-start text-red-500');
+        name_classes.push('text-red-500');
+        return status_classes.push('items-start ');
       case 'player':
         name = 'You';
-        return classNames.push('items-end text-blue-500');
+        name_classes.push('text-blue-500');
+        return status_classes.push('items-end ');
       case 'game':
       default:
-        return classNames.push('items-center text-white');
+        name_classes.push('text-white');
+        return status_classes.push('items-center ');
     }
   })();
 
@@ -143,8 +115,8 @@ function Status(props: Props) {
   // border-4 border-yellow-200 border-opacity-50
   return (
     <>
-      <div className={classNames.join(' ')}>
-        {!name ? null : <div className="text-4xl font-bold uppercase">{name}</div>}
+      <div className={status_classes.join(' ')}>
+        {!name ? null : <div className={name_classes.join(' ')}>{name}</div>}
 
         {props.children}
       </div>
