@@ -19,6 +19,8 @@ export function Game() {
 
 export function Player() {
   const [state] = AppState.useAppState();
+  const swap = ClientState.useSwap();
+  const game_command = AppState.useGameCommand();
 
   const message = (function () {
     switch (state.status) {
@@ -27,6 +29,25 @@ export function Player() {
           <span>
             Select the card randomly selected by <span className="font-bold">Chaos</span>
           </span>
+        );
+
+      case AppState.Status.swap:
+        return (
+          <div className="flex w-full flex-row justify-between">
+            <span>
+              Select <span className="font-bold">Swap</span> card
+            </span>
+            {!swap.done ? null : (
+              <Button
+                onClick={async () => {
+                  const { player, computer } = swap;
+                  await game_command('swap', { player, computer });
+                }}
+              >
+                Confirm
+              </Button>
+            )}
+          </div>
         );
 
       default:
@@ -41,6 +62,7 @@ export function Computer() {
   const [state] = AppState.useAppState();
   const all_open = ClientState.useAllOpen();
   const three_open = ClientState.useThreeOpen();
+  const swap = ClientState.useSwap();
   const game_command = AppState.useGameCommand();
 
   const name = state?.npc?.name;
@@ -49,38 +71,61 @@ export function Computer() {
     switch (state.status) {
       case AppState.Status.all_open:
         return (
-          <div className="flex flex-row">
+          <div className="flex w-full flex-row justify-between">
             <span>
               Select the cards revealed by <span className="font-bold">All Open</span>
             </span>
-            <Button
-              disabled={!all_open.done}
-              onClick={async () => {
-                const cards = Array.from(all_open.selected);
-                await game_command('all_open', { cards });
-              }}
-            >
-              Confirm
-            </Button>
+            {!all_open.done ? null : (
+              <Button
+                onClick={async () => {
+                  const cards = Array.from(all_open.selected);
+                  await game_command('all_open', { cards });
+                }}
+              >
+                Confirm
+              </Button>
+            )}
           </div>
         );
+
       case AppState.Status.three_open:
         return (
-          <div className="flex flex-row">
+          <div className="flex w-full flex-row justify-between">
             <span>
               Select the cards revealed by <span className="font-bold">Three Open</span>
             </span>
-            <Button
-              disabled={!three_open.done}
-              onClick={async () => {
-                const cards = Array.from(three_open.selected);
-                await game_command('three_open', { cards });
-              }}
-            >
-              Confirm
-            </Button>
+            {!three_open.done ? null : (
+              <Button
+                onClick={async () => {
+                  const cards = Array.from(three_open.selected);
+                  await game_command('three_open', { cards });
+                }}
+              >
+                Confirm
+              </Button>
+            )}
           </div>
         );
+
+      case AppState.Status.swap:
+        return (
+          <div className="flex w-full flex-row justify-between">
+            <span>
+              Select <span className="font-bold">Swap</span> card
+            </span>
+            {!swap.done ? null : (
+              <Button
+                onClick={async () => {
+                  const { player, computer } = swap;
+                  await game_command('swap', { player, computer });
+                }}
+              >
+                Confirm
+              </Button>
+            )}
+          </div>
+        );
+
       default:
         return null;
     }
