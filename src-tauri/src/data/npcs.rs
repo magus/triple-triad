@@ -123,6 +123,10 @@ impl NpcData {
             });
         }
 
+        npcs.sort_by(|a, b| {
+            return a.name.to_lowercase().cmp(&b.name.to_lowercase());
+        });
+
         return NpcData { npcs };
     }
 }
