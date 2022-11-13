@@ -2,6 +2,8 @@ import * as React from 'react';
 import { type AppProps } from 'next/app';
 import * as TauriGlobalShortcut from '@tauri-apps/api/globalShortcut';
 import { isTauriApp } from 'src/core/isTauriApp';
+import { AppStateProvider } from 'src/core/AppStateContext';
+import { ClientStateProvider } from 'src/core/ClientStateContext';
 
 // load global styles
 import './global.css';
@@ -48,13 +50,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <div data-tauri-drag-region className="h-full w-full">
-      <div
-        className="data-tauri-drag-region flex h-full w-full origin-center items-center"
-        // style={{ transform: `scale(${zoom})` }}
-      >
-        <Component {...pageProps} />
-      </div>
-    </div>
+    <AppStateProvider>
+      <ClientStateProvider>
+        <div data-tauri-drag-region className="h-full w-full">
+          <div
+            className="data-tauri-drag-region flex h-full w-full origin-center items-center"
+            // style={{ transform: `scale(${zoom})` }}
+          >
+            <Component {...pageProps} />
+          </div>
+        </div>
+      </ClientStateProvider>
+    </AppStateProvider>
   );
 }
