@@ -14,7 +14,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | sudden_death | ✅   | ✅   |
 | plus         | ✅   | ✅   |
 | random       | ✅   | ❌   |
-| order        | ✅   | ❌   |
+| order        | ✅   | ✅   |
 | chaos        | ✅   | ✅   |
 | reverse      | ❌   | ❌   |
 | fallen_ace   | ❌   | ❌   |
