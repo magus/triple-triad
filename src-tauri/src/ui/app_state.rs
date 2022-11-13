@@ -7,6 +7,8 @@ use crate::data;
 use crate::data::Npc;
 use crate::game::{ExploreResult, Game, Rules};
 
+use crate::ui::persist_data::PersistData;
+
 pub struct AppState {
     // use interior mutability since the instance of AppState cannot change
     // that means we Mutex fields so we can change their values
@@ -23,6 +25,7 @@ pub struct AppState {
     pub rule_data: Mutex<Option<data::RuleData>>,
     pub card_data: Mutex<Option<data::CardData>>,
     pub npc_data: Mutex<Option<data::NpcData>>,
+    pub persist_data: Mutex<Option<PersistData>>,
 }
 
 // serialized json, subset of AppState
@@ -33,6 +36,7 @@ pub struct AppStateJson {
     status: Option<String>,
     explore_result: Option<ExploreResult>,
     npc: Option<Npc>,
+    persist_data: PersistData,
 
     // for client state
     now: u32,
@@ -48,6 +52,7 @@ impl AppState {
         let status = self.status.lock().unwrap().clone();
         let explore_result = self.explore_result.lock().unwrap().clone();
         let npc = self.npc.lock().unwrap().clone();
+        let persist_data = self.persist_data.lock().unwrap().clone().unwrap();
 
         let now = (SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -63,6 +68,7 @@ impl AppState {
             status,
             explore_result,
             npc,
+            persist_data,
 
             now,
 
@@ -96,6 +102,11 @@ impl AppState {
         *npc_mutex = npc;
     }
 
+    pub fn set_persist_data(&self, persist_data: Option<PersistData>) {
+        let mut persist_data_mutex = self.persist_data.lock().unwrap();
+        *persist_data_mutex = persist_data;
+    }
+
     pub fn set_pre_game(&self, pre_game: Option<Rules>) {
         let mut pre_game_mutex = self.pre_game.lock().unwrap();
         *pre_game_mutex = pre_game;
@@ -118,6 +129,10 @@ impl AppState {
 
         let mut npc_data_mutex = self.npc_data.lock().unwrap();
         *npc_data_mutex = Some(npc_data);
+
+        let mut persist_data_mutex = self.persist_data.lock().unwrap();
+        let persist_data = PersistData::read(&app);
+        *persist_data_mutex = Some(persist_data);
     }
 
     pub fn new() -> AppState {
@@ -132,6 +147,7 @@ impl AppState {
             rule_data: Mutex::new(None),
             card_data: Mutex::new(None),
             npc_data: Mutex::new(None),
+            persist_data: Mutex::new(None),
         }
     }
 }

@@ -3,6 +3,8 @@ use tauri::Manager;
 use crate::ui::AppState;
 use crate::ui::AppStateJson;
 
+use super::start::start_internal;
+
 // see https://tauri.app/v1/guides/features/command
 #[tauri::command]
 pub async fn set_npc(search: &str, app_handle: tauri::AppHandle) -> Result<AppStateJson, String> {
@@ -24,6 +26,9 @@ pub async fn set_npc(search: &str, app_handle: tauri::AppHandle) -> Result<AppSt
 
     // assign the game back to mutex
     state.set_game(game);
+
+    // handle saving setup_game and reset
+    start_internal(&app_handle)?;
 
     // send back the updated game state
     Ok(state.json())

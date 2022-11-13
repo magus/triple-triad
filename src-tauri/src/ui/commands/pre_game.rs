@@ -43,6 +43,19 @@ pub fn pre_game_internal(app_handle: &tauri::AppHandle) -> Result<AppStateJson, 
 
     state.set_pre_game(Some(pre_game));
 
+    let cards_left = game.player.cards_left(None, false).len();
+
+    // prevent pre_game until player deck is selected
+    if cards_left < 5 {
+        return Ok(state.json());
+    }
+
+    // prevent pre_game until npc deck is selected
+    let state_npc = state.npc.lock().unwrap().clone();
+    if state_npc.is_none() {
+        return Ok(state.json());
+    }
+
     // check pre_game and compare against game.rules
     // ensure each rule is setup by setting it as status to handle in client
     if game.rules.roulette && !pre_game.roulette {

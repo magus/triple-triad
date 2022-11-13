@@ -135,7 +135,7 @@ function DraggableCard(props: InternalProps) {
   return <CardInternal {...props} />;
 }
 
-function CardInternal(props: InternalProps) {
+export function CardInternal(props: InternalProps) {
   const x_offset = -1 * card_style.width * (props.image_id - 1);
   const background = getBackground(props.owner);
 

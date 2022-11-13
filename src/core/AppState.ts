@@ -3,6 +3,7 @@ export type AppState = {
   game: Game;
   explore_result: null | ExploreResult;
   npc: null | Npc;
+  persist_data: PersistData;
 
   now: number;
 
@@ -20,7 +21,27 @@ export enum Status {
   turns = 'turns',
 }
 
-type Npc = {
+type PersistData = {
+  deck_list: Array<Deck>;
+};
+
+type Deck = {
+  cards: [string, string, string, string, string];
+};
+
+export type CardJson = {
+  id: string;
+  name: string;
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  tribe: number;
+  // sort: number;
+  // order: number;
+};
+
+export type Npc = {
   id: string;
   name: string;
   cards: Array<Card>;
