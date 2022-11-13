@@ -7,8 +7,9 @@ use super::pre_game::pre_game_internal;
 
 // see https://tauri.app/v1/guides/features/command
 #[tauri::command]
-pub async fn three_open(
-    cards: Vec<usize>,
+pub async fn swap(
+    player: usize,
+    computer: usize,
     app_handle: tauri::AppHandle,
 ) -> Result<AppStateJson, String> {
     // println!("[command::all_open] card={:#?}", cards);
@@ -16,17 +17,14 @@ pub async fn three_open(
     let state = app_handle.state::<AppState>();
 
     // grab game via mutex and clone for mutating and reassigning back to mutex
-    let game = state.game.lock().unwrap().clone();
+    let mut game = state.game.lock().unwrap().clone();
 
-    for index in cards {
-        let mut card = game.computer.cards[index];
-        card.is_guaranteed = true;
-    }
+    game.execute_swap(player, computer);
 
     state.set_game(game);
 
     let mut pre_game = state.pre_game.lock().unwrap().clone().unwrap();
-    pre_game.three_open = true;
+    pre_game.swap = true;
     state.set_pre_game(Some(pre_game));
 
     // handle pre_game setup immediately

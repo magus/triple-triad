@@ -22,9 +22,11 @@ export function Card(props: Props) {
   const game_command = AppState.useGameCommand();
   const all_open = ClientState.useAllOpen();
   const three_open = ClientState.useThreeOpen();
+  const swap = ClientState.useSwap();
 
   const id = props.name;
   const image_id = props.id;
+  const card = props.index;
   const highlight = props.highlight;
 
   let owner;
@@ -62,13 +64,10 @@ export function Card(props: Props) {
     onClick = async function handleClick() {
       // console.debug('[Card]', props.id, 'handleClick');
 
-      const card = props.index;
       await game_command('chaos_select', { card });
       await game_command('explore');
     };
   } else if (!props.is_player && state.status === AppState.Status.all_open) {
-    const card = props.index;
-
     if (typeof card === 'number') {
       selected = props.is_guaranteed || all_open.selected.has(card);
 
@@ -79,11 +78,19 @@ export function Card(props: Props) {
       };
     }
   } else if (!props.is_player && state.status === AppState.Status.three_open) {
-    const card = props.index;
-
     if (typeof card === 'number') {
       selected = three_open.selected.has(card);
       onClick = () => three_open.toggle(card);
+    }
+  } else if (state.status === AppState.Status.swap) {
+    if (typeof card === 'number') {
+      if (props.is_player) {
+        selected = swap.player === card;
+        onClick = () => swap.select_player(card);
+      } else {
+        selected = swap.computer === card;
+        onClick = () => swap.select_computer(card);
+      }
     }
   }
 

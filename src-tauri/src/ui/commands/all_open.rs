@@ -34,11 +34,11 @@ pub async fn all_open(
 
     game.computer.cards_from(selected_cards);
 
+    state.set_game(game);
+
     let mut pre_game = state.pre_game.lock().unwrap().clone().unwrap();
     pre_game.all_open = true;
     state.set_pre_game(Some(pre_game));
-
-    state.set_game(game);
 
     // handle pre_game setup immediately
     pre_game_internal(&app_handle)?;

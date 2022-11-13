@@ -6,6 +6,7 @@ export type ClientState = {
   explore_result_index: number;
   all_open_select: Set<number>;
   three_open_select: Set<number>;
+  swap: Array<null | number>;
 };
 
 // hook tuple because we return React.useState
@@ -25,6 +26,7 @@ function DefaultClientState() {
     explore_result_index: 0,
     all_open_select: new Set([]),
     three_open_select: new Set([]),
+    swap: [null, null],
   };
 }
 
@@ -57,8 +59,11 @@ export function useReset() {
     set_state((current_state) => {
       const next_state = { ...current_state };
 
-      next_state.all_open_select = new Set([]);
-      next_state.three_open_select = new Set([]);
+      const default_state = DefaultClientState();
+
+      next_state.all_open_select = default_state.all_open_select;
+      next_state.three_open_select = default_state.three_open_select;
+      next_state.swap = default_state.swap;
 
       return next_state;
     });
@@ -134,4 +139,30 @@ export function useThreeOpen() {
   }
 
   return { done, selected, toggle };
+}
+
+export function useSwap() {
+  const [state, set_state] = useClientState();
+
+  const [player, computer] = state.swap;
+  const done = typeof computer === 'number' && typeof player === 'number';
+
+  function set_swap_index(swap_index, index) {
+    set_state((current_state) => {
+      const next_state = { ...current_state };
+      next_state.swap = [...next_state.swap];
+      next_state.swap[swap_index] = index;
+      return next_state;
+    });
+  }
+
+  function select_player(index) {
+    set_swap_index(0, index);
+  }
+
+  function select_computer(index) {
+    set_swap_index(1, index);
+  }
+
+  return { done, select_player, player, select_computer, computer };
 }

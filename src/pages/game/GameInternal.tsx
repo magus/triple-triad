@@ -119,7 +119,10 @@ function Actions() {
           // game_command('set_npc', { search: 'mother' });
 
           // sudden death
-          game_command('set_npc', { search: 'ruhtwyda' });
+          // game_command('set_npc', { search: 'ruhtwyda' });
+
+          // swap
+          game_command('set_npc', { search: 'voracious' });
         }}
       >
         set_npc

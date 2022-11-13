@@ -26,6 +26,7 @@ fn main() {
             ui::commands::pre_game::pre_game,
             ui::commands::all_open::all_open,
             ui::commands::three_open::three_open,
+            ui::commands::swap::swap,
             ui::commands::explore::explore,
             ui::commands::execute_turn::execute_turn,
             ui::commands::chaos_select::chaos_select,

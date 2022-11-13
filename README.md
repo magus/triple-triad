@@ -20,7 +20,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | fallen_ace   | ❌   | ❌   |
 | ascension    | ❌   | ❌   |
 | descension   | ❌   | ❌   |
-| swap         | ✅   | ❌   |
+| swap         | ✅   | ✅   |
 | draft        | -    | -    |
 
 > **[Find NPCs for testing different rules](https://arrtripletriad.com/en/npcs)**
