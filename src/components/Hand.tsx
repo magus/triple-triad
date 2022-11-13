@@ -88,7 +88,11 @@ function Hand(props: Props) {
     const card = props.cards[i];
 
     const highlight = props.highlight === i;
-    const order = props.order === i;
+
+    let order;
+    if (typeof props.order === 'number') {
+      order = props.order === i;
+    }
 
     row.push(<Card key={key()} {...card} highlight={highlight} order={order} index={i} />);
 

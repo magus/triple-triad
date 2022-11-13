@@ -100,7 +100,10 @@ export function Card(props: Props) {
     }
   }
 
-  return <DraggableCard {...{ id, image_id, owner, draggable, highlight, selected, onClick }} />;
+  const config = { id, image_id, owner, draggable, highlight, selected, onClick };
+  // console.debug(config);
+
+  return <DraggableCard {...config} />;
 }
 
 type InternalProps = {
