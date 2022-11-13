@@ -26,7 +26,7 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 | all_open     | ✅   | ✅   |
 | three_open   | ✅   | ✅   |
 | same         | ✅   | ✅   |
-| sudden_death | ✅   | ❌   |
+| sudden_death | ✅   | ✅   |
 | plus         | ✅   | ✅   |
 | random       | ✅   | ❌   |
 | order        | ✅   | ❌   |

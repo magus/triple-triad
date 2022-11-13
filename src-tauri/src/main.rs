@@ -29,6 +29,7 @@ fn main() {
             ui::commands::explore::explore,
             ui::commands::execute_turn::execute_turn,
             ui::commands::chaos_select::chaos_select,
+            ui::commands::post_game::post_game,
             ui::commands::reset::reset,
         ])
         .run(tauri::generate_context!())

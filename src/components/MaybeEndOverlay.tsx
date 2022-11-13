@@ -18,7 +18,7 @@ export function MaybeEndOverlay() {
         className="pointer-events-auto absolute top-0 left-0 flex w-full items-center justify-center"
         style={{ height: board_height }}
       >
-        <button className="rounded-md bg-neutral-900 p-16" onClick={() => game_command('reset')}>
+        <button className="rounded-md bg-neutral-900 p-32" onClick={() => game_command('reset')}>
           <Button color="red">reset</Button>
         </button>
       </div>

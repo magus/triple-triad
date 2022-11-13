@@ -36,8 +36,8 @@ export function Card(props: Props) {
     owner = 'npc';
   }
 
-  // only setup draggable when status is turns
-  if (state.status === AppState.Status.turns) {
+  // only setup draggable when status is null
+  if (!state.status) {
     if (props.is_player) {
       draggable = state.turn_is_player === true;
     } else {
@@ -134,8 +134,10 @@ function CardInternal(props: InternalProps) {
     }
   }
 
+  const Container = props.onClick ? 'button' : 'div';
+
   return (
-    <button className={container_classNames.join(' ')} style={{ ...card_size }} onClick={props.onClick}>
+    <Container className={container_classNames.join(' ')} style={{ ...card_size }} onClick={props.onClick}>
       <Image {...background} alt={background.alt} layout="fill" priority />
 
       <div
@@ -148,7 +150,7 @@ function CardInternal(props: InternalProps) {
           transformOrigin: 'top left',
         }}
       />
-    </button>
+    </Container>
   );
 }
 

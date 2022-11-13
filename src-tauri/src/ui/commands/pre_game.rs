@@ -50,7 +50,7 @@ pub fn pre_game_internal(app_handle: &tauri::AppHandle) -> Result<AppStateJson, 
     } else if game.rules.three_open && !pre_game.three_open {
         state.set_status(Some("three_open".into()));
     } else {
-        state.set_status(Some("turns".into()));
+        state.set_status(None);
     }
 
     // send back the updated game state
