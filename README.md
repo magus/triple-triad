@@ -43,3 +43,15 @@ yarn tauri dev --release
 ```sh
 cargo tauri build
 ```
+
+
+## publish
+
+> The release workflow by default is triggered by pushes on the "release" branch. The action automatically creates a tag and title for the GitHub release using the application version specified in `tauri.config.json`.
+
+> https://tauri.app/v1/guides/building/cross-platform
+
+
+```
+git push origin master:release
+```
