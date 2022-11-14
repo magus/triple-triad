@@ -4,7 +4,7 @@ import { Button } from 'src/components/Button';
 import { Roulette } from 'src/components/Roulette';
 import * as AppState from 'src/core/AppStateContext';
 import * as ClientState from 'src/core/ClientStateContext';
-import { CardInternal } from './Card';
+import { Card, CardInternal } from './Card';
 
 export function Game() {
   const [state] = AppState.useAppState();
@@ -287,6 +287,7 @@ function SelectDeck(props: SelectDeckProps) {
   const [state] = AppState.useAppState();
   const command = AppState.useCommand();
   const game_command = AppState.useGameCommand();
+  const card_size = Card.useCardSize();
 
   const [create_deck, set_create_deck] = React.useState<Array<string>>([]);
   const [card_results, set_card_results] = React.useState<Array<AppState.CardJson>>([]);
@@ -361,9 +362,11 @@ function SelectDeck(props: SelectDeckProps) {
   }
 
   if (creating) {
+    const width = card_size.width * 6;
+
     return (
       <div className="relative z-20 w-full">
-        <div className="absolute rounded-md bg-neutral-900 p-16" style={{ width: 360 }}>
+        <div className="absolute rounded-md bg-neutral-900 p-16" style={{ width }}>
           <div className="flex justify-end">
             <button
               className=""
