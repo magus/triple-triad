@@ -412,25 +412,28 @@ function SelectDeck(props: SelectDeckProps) {
                 />
 
                 <div className="flex w-full flex-col items-start">
-                  {card_results.slice(0, 3).map((card) => {
-                    // disabling key improves performance
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <button
-                        onClick={() => handle_add_card(card)}
-                        className="flex w-full flex-nowrap items-start whitespace-pre py-4"
-                      >
-                        <div className="">
-                          <CardInternal id={card.id} image_id={+card.id} owner="player" />
-                        </div>
+                  {card_results
+                    .filter((card) => !new Set(create_deck).has(card.id))
+                    .slice(0, 3)
+                    .map((card) => {
+                      // disabling key improves performance
+                      return (
+                        // eslint-disable-next-line react/jsx-key
+                        <button
+                          onClick={() => handle_add_card(card)}
+                          className="flex w-full flex-nowrap items-start whitespace-pre py-4"
+                        >
+                          <div className="">
+                            <CardInternal id={card.id} image_id={+card.id} owner="player" />
+                          </div>
 
-                        <div className="flex justify-start overflow-hidden overflow-ellipsis">
-                          <div className="h-8 w-8 min-w-max" />
-                          <span className="overflow-hidden overflow-ellipsis">{card.name}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
+                          <div className="flex justify-start overflow-hidden overflow-ellipsis">
+                            <div className="h-8 w-8 min-w-max" />
+                            <span className="overflow-hidden overflow-ellipsis">{card.name}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
                 </div>
               </>
             )}
