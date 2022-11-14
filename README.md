@@ -53,6 +53,7 @@ cargo tauri build
 > https://tauri.app/v1/guides/building/cross-platform
 
 
-```
-git push origin master:release
+```sh
+yarn release
+# git push origin master:release
 ```

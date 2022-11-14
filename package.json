@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev -p 1420",
-    "build": "next build && next export -o dist",
     "tauri": "tauri",
+    "build": "next build && next export -o dist",
     "build:data": "node data/src/index.js",
     "build:spritesheet": "node data/src/card/spritesheet.js",
+    "release": "git push origin master:release",
     "test:card": "node data/src/card/test-image.js",
     "lint": "next lint"
   },
