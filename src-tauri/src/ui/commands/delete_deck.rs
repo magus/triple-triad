@@ -3,10 +3,6 @@ use tauri::Manager;
 use crate::ui::AppState;
 use crate::ui::AppStateJson;
 
-use crate::card::Card;
-
-use super::start::start_internal;
-
 // see https://tauri.app/v1/guides/features/command
 #[tauri::command]
 pub async fn delete_deck(
