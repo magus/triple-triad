@@ -1,4 +1,5 @@
 name: "test"
+
 on: [pull_request]
 
 jobs:
@@ -10,15 +11,13 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.5.0
     - name: setup node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3.5.1
       with:
         node-version: 16
-    - name: install Rust stable
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
+    - name: Install Rust (Stable)
+      run: curl https://sh.rustup.rs -sSf | sh -s -- -y
     - name: install dependencies (ubuntu only)
       if: matrix.platform == 'ubuntu-20.04'
       run: |
