@@ -422,8 +422,9 @@ impl Game {
 
                 let is_combo = false;
                 self.card_impact(index, is_combo);
-                self.score += if is_player { 1 } else { 0 };
                 self.last_move = Some((card_index, index));
+
+                self.handle_tribe(&card);
 
                 // now that card is placed, can we guarantee computer cards?
                 if !is_player {
@@ -437,6 +438,51 @@ impl Game {
         // if we got here it means we failed for some reason
         println!("❌ Invalid card choice");
         return false;
+    }
+
+    fn handle_tribe(&mut self, card: &Card) {
+        // no tribe rules, skip
+        if !self.rules.ascension && !self.rules.descension {
+            return;
+        }
+
+        // no tribe, skip
+        if card.tribe == 0 {
+            return;
+        }
+
+        let modifier = if self.rules.ascension {
+            1
+        } else if self.rules.descension {
+            -1
+        } else {
+            panic!("unexpected scenario neither ascension or descension but in else block");
+        };
+
+        // increment cards on board
+        for i in 0..BOARD_SIZE {
+            let square = &self.board[i];
+
+            if !square.is_empty && square.tribe == card.tribe {
+                self.board[i].modifier += modifier;
+            }
+        }
+
+        // increment cards in hands
+        for i in 0..self.player.cards.len() {
+            let hand_card = &self.player.cards[i];
+
+            if !hand_card.is_empty && hand_card.tribe == card.tribe {
+                self.player.cards[i].modifier += modifier;
+            }
+        }
+        for i in 0..self.computer.cards.len() {
+            let hand_card = &self.computer.cards[i];
+
+            if !hand_card.is_empty && hand_card.tribe == card.tribe {
+                self.computer.cards[i].modifier += modifier;
+            }
+        }
     }
 
     pub fn flip(&mut self, square: usize) -> bool {

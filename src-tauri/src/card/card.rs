@@ -140,20 +140,28 @@ impl Card {
         self.is_player = is_player;
     }
 
+    fn value(&self, value: u8) -> u8 {
+        if self.modifier == 0 {
+            return value;
+        }
+
+        return ((value as i8) + self.modifier).min(10).max(1) as u8;
+    }
+
     pub fn top(&self) -> u8 {
-        return self.sides.0;
+        return self.value(self.sides.0);
     }
 
     pub fn right(&self) -> u8 {
-        return self.sides.1;
+        return self.value(self.sides.1);
     }
 
     pub fn bottom(&self) -> u8 {
-        return self.sides.2;
+        return self.value(self.sides.2);
     }
 
     pub fn left(&self) -> u8 {
-        return self.sides.3;
+        return self.value(self.sides.3);
     }
 
     fn print_side(&self, side: u8) -> String {

@@ -8,6 +8,26 @@
   }
 }
 
+@layer utilities {
+  .text-shadow-xs {
+    text-shadow: 1px 1px 0 var(--tw-shadow-color),
+    -1px 1px 0 var(--tw-shadow-color),
+    1px -1px 0 var(--tw-shadow-color),
+    -1px -1px 0 var(--tw-shadow-color);
+  }
+
+  .text-shadow {
+    text-shadow: 2px 2px 0 var(--tw-shadow-color),
+    -2px 2px 0 var(--tw-shadow-color),
+    2px -2px 0 var(--tw-shadow-color),
+    -2px -2px 0 var(--tw-shadow-color);
+  }
+
+  .text-shadow-none {
+    text-shadow: none;
+  }
+}
+
 /* https://www.joshwcomeau.com/css/custom-css-reset/ */
 
 /*

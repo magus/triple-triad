@@ -11,19 +11,19 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 
 | Rule         | Game | UI   |
 | :---         | ---: | ---: |
-| roulette     | -    | ✅   |
+| roulette     | ✅   | ✅   |
 | all_open     | ✅   | ✅   |
 | three_open   | ✅   | ✅   |
 | same         | ✅   | ✅   |
 | sudden_death | ✅   | ✅   |
 | plus         | ✅   | ✅   |
-| random       | ✅   | ❌   |
+| random       | -    | -    |
 | order        | ✅   | ✅   |
 | chaos        | ✅   | ✅   |
 | reverse      | ✅   | ✅   |
 | fallen_ace   | ✅   | ✅   |
-| ascension    | ❌   | ❌   |
-| descension   | ❌   | ❌   |
+| ascension    | ✅   | ✅   |
+| descension   | ✅   | ✅   |
 | swap         | ✅   | ✅   |
 | draft        | -    | -    |
 

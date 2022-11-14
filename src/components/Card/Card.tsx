@@ -29,6 +29,7 @@ export function Card(props: Props) {
   const image_id = props.id;
   const card = props.index;
   const highlight = props.highlight;
+  const modifier = props.modifier;
 
   let owner;
   let draggable = false;
@@ -100,7 +101,7 @@ export function Card(props: Props) {
     }
   }
 
-  const config = { id, image_id, owner, draggable, highlight, selected, onClick };
+  const config = { id, image_id, owner, modifier, draggable, highlight, selected, onClick };
   // console.debug(config);
 
   return <DraggableCard {...config} />;
@@ -110,6 +111,7 @@ type InternalProps = {
   id: string;
   image_id: number;
   owner: 'player' | 'npc' | 'none';
+  modifier?: number;
   draggable?: boolean;
   highlight?: boolean;
   selected?: boolean;
@@ -166,7 +168,35 @@ export function CardInternal(props: InternalProps) {
           transformOrigin: 'top left',
         }}
       />
+
+      <Modifier {...props} />
     </Container>
+  );
+}
+
+function Modifier(props: InternalProps) {
+  if (!props.modifier) {
+    return null;
+  }
+
+  let is_positive = props.modifier > 0;
+  let sign = is_positive ? '+' : '-';
+
+  let shadow_color = '';
+
+  if (is_positive) {
+    shadow_color = 'shadow-blue-600';
+  } else {
+    shadow_color = 'shadow-red-600';
+  }
+
+  return (
+    <div
+      className={`text-shadow absolute top-0 left-0 z-30 flex h-full w-full items-center justify-center text-5xl font-extrabold ${shadow_color}`}
+    >
+      {sign}
+      {props.modifier}
+    </div>
   );
 }
 
