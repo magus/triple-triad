@@ -111,4 +111,4 @@ impl RuleData {
     }
 }
 
-const JSON_PATH: &str = "../data/game/rules.json";
+const JSON_PATH: &str = "./data/rules.json";

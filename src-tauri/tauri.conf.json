@@ -46,7 +46,7 @@
         "signingIdentity": null
       },
       "resources": [
-        "../data/game"
+        "data/"
       ],
       "shortDescription": "",
       "targets": "all",

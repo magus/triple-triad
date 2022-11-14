@@ -113,10 +113,10 @@ impl AppState {
     }
 
     pub fn init_data(&self, app: &App) {
-        let rule_data = data::RuleData::read(load_resource(app, "../data/game/rules.json"));
-        let card_data = data::CardData::read(load_resource(app, "../data/game/cards.json"));
+        let rule_data = data::RuleData::read(load_resource(app, "./data/rules.json"));
+        let card_data = data::CardData::read(load_resource(app, "./data/cards.json"));
         let npc_data = data::NpcData::read(
-            load_resource(app, "../data/game/npcs.json"),
+            load_resource(app, "./data/npcs.json"),
             &card_data,
             &rule_data,
         );

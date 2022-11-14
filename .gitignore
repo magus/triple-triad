@@ -8,8 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
 *.local
 .next
 
@@ -22,8 +20,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# ignore nextjs buid output but ensure folder exists
+dist/*
+dist-ssr
+!dist/__ANCHOR
 
 # data/game used as output folder, ignore everything except single file
 data/game/*
-!data/1-extract-ui-data.bat
-!data/images
+!data/game/1-extract-ui-data.bat
