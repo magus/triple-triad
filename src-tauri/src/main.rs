@@ -23,6 +23,7 @@ fn main() {
             ui::commands::search_card::search_card,
             ui::commands::search_npc::search_npc,
             ui::commands::save_deck::save_deck,
+            ui::commands::delete_deck::delete_deck,
             ui::commands::set_deck::set_deck,
             ui::commands::set_npc::set_npc,
             ui::commands::start::start,

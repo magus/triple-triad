@@ -1,5 +1,6 @@
 pub mod all_open;
 pub mod chaos_select;
+pub mod delete_deck;
 pub mod execute_turn;
 pub mod explore;
 pub mod post_game;

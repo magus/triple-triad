@@ -451,14 +451,28 @@ function SelectDeck(props: SelectDeckProps) {
             {deck_choices.map((deck_choice) => {
               const content = (function deck_choice_content() {
                 switch (deck_choice.type) {
-                  case 'deck':
+                  case 'deck': {
+                    const index = deck_choice.value;
+
                     return (
                       <div className="flex flex-row flex-nowrap">
                         {deck_choice.data.map((id) => {
                           return <CardInternal key={id} id={id} image_id={+id} owner="player" />;
                         })}
+
+                        <button
+                          className="pl-8 text-6xl"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            game_command('delete_deck', { index });
+                          }}
+                        >
+                          🗑
+                        </button>
                       </div>
                     );
+                  }
+
                   case 'text':
                   default:
                     return deck_choice.data;
