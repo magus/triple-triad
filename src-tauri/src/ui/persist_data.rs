@@ -23,6 +23,7 @@ impl PersistData {
         let persist_json_path = Path::new(&app_dir).join("data").join("persist.json");
 
         let json = serde_json::to_string(&self).unwrap();
+        println!("💾 saving persist data json");
         println!("[json={json}]");
         fs::write(persist_json_path, json).unwrap();
     }
