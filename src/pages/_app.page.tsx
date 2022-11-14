@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type AppProps } from 'next/app';
-import * as TauriGlobalShortcut from '@tauri-apps/api/globalShortcut';
+// import * as TauriGlobalShortcut from '@tauri-apps/api/globalShortcut';
 import { isTauriApp } from 'src/core/isTauriApp';
 import { AppStateProvider } from 'src/core/AppStateContext';
 import { ClientStateProvider } from 'src/core/ClientStateContext';
