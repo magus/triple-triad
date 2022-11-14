@@ -10,6 +10,13 @@ use super::start::start_internal;
 // see https://tauri.app/v1/guides/features/command
 #[tauri::command]
 pub async fn set_deck(index: usize, app_handle: tauri::AppHandle) -> Result<AppStateJson, String> {
+    return set_deck_internal(index, &app_handle);
+}
+
+pub fn set_deck_internal(
+    index: usize,
+    app_handle: &tauri::AppHandle,
+) -> Result<AppStateJson, String> {
     let state = app_handle.state::<AppState>();
 
     let persist_data = state.persist_data.lock().unwrap().clone().unwrap();

@@ -5,7 +5,6 @@ can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com
 ## todo
 
 - show ❌ inline when selecting decks to delete saved decks
-- auto select created deck after Save
 
 ## progress
 
