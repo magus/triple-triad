@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - release
+  # allow manual trigger via github workflow ui
+  workflow_dispatch:
 
 jobs:
   publish-tauri:

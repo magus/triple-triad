@@ -1,5 +1,7 @@
 name: "test"
-on: [pull_request]
+
+# run on PR and manual trigger via github workflow ui
+on: [pull_request, workflow_dispatch]
 
 jobs:
   test-tauri:
