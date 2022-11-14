@@ -1,0 +1,16 @@
+name: "keep-alive-workflows"
+
+on:
+  # run at 10:27 PST, on day 5 of the month
+  schedule:
+    - cron: "27 17 5 * *"
+  # allow manual trigger via github workflow ui
+  workflow_dispatch:
+
+jobs:
+  keep-alive-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.5.0
+
+      - uses: ./.github/actions/keep-alive-workflows

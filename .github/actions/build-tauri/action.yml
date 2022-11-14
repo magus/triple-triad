@@ -1,0 +1,56 @@
+# documentation for actions
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+
+name: "build-tauri"
+description: "Build a tauri app"
+
+inputs:
+  GITHUB_TOKEN:
+    # https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+    description: "automatic github token authentication"
+    required: true
+  RELEASE:
+    description: "indicate whether this is a release to publish"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: setup node
+      uses: actions/setup-node@v3.5.1
+      with:
+        node-version: 16
+
+    - name: Install Rust (Stable)
+      shell: bash
+      run: curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+    - name: install dependencies (ubuntu only)
+      if: matrix.platform == 'ubuntu-20.04'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+    - name: install app dependencies and build it
+      shell: bash
+      run: yarn && yarn build
+
+    - name: build tauri app
+      if: ${{ !inputs.RELEASE }}
+      uses: tauri-apps/tauri-action@774d52fa00c4a4736c10d107e3f1e83a9b347a0d
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    - name: build and release tauri app
+      if: ${{ inputs.RELEASE }}
+      uses: tauri-apps/tauri-action@774d52fa00c4a4736c10d107e3f1e83a9b347a0d
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      with:
+        # the action automatically replaces \_\_VERSION\_\_ with the app version
+        tagName: v__VERSION__
+        releaseName: "Triple Triad v__VERSION__"
+        releaseBody: "Expand assets below to download and install."
+        releaseDraft: true
+        prerelease: false

@@ -1,0 +1,12 @@
+# documentation for actions
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+
+name: "keep-alive-workflows"
+description: "preventing github from disabling workflows by commiting to branch"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Execute script
+      run: ${{ github.action_path }}/script.sh
+      shell: bash

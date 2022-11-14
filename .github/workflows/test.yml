@@ -12,20 +12,9 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2.5.0
-    - name: setup node
-      uses: actions/setup-node@v3.5.1
-      with:
-        node-version: 16
-    - name: Install Rust (Stable)
-      run: curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-20.04'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-    - name: install app dependencies and build it
-      run: yarn && yarn build
-    - uses: tauri-apps/tauri-action@774d52fa00c4a4736c10d107e3f1e83a9b347a0d
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2.5.0
+
+      - uses: ./.github/actions/build-tauri
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
