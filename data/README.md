@@ -4,17 +4,23 @@ extract and parse game data, textures and images from ffxiv files
 
 ## run
 
-> **Generate game data json files consumed by triple-triad rust program**
+#### **Generate game data json files consumed by triple-triad rust program**
+
+> **NOTE: Copy output json files to `src-tauri/data`**
+
 ```sh
 yarn build:data
 ```
 
-> **Generate spritesheet of all card images**
+
+#### Generate spritesheet of all card images
+
 ```sh
 yarn build:spritesheet
 ```
 
-> **Test the card image creation with a specific card and permuting params**
+#### Test the card image creation with a specific card and permuting params
+
 ```sh
 yarn test:card
 ```
