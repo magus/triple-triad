@@ -1,4 +1,5 @@
-# triple-triad
+# triple-triad · [![publish](https://github.com/magus/triple-triad/actions/workflows/publish.yml/badge.svg?branch=release)](https://github.com/magus/triple-triad/actions/workflows/publish.yml)
+
 can we solve **[Triple Triad | FINAL FANTASY XIV](https://na.finalfantasyxiv.com/lodestone/playguide/contentsguide/goldsaucer/tripletriad/)**?
 
 ## todo
