@@ -15,7 +15,9 @@ pub fn post_game_internal(app_handle: &tauri::AppHandle) -> Result<AppStateJson,
     // grab game via mutex and clone for mutating and reassigning back to mutex
     let game = state.game.lock().unwrap().clone();
 
-    if !game.rules.sudden_death || game.score != 5 || !game.is_ended() {
+    let is_suddent_death = game.rules.sudden_death && game.score == 5 && game.is_ended();
+
+    if !is_suddent_death {
         return Ok(state.json());
     }
 

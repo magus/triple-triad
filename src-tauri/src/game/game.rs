@@ -320,8 +320,7 @@ impl Game {
                     // return self.percent_score();
 
                     // evaluating score to determine boolean win shot
-                    let is_winning = self.percent_score() > 50.0;
-                    return if is_winning { 100.0 } else { 0.0 };
+                    return if self.is_winning() { 100.0 } else { 0.0 };
                 } else {
                     return game.explore(start_turn, max_depth, next_depth, results);
                 }
@@ -807,16 +806,16 @@ impl Game {
     }
 
     pub fn percent_score(&self) -> f64 {
-        if self.turn == 0 {
-            return 0.0;
-        }
+        return 100.0 * (self.score as f64 / BOARD_SIZE as f64);
+    }
 
-        return 100.0 * (self.score as f64 / self.turn as f64);
+    pub fn is_winning(&self) -> bool {
+        let draw_score = (BOARD_SIZE as f32 / 2.0).ceil() as i8;
+        return self.score > draw_score;
     }
 
     pub fn is_win(&self) -> bool {
-        let is_score_over_half = self.score as f32 >= BOARD_SIZE as f32 / 2.0;
-        return self.is_ended() && is_score_over_half;
+        return self.is_ended() && self.is_winning();
     }
 
     pub fn turn_is_player(&self) -> bool {
@@ -904,7 +903,7 @@ impl Game {
         return Game {
             turn: 0,
             is_player_first: true,
-            score: 0,
+            score: 5,
             rules,
             board,
             last_move: None,
