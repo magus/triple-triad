@@ -1,0 +1,77 @@
+[
+  {
+    "id": "1",
+    "name": "Roulette",
+    "description": "Rules in play are chosen at random."
+  },
+  {
+    "id": "2",
+    "name": "All Open",
+    "description": "Both decks are placed face up."
+  },
+  {
+    "id": "3",
+    "name": "Three Open",
+    "description": "Three cards chosen at random from each deck are played face up."
+  },
+  {
+    "id": "4",
+    "name": "Same",
+    "description": "When a card is played, if two or more of the sides are touching other cards, and the ranks of those sides are identical to those on the sides of the card played, the other cards are flipped."
+  },
+  {
+    "id": "5",
+    "name": "Sudden Death",
+    "description": "If a match ends in a draw, a new deciding match is played with each player using the cards they captured."
+  },
+  {
+    "id": "6",
+    "name": "Plus",
+    "description": "When a card is played, if two or more of the sides are touching other cards, and the sum of the ranks on the touching sides are identical to the sums on the other touching sides, the other cards are flipped."
+  },
+  {
+    "id": "7",
+    "name": "Random",
+    "description": "Decks are chosen at random from each player's list of claimed cards."
+  },
+  {
+    "id": "8",
+    "name": "Order",
+    "description": "Cards must be played in the order they appear in the deck."
+  },
+  {
+    "id": "9",
+    "name": "Chaos",
+    "description": "Cards must be played in a random order determined before the match."
+  },
+  {
+    "id": "10",
+    "name": "Reverse",
+    "description": "Lower numbers flip higher numbers."
+  },
+  {
+    "id": "11",
+    "name": "Fallen Ace",
+    "description": "A rank 1 side can flip an A. When Reverse is in play, a rank A side will flip a 1."
+  },
+  {
+    "id": "12",
+    "name": "Ascension",
+    "description": "A card's ranks increase in proportion to the number of cards of the same type already played."
+  },
+  {
+    "id": "13",
+    "name": "Descension",
+    "description": "A card's ranks decrease in proportion to the number of cards of the same type already played."
+  },
+  {
+    "id": "14",
+    "name": "Swap",
+    "description": "One random card from each player's deck will be swapped with the other."
+  },
+  {
+    "id": "15",
+    "name": "Draft",
+    "description": "Decks must be built from a selection of randomly generated cards."
+  }
+]
